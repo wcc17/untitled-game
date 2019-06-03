@@ -2,15 +2,11 @@
 
 const float PLAYER_WIDTH = 16.f;
 const float PLAYER_HEIGHT = 26.f;
-const float PLAYER_FRAME_TIME = 0.2f;
+const float PLAYER_FRAME_TIME = 0.16f;
 
 Player::Player(sf::Texture* texture, float windowWidth, float windowHeight) : Entity(texture) {
-    float x1 = windowWidth / 2;
-    float x2 = PLAYER_WIDTH / 2;
-    float y1 = windowHeight / 2;
-    float y2 = PLAYER_HEIGHT / 2;
-
     //TODO: if window is resized, we will need to update the player's position. the player is always in the middle of the screen
+    //TODO: scale of texture needs to be considered here?
     this->setPosition( (windowWidth / 2) - ((this->getGlobalBounds().width /4) / 2), (windowHeight / 2) - ((this->getGlobalBounds().height /4) / 2));
     this->setFrameTime(sf::seconds(PLAYER_FRAME_TIME));
     initializeAnimations();

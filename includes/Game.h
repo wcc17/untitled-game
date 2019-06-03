@@ -9,6 +9,7 @@
 #include "controller/KeyboardController.h"
 #include "entity/Player.h"
 #include "asset/TexturePath.h"
+#include "level/Level.h"
 
 class Game {
 
@@ -24,6 +25,7 @@ private:
     KeyboardController keyboardController;
 
     std::unique_ptr<Player> player;
+    std::unique_ptr<Level> level;
 
     void update();
     void draw();

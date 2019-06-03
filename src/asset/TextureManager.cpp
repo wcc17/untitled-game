@@ -17,4 +17,5 @@ void TextureManager::releaseTexture(std::string filename) {
 
 void TextureManager::releaseTextures() {
     releaseTexture(TexturePath::PLAYER_TEXTURE);
+    releaseTexture(TexturePath::TEST_LEVEL_TEXTURE);
 }

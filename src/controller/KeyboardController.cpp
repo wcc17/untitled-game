@@ -1,28 +1,27 @@
 #include "../../includes/controller/KeyboardController.h"
-#include <iostream>
 
-void KeyboardController::handleInput(Player* player) {
+void KeyboardController::handleInput(Player* player, Level* level) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        std::cout << "W key pressed" << std::endl;
         player->moveUp();
+        level->moveUp();
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        std::cout << "A key pressed" << std::endl;
         player->moveLeft();
+        level->moveLeft();
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        std::cout << "S key pressed" << std::endl;
         player->moveDown();
+        level->moveDown();
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        std::cout << "D key pressed" << std::endl;
         player->moveRight();
+        level->moveRight();
     } else {
         player->stop();
+        level->stop();
     }
 }
 
 void KeyboardController::handleKeyPressedEvent(sf::Keyboard::Key key) {
     switch(key) {
         case sf::Keyboard::Enter:
-            std::cout << "Enter key pressed" << std::endl;
             break;
         default:
             break;
@@ -32,7 +31,6 @@ void KeyboardController::handleKeyPressedEvent(sf::Keyboard::Key key) {
 void KeyboardController::handleKeyReleasedEvent(sf::Keyboard::Key key) {
     switch(key) {
         case sf::Keyboard::Enter:
-            std::cout << "Enter key released" << std::endl;
             break;
         default:
             break;

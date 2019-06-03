@@ -13,6 +13,7 @@ class TexturePath : public AssetPath {
 
 public:
     static const std::string PLAYER_TEXTURE;
+    static const std::string TEST_LEVEL_TEXTURE;
 };
 
 
