@@ -1,7 +1,3 @@
-//
-// Created by William Curry on 2019-06-01.
-//
-
 #include "../includes/EventHandler.h"
 
 void EventHandler::handleEvents(sf::RenderWindow* window, BaseController* controller) {
@@ -31,6 +27,6 @@ void EventHandler::handleKeyReleasedEvent(sf::Event event, BaseController* contr
     }
 }
 
-bool EventHandler::getShouldExitGame() {
+bool EventHandler::getShouldExitGame() const {
     return this->shouldExitGame;
 }

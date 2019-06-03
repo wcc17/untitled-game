@@ -1,7 +1,3 @@
-//
-// Created by William Curry on 2019-05-31.
-//
-
 #ifndef NEWNEW_GAME_H
 #define NEWNEW_GAME_H
 
@@ -12,6 +8,7 @@
 #include "EventHandler.h"
 #include "controller/KeyboardController.h"
 #include "entity/Player.h"
+#include "asset/TexturePath.h"
 
 class Game {
 

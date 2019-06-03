@@ -1,5 +1,4 @@
 #include "../includes/Game.h"
-#include "../includes/asset/TexturePath.h"
 
 Game::Game() {
     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(640*2,480*2,32),"newnew");
@@ -34,8 +33,10 @@ void Game::run() {
 }
 
 void Game::update() {
-    keyboardController.handleInput();
-    framerateCounter->update();
+    sf::Time elapsedTime = framerateCounter->update();
+
+    keyboardController.handleInput(player.get());
+    player->update(elapsedTime);
 }
 
 void Game::draw() {
@@ -50,7 +51,9 @@ void Game::exit() {
     fontManager->releaseFonts();
     textureManager->releaseTextures();
 
+    player.reset();
     framerateCounter.reset();
+    textureManager.reset();
     fontManager.reset();
     window.reset();
 }

@@ -1,18 +1,21 @@
 #include "../../includes/controller/KeyboardController.h"
 #include <iostream>
 
-void KeyboardController::handleInput() {
+void KeyboardController::handleInput(Player* player) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
         std::cout << "W key pressed" << std::endl;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+        player->moveUp();
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
         std::cout << "A key pressed" << std::endl;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        player->moveLeft();
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
         std::cout << "S key pressed" << std::endl;
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        player->moveDown();
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         std::cout << "D key pressed" << std::endl;
+        player->moveRight();
+    } else {
+        player->stop();
     }
 }
 

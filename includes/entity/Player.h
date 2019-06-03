@@ -7,7 +7,9 @@
 class Player : public Entity {
 
 public:
-    Player(sf::Texture* texture, int windowWidth, int windowHeight);
+    Player(sf::Texture* texture, float windowWidth, float windowHeight);
+protected:
+    void initializeAnimations();
 };
 
 

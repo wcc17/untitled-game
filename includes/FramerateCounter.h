@@ -1,7 +1,3 @@
-//
-// Created by William Curry on 2019-05-30.
-//
-
 #ifndef FRAMERATECOUNTER_H
 #define FRAMERATECOUNTER_H
 
@@ -18,7 +14,7 @@ private:
 
 public:
     FramerateCounter(sf::Font* font);
-    void update();
+    sf::Time update();
     sf::Text getFpsText();
 };
 

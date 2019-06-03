@@ -14,7 +14,7 @@ class EventHandler {
 
 public:
     void handleEvents(sf::RenderWindow* window, BaseController* controller);
-    bool getShouldExitGame();
+    bool getShouldExitGame() const;
 
 private:
     void handleClosedEvent(sf::Event event);

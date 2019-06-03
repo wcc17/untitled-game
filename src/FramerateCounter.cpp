@@ -1,7 +1,3 @@
-//
-// Created by William Curry on 2019-05-30.
-//
-
 #include "../includes/FramerateCounter.h"
 
 FramerateCounter::FramerateCounter(sf::Font* font) {
@@ -10,14 +6,17 @@ FramerateCounter::FramerateCounter(sf::Font* font) {
     fpsText->setPosition(fpsText->getGlobalBounds().width/2, fpsText->getGlobalBounds().height/2);
 }
 
-void FramerateCounter::update() {
+sf::Time FramerateCounter::update() {
     frames++;
-    float elapsed = clock.restart().asSeconds();
+    sf::Time elapsedTime = clock.restart();
 
     if (frames % 5 == 0) {
+        float elapsed = elapsedTime.asSeconds();
         float fps = 1.0f / elapsed;
         fpsText->setString(std::to_string(fps));
     }
+
+    return elapsedTime;
 }
 
 sf::Text FramerateCounter::getFpsText() {
