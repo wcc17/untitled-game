@@ -15,6 +15,9 @@ set(INCLUDE_FILES includes/FramerateCounter.h includes/asset/FontManager.h inclu
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES})
 
+find_library(TMX_LITE_LIB lib/libtmxlite.a)
+target_link_libraries(newnew ${TMX_LITE_LIB})
+
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
 find_package(SFML REQUIRED system window graphics network audio)
 if (SFML_FOUND)

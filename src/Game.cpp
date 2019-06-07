@@ -19,9 +19,8 @@ void Game::initializeManagers() {
     player = std::make_unique<Player>(textureManager->getTexture(TexturePath::PLAYER_TEXTURE),
             window->getSize().x, window->getSize().y);
 
-    textureManager->loadTexture(TexturePath::TEST_LEVEL_TEXTURE);
-    level = std::make_unique<Level>(textureManager->getTexture(TexturePath::TEST_LEVEL_TEXTURE),
-            window->getSize().x, window->getSize().y);
+//    textureManager->loadTexture(TexturePath::TEST_LEVEL_TEXTURE);
+    level = std::make_unique<Level>(window->getSize().x, window->getSize().y);
 }
 
 void Game::run() {
@@ -49,8 +48,8 @@ void Game::draw() {
     window->clear(sf::Color::Black);
 
     window->setView(level->getView());
-
     window->draw(*level);
+
     window->draw(framerateCounter->getFpsText());
     window->draw(*player);
 
