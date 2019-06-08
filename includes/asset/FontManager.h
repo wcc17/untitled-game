@@ -4,7 +4,7 @@
 #include <SFML/Graphics/Font.hpp>
 #include <iostream>
 #include "BaseAssetManager.h"
-#include "../../includes/asset/FontPath.h"
+#include "../../includes/asset/AssetPath.h"
 
 class FontManager : public BaseAssetManager {
 

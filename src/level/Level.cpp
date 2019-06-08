@@ -1,5 +1,6 @@
 #include <cmath>
 #include "../../includes/level/Level.h"
+#include "../../includes/asset/AssetPath.h"
 
 const float LEVEL_MOVEMENT_SPEED = 270.f;
 //TODO: should an AnimatedEntity and Level both derive from a BaseEntity? Basically Entity without the animation stuff. Will help with scaling too
@@ -31,6 +32,8 @@ sf::View Level::getView() const {
 
 void Level::update(sf::Time deltaTime) {
     this->move(movement * deltaTime.asSeconds());
+
+    //NOTE: rounding the position gets rid of weird artifacting/flickering that was introduced after tile maps. any negative repercussions?
     this->setPosition(std::round(this->getPosition().x), std::round(this->getPosition().y));
 }
 
@@ -64,19 +67,14 @@ void Level::resetMovement() {
 }
 
 void Level::loadTileMap() {
-    //TODO: move tiled stuff to its own class that Level can inherit from or whatever
-
     tmx::Map map;
 
-    //TODO: the path should be in a constant file like TexturePath (or in its own)
-    if(!map.load("assets/gfx/tileset/test_map.tmx")) {
+    if(!map.load(AssetPath::LEVEL_TILEMAP)) {
         //TODO: exit the application after printing the error that the file couldn't be loaded
     }
 
-    tmx::Tileset tileset = map.getTilesets()[0]; //NOTE: this assumes that each level is only going to have a single tileset.
-
-    //TODO: for now, manually loading the texture here
-    //TODO: create another Manager for loading maps and setting up a "Level" object with all the info needed from the tmx file, tileset, and image
+    //NOTE: this assumes that each level is only going to have a single tileset
+    tmx::Tileset tileset = map.getTilesets()[0];
     texture.loadFromFile(tileset.getImagePath());
 
     //tile count and tile size
@@ -95,7 +93,6 @@ void Level::loadTileMap() {
 void Level::handleTileLayer(tmx::TileLayer layer, tmx::Tileset tileset, tmx::Vector2u mapSizeInTiles, tmx::Vector2u tileSize) {
 
     //TODO: tiles currently aren't being flipped if I flipped them inside of the Tiled app. tile has ID and flipFlags member variables
-    //TODO: constants that won't make sense if tile size changes
     sf::VertexArray layerVertices;
     layerVertices.setPrimitiveType(sf::Quads);
     layerVertices.resize(mapSizeInTiles.x * mapSizeInTiles.y * 4);

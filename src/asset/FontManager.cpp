@@ -15,6 +15,6 @@ void FontManager::releaseFont(std::string filename) {
 }
 
 void FontManager::releaseFonts() {
-    releaseFont(FontPath::OPENSANS_REGULAR);
-    releaseFont(FontPath::OPENSANS_BOLD);
+    releaseFont(AssetPath::OPENSANS_REGULAR);
+    releaseFont(AssetPath::OPENSANS_BOLD);
 }

@@ -1,5 +1,5 @@
 #include "../../includes/asset/TextureManager.h"
-#include "../../includes/asset/TexturePath.h"
+#include "../../includes/asset/AssetPath.h"
 
 TextureManager::TextureManager() { }
 
@@ -16,6 +16,5 @@ void TextureManager::releaseTexture(std::string filename) {
 }
 
 void TextureManager::releaseTextures() {
-    releaseTexture(TexturePath::PLAYER_TEXTURE);
-    releaseTexture(TexturePath::TEST_LEVEL_TEXTURE);
+    releaseTexture(AssetPath::PLAYER_TEXTURE);
 }

@@ -28,14 +28,9 @@ public:
 private:
     sf::View view;
     sf::Vector2f movement;
-    sf::Texture texture;
     float speed;
 
-    // Note that tmx::Map objects are generally not designed to be kept around, rather they are used to load and read
-    // map file data into a format which can be easily processed, before being disposed. Layers are returned as a vector
-    // of pointers to base class - their concrete type can be found with getType() and a reference gained by calling
-    // the templated function Layer::getLayerAs<T>() with the correct type. The parse test directory contains a more detailed example.
-    //https://github.com/fallahn/tmxlite/wiki/Quick-Start
+    sf::Texture texture;
     std::vector<sf::VertexArray> vertices;
 
     void loadTileMap();

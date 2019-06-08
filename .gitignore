@@ -2,3 +2,9 @@
 cmake-build-debug/
 .history/
 .vscode/
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+build/
+cmake_install.cmake
+newnew.xcodeproj/
