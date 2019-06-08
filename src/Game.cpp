@@ -19,7 +19,7 @@ void Game::initializeManagers() {
     player = std::make_unique<Player>(textureManager->getTexture(AssetPath::PLAYER_TEXTURE),
             window->getSize().x, window->getSize().y);
 
-    level = std::make_unique<Level>(window->getSize().x, window->getSize().y);
+    level = std::make_unique<Level>(window->getSize().x, window->getSize().y, AssetPath::LEVEL_TILEMAP);
 }
 
 void Game::run() {

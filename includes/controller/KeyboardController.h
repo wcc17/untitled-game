@@ -3,8 +3,8 @@
 
 #include <SFML/Window/Keyboard.hpp>
 #include "BaseController.h"
-#include "../entity/Player.h"
-#include "../level/Level.h"
+#include "../entity/character/Player.h"
+#include "../entity/level/Level.h"
 
 class KeyboardController : public BaseController {
 

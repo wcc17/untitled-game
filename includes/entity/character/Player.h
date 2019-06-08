@@ -2,7 +2,7 @@
 #define NEWNEW_PLAYER_H
 
 
-#include "Entity.h"
+#include "../Entity.h"
 
 class Player : public Entity {
 

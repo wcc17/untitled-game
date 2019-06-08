@@ -1,4 +1,4 @@
-#include "../../includes/entity/Player.h"
+#include "../../../includes/entity/character/Player.h"
 
 const float PLAYER_WIDTH = 16.f;
 const float PLAYER_HEIGHT = 26.f;

@@ -7,9 +7,9 @@
 #include "FramerateCounter.h"
 #include "EventHandler.h"
 #include "controller/KeyboardController.h"
-#include "entity/Player.h"
+#include "entity/character/Player.h"
 #include "asset/AssetPath.h"
-#include "level/Level.h"
+#include "entity/level/Level.h"
 
 class Game {
 

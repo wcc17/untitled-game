@@ -4,7 +4,7 @@
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/System/Time.hpp>
-#include "Animation.h"
+#include "character/Animation.h"
 
 class Entity : public sf::Sprite {
 
