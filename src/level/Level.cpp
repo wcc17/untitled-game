@@ -1,3 +1,4 @@
+#include <cmath>
 #include "../../includes/level/Level.h"
 
 const float LEVEL_MOVEMENT_SPEED = 270.f;
@@ -30,6 +31,7 @@ sf::View Level::getView() const {
 
 void Level::update(sf::Time deltaTime) {
     this->move(movement * deltaTime.asSeconds());
+    this->setPosition(std::round(this->getPosition().x), std::round(this->getPosition().y));
 }
 
 void Level::moveUp() {
