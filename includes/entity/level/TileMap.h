@@ -14,13 +14,25 @@ public:
     TileMap(std::string tileMapPath);
 
 protected:
-    std::string tileMapPath;
     sf::Texture texture;
     std::vector<sf::VertexArray> vertices;
-
     void loadTileMap();
-    void handleTileLayer(tmx::TileLayer layer, tmx::Tileset tileset, tmx::Vector2u mapSizeInTiles, tmx::Vector2u tileSize);
+
+private:
+    std::string tileMapPath;
+    void loadTileLayer(tmx::TileLayer layer, tmx::Tileset tileset, tmx::Vector2u mapSizeInTiles, tmx::Vector2u tileSize);
     bool isTileIdTransparent(uint32_t layerTileId);
+    void setVertexPositionForTile(sf::Vertex* quad, int x, int y, tmx::Vector2u tilesetTileImageSize);
+    void setVertexTextureCoordsForTile(sf::Vertex* quad, int x, int y, tmx::Vector2u tilesetTileImagePosition,
+            tmx::Vector2u tilesetTileImageSize);
+    bool tileHasFlip(uint8_t flipFlags);
+    bool isHorizontalFlip(uint8_t flipFlags);
+    bool isVerticalFlip(uint8_t flipFlags);
+    bool isDiagonalFlip(uint8_t flipFlags);
+    void handleFlips(sf::Vertex* quad, uint8_t flipFlags); //NOTE: taken from https://github.com/fallahn/tmxlite/blob/master/SFMLExample/src/SFMLOrthogonalLayer.hpp in doFlips function
+    void flipY(sf::Vertex* quad);
+    void flipX(sf::Vertex* quad);
+    void flipD(sf::Vertex* quad);
 };
 
 

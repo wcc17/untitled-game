@@ -2,9 +2,9 @@
 #define NEWNEW_PLAYER_H
 
 
-#include "../Entity.h"
+#include "AnimatedEntity.h"
 
-class Player : public Entity {
+class Player : public AnimatedEntity {
 
 public:
     Player(sf::Texture* texture, float windowWidth, float windowHeight);

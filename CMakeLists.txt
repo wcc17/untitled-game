@@ -6,12 +6,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 set(SOURCE_FILES src/main.cpp src/FramerateCounter.cpp src/asset/FontManager.cpp src/Game.cpp src/EventHandler.cpp
         src/controller/BaseController.cpp src/controller/KeyboardController.cpp src/asset/TextureManager.cpp
         src/asset/BaseAssetManager.cpp src/asset/AssetPath.cpp src/entity/Entity.cpp src/entity/character/Player.cpp
-        src/entity/character/Animation.cpp src/entity/level/Level.cpp src/entity/level/TileMap.cpp)
+        src/entity/character/Animation.cpp src/entity/level/Level.cpp src/entity/level/TileMap.cpp
+        src/entity/character/AnimatedEntity.cpp)
 
 set(INCLUDE_FILES includes/FramerateCounter.h includes/asset/FontManager.h includes/Game.h includes/EventHandler.h
         includes/controller/BaseController.h includes/controller/KeyboardController.h includes/asset/TextureManager.h
         includes/asset/BaseAssetManager.h includes/asset/AssetPath.h includes/entity/Entity.h includes/entity/character/Player.h
-        includes/entity/character/Animation.h includes/entity/level/Level.h includes/entity/level/TileMap.h)
+        includes/entity/character/Animation.h includes/entity/level/Level.h includes/entity/level/TileMap.h
+        includes/entity/character/AnimatedEntity.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES})
 

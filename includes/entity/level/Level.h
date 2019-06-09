@@ -8,10 +8,11 @@
 #include <SFML/Graphics/View.hpp>
 #include <SFML/System/Time.hpp>
 #include <cmath>
-#include "../../../includes/asset/AssetPath.h"
 #include "TileMap.h"
+#include "../Entity.h"
+#include "../../../includes/asset/AssetPath.h"
 
-class Level : public sf::Drawable, public sf::Transformable, public TileMap {
+class Level : public sf::Drawable, public sf::Transformable, public TileMap, public Entity {
 public:
     Level(float windowWidth, float windowHeight, std::string tileMapPath);
     sf::View getView() const;
