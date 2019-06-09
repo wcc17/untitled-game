@@ -14,7 +14,7 @@ private:
 
 public:
     FramerateCounter(sf::Font* font);
-    sf::Time update();
+    sf::Time update(sf::Vector2f viewPosition);
     sf::Text getFpsText();
 };
 

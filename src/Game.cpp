@@ -1,7 +1,7 @@
 #include "../includes/Game.h"
 
 Game::Game() {
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(640*2,480*2,32),"newnew");
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920,1080,32),"newnew");
 //    window->setFramerateLimit(60);
     window->setVerticalSyncEnabled(true);
 
@@ -15,11 +15,11 @@ void Game::initializeManagers() {
     fontManager->loadFont(AssetPath::OPENSANS_REGULAR);
     framerateCounter = std::make_unique<FramerateCounter>(fontManager->getFont(AssetPath::OPENSANS_REGULAR));
 
+    level = std::make_unique<Level>(window->getSize().x, window->getSize().y, AssetPath::LEVEL_TILEMAP);
+
     textureManager->loadTexture(AssetPath::PLAYER_TEXTURE);
     player = std::make_unique<Player>(textureManager->getTexture(AssetPath::PLAYER_TEXTURE),
-            window->getSize().x, window->getSize().y);
-
-    level = std::make_unique<Level>(window->getSize().x, window->getSize().y, AssetPath::LEVEL_TILEMAP);
+                                      level->getMapSizeInPixels().x, level->getMapSizeInPixels().y);
 }
 
 void Game::run() {
@@ -36,11 +36,11 @@ void Game::run() {
 }
 
 void Game::update() {
-    sf::Time elapsedTime = framerateCounter->update();
+    sf::Time elapsedTime = framerateCounter->update(level->getViewPosition());
 
     keyboardController.handleInput(player.get(), level.get());
-    player->update(elapsedTime);
     level->update(elapsedTime);
+    player->update(elapsedTime, level->getViewPosition());
 }
 
 void Game::draw() {
@@ -48,8 +48,8 @@ void Game::draw() {
 
     window->setView(level->getView());
     window->draw(*level);
-
     window->draw(framerateCounter->getFpsText());
+
     window->draw(*player);
 
     window->display();

@@ -2,11 +2,7 @@
 
 AnimatedEntity::AnimatedEntity(sf::Texture* texture)
     : frameTime(sf::seconds(0.f)), currentTime(sf::seconds(0.f)) {
-
     this->setTexture(*texture);
-
-    //TODO: need a better way to set the scale. other sprites will need to have the same scale. also if the window is resized, the scale has to change too
-    this->scale(sf::Vector2f(5.f, 5.f));
 }
 
 void AnimatedEntity::update(sf::Time deltaTime) {

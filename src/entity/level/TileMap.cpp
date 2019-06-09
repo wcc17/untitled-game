@@ -1,5 +1,9 @@
 #include "../../../includes/entity/level/TileMap.h"
 
+const static std::string NOTYPE_LAYER = "notype";
+const static std::string DOOR_LAYER = "doors";
+const static std::string SIGN_LAYER = "signs";
+
 TileMap::TileMap(std::string tileMapPath) {
     this->tileMapPath = tileMapPath;
     this->loadTileMap();
@@ -19,14 +23,20 @@ void TileMap::loadTileMap() {
     //tile count and tile size
     tmx::Vector2u mapSizeInTiles = map.getTileCount();
     tmx::Vector2u tileSize = map.getTileSize();
+    mapSizeInPixels = sf::Vector2f(mapSizeInTiles.x * tileSize.x, mapSizeInTiles.y * tileSize.y);
+
     const auto& layers = map.getLayers();
     for(const auto& layer : layers) {
         if(layer->getType() == tmx::Layer::Type::Tile) {
             loadTileLayer(layer->getLayerAs<tmx::TileLayer>(), tileset, mapSizeInTiles, tileSize);
+        } else if(layer->getType() == tmx::Layer::Type::Object) {
+            loadObjectLayer(layer->getLayerAs<tmx::ObjectGroup>());
         } else {
-            printf("not supporting this type of layer yet");
+            printf("not supporting this type of layer yet\n");
         }
     }
+
+    printf("done loading tile map\n");
 }
 
 void TileMap::loadTileLayer(tmx::TileLayer layer, tmx::Tileset tileset, tmx::Vector2u mapSizeInTiles, tmx::Vector2u tileSize) {
@@ -53,8 +63,23 @@ void TileMap::loadTileLayer(tmx::TileLayer layer, tmx::Tileset tileset, tmx::Vec
     }
 
 
-    //TODO: need support for a "foreground layer" that should be draw ABOVE the player
+    //TODO: do i want support for a "foreground layer" that should be draw ABOVE the player
     vertices.push_back(layerVertices);
+}
+
+void TileMap::loadObjectLayer(tmx::ObjectGroup layer) {
+    std::string layerName = layer.getName();
+    for(int i = 0; i < layer.getObjects().size(); i++) {
+        tmx::Object object = layer.getObjects()[i];
+
+        if(object.getShape() == tmx::Object::Shape::Rectangle) {
+            loadRectangleObjects(object, layerName);
+        } else if(object.getShape() == tmx::Object::Shape::Polygon) {
+            printf("NOTE: polygon collision is more complicated than AABB, haven't found a situation yet where I NEED polygons\n");
+        } else {
+            printf("this object shape is not yet supported\n");
+        }
+    }
 }
 
 bool TileMap::isTileIdTransparent(uint32_t layerTileId) {
@@ -162,9 +187,7 @@ void TileMap::flipX(sf::Vertex* quad) {
 }
 
 void TileMap::flipD(sf::Vertex* quad) {
-    sf::Vector2f *v0 = &quad[0].texCoords;
     sf::Vector2f *v1 = &quad[1].texCoords;
-    sf::Vector2f *v2 = &quad[2].texCoords;
     sf::Vector2f *v3 = &quad[3].texCoords;
 
     sf::Vector2f tmp = *v1;
@@ -172,4 +195,33 @@ void TileMap::flipD(sf::Vertex* quad) {
     v1->y = v3->y;
     v3->x = tmp.x;
     v3->y = tmp.y;
+}
+
+void TileMap::loadRectangleObjects(tmx::Object object, std::string layerName) {
+    tmx::FloatRect boundingBox = object.getAABB();
+    std::string objectName = object.getName();
+
+    sf::Vector2f position(boundingBox.left, boundingBox.top);
+    sf::Vector2f size(boundingBox.width, boundingBox.height);
+
+    CollidableType type = getCollidableType(layerName);
+    collidables.push_back(Collidable (position, size, objectName, type));
+}
+
+CollidableType TileMap::getCollidableType(std::string layerName) {
+
+    if(layerName == NOTYPE_LAYER) {
+        return CollidableType::NO_TYPE;
+    } else if(layerName == DOOR_LAYER) {
+        return CollidableType::DOOR;
+    } else if(layerName == SIGN_LAYER) {
+        return CollidableType::SIGN;
+    }
+
+    printf("this type not yet supported\n");
+    return CollidableType::NO_TYPE;
+}
+
+sf::Vector2f TileMap::getMapSizeInPixels() {
+    return this->mapSizeInPixels;
 }

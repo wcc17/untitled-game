@@ -15,15 +15,19 @@
 class Level : public sf::Drawable, public sf::Transformable, public TileMap, public Entity {
 public:
     Level(float windowWidth, float windowHeight, std::string tileMapPath);
-    sf::View getView() const;
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void update(sf::Time deltaTime);
+    void handleCollisions();
+    void handleNoTypeCollision();
+    void handleDoorCollision();
+    void handleSignCollision();
     void moveUp();
     void moveLeft();
     void moveDown();
     void moveRight();
     void stop();
-
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+    sf::View getView() const;
+    sf::Vector2f getViewPosition();
 
 private:
     sf::View view;

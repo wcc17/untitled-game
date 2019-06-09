@@ -13,7 +13,7 @@ set(INCLUDE_FILES includes/FramerateCounter.h includes/asset/FontManager.h inclu
         includes/controller/BaseController.h includes/controller/KeyboardController.h includes/asset/TextureManager.h
         includes/asset/BaseAssetManager.h includes/asset/AssetPath.h includes/entity/Entity.h includes/entity/character/Player.h
         includes/entity/character/Animation.h includes/entity/level/Level.h includes/entity/level/TileMap.h
-        includes/entity/character/AnimatedEntity.h)
+        includes/entity/character/AnimatedEntity.h src/collidable/Collidable.cpp includes/collidable/Collidable.h includes/collidable/CollidableType.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES})
 

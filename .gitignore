@@ -8,3 +8,6 @@ CMakeScripts/
 build/
 cmake_install.cmake
 newnew.xcodeproj/
+Makefile
+newnew
+newnew.cbp
