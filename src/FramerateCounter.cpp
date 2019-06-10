@@ -19,6 +19,7 @@ sf::Time FramerateCounter::update(sf::Vector2f viewPosition) {
     }
 
     //TODO: fix, no constants here, going to need ViewManager for this
+    //TODO: framerate counter needs to be drawn outside of the view, not scaled like this. although scaling would be fine if the better alternative is too complicated
     fpsText->setPosition(viewPosition.x - 190, viewPosition.y - 108);
     fpsText->setPosition(std::round(fpsText->getPosition().x), std::round(fpsText->getPosition().y));
 

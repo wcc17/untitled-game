@@ -1,13 +1,7 @@
-#include "../../../includes/entity/level/Level.h"
+#include "../../includes/level/Level.h"
 
-const float LEVEL_MOVEMENT_SPEED = 120.f;
-
-Level::Level(float windowWidth, float windowHeight, std::string tileMapPath) : TileMap(tileMapPath), movement(0.f, 0.f) {
-    this->speed = LEVEL_MOVEMENT_SPEED;
-
-    //TODO: view stuff should be handled somewhere else, not in Level
-    view.setCenter(sf::Vector2f(mapSizeInPixels.x / 2, mapSizeInPixels.y / 2));
-    view.setSize(sf::Vector2f(windowWidth / 5, windowHeight / 5));
+void Level::initialize(std::string tileMapPath) {
+    TileMap::initialize(tileMapPath);
 }
 
 void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -20,12 +14,7 @@ void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 }
 
 void Level::update(sf::Time deltaTime) {
-//    printf("position: %f, %f \n", view.getCenter().x, view.getCenter().y);
-    view.move(movement * deltaTime.asSeconds());
-
-    //NOTE: rounding the position gets rid of weird artifacting/flickering that was introduced after tile maps. any negative repercussions?
-    //NOTE: setting the position AFTER checking collisions, or else that will mess with the float precision collision detecting (i think)
-    view.setCenter(std::round(view.getCenter().x), std::round(view.getCenter().y));
+    //TODO: don't maybe level shouldn't have a .update() function, just handleCollisisions and anything else it might need to do
 }
 
 void Level::handleCollisions() {
@@ -65,40 +54,3 @@ void Level::handleDoorCollision() {
 void Level::handleSignCollision() {
     printf("colliding with a sign\n");
 };
-
-void Level::moveUp() {
-    resetMovement();
-    movement.y -= speed;
-}
-
-void Level::moveLeft() {
-    resetMovement();
-    movement.x -= speed;
-}
-
-void Level::moveDown() {
-    resetMovement();
-    movement.y += speed;
-}
-
-void Level::moveRight() {
-    resetMovement();
-    movement.x += speed;
-}
-
-void Level::stop() {
-    resetMovement();
-}
-
-void Level::resetMovement() {
-    movement.x = 0;
-    movement.y = 0;
-}
-
-sf::View Level::getView() const {
-    return this->view;
-}
-
-sf::Vector2f Level::getViewPosition() {
-    return this->view.getCenter();
-}

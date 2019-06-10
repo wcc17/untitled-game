@@ -7,9 +7,8 @@
 #include "FramerateCounter.h"
 #include "EventHandler.h"
 #include "controller/KeyboardController.h"
-#include "entity/character/Player.h"
 #include "asset/AssetPath.h"
-#include "entity/level/Level.h"
+#include "LevelManager.h"
 
 class Game {
 
@@ -17,15 +16,14 @@ public:
     Game();
     void run();
 private:
+    //TODO: I'm not sure that all of these need to be pointers
     std::unique_ptr<sf::RenderWindow> window;
     std::unique_ptr<FramerateCounter> framerateCounter;
     std::unique_ptr<FontManager> fontManager;
     std::unique_ptr<TextureManager> textureManager;
     EventHandler eventHandler;
     KeyboardController keyboardController;
-
-    std::unique_ptr<Player> player;
-    std::unique_ptr<Level> level;
+    LevelManager levelManager;
 
     void update();
     void draw();

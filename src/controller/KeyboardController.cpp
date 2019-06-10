@@ -1,21 +1,16 @@
 #include "../../includes/controller/KeyboardController.h"
 
-void KeyboardController::handleInput(Player* player, Level* level) {
+void KeyboardController::handleInput(LevelManager* levelManager) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        player->moveUp();
-        level->moveUp();
+        levelManager->handleMoveUp();
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        player->moveLeft();
-        level->moveLeft();
+        levelManager->handleMoveLeft();
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        player->moveDown();
-        level->moveDown();
+        levelManager->handleMoveDown();
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        player->moveRight();
-        level->moveRight();
+        levelManager->handleMoveRight();
     } else {
-        player->stop();
-        level->stop();
+        levelManager->handleMoveStop();
     }
 }
 

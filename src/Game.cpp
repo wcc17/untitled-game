@@ -15,11 +15,8 @@ void Game::initializeManagers() {
     fontManager->loadFont(AssetPath::OPENSANS_REGULAR);
     framerateCounter = std::make_unique<FramerateCounter>(fontManager->getFont(AssetPath::OPENSANS_REGULAR));
 
-    level = std::make_unique<Level>(window->getSize().x, window->getSize().y, AssetPath::LEVEL_TILEMAP);
-
     textureManager->loadTexture(AssetPath::PLAYER_TEXTURE);
-    player = std::make_unique<Player>(textureManager->getTexture(AssetPath::PLAYER_TEXTURE),
-                                      level->getMapSizeInPixels().x, level->getMapSizeInPixels().y);
+    levelManager.initialize(textureManager->getTexture(AssetPath::PLAYER_TEXTURE), window->getSize());
 }
 
 void Game::run() {
@@ -36,22 +33,15 @@ void Game::run() {
 }
 
 void Game::update() {
-    sf::Time elapsedTime = framerateCounter->update(level->getViewPosition());
-
-    keyboardController.handleInput(player.get(), level.get());
-    level->update(elapsedTime);
-    player->update(elapsedTime, level->getViewPosition());
+    sf::Time elapsedTime = framerateCounter->update(levelManager.getViewPosition());
+    keyboardController.handleInput(&levelManager);
+    levelManager.update(elapsedTime);
 }
 
 void Game::draw() {
     window->clear(sf::Color::Black);
-
-    window->setView(level->getView());
-    window->draw(*level);
-    window->draw(framerateCounter->getFpsText());
-
-    window->draw(*player);
-
+//    window->draw(framerateCounter->getFpsText());
+    levelManager.draw(window.get());
     window->display();
 }
 
@@ -60,8 +50,6 @@ void Game::exit() {
     fontManager->releaseFonts();
     textureManager->releaseTextures();
 
-    player.reset();
-    level.reset();
     framerateCounter.reset();
     textureManager.reset();
     fontManager.reset();

@@ -8,13 +8,13 @@
 #include <tmxlite/ObjectGroup.hpp>
 #include <tmxlite/TileLayer.hpp>
 #include <tmxlite/Tileset.hpp>
-#include "../../collidable/CollidableType.h"
-#include "../../collidable/Collidable.h"
+#include "../collidable/CollidableType.h"
+#include "../collidable/Collidable.h"
 
 class TileMap {
 
 public:
-    TileMap(std::string tileMapPath);
+    void initialize(std::string tileMapPath);
     sf::Vector2f getMapSizeInPixels();
 
 protected:

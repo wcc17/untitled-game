@@ -7,7 +7,7 @@
 class Player : public AnimatedEntity {
 
 public:
-    Player(sf::Texture* texture, float windowWidth, float windowHeight);
+    void initialize(sf::Texture* texture, float windowWidth, float windowHeight);
     void update(sf::Time deltaTime, sf::Vector2f viewCenter);
 protected:
     void initializeAnimations();

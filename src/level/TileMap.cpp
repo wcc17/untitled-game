@@ -1,10 +1,10 @@
-#include "../../../includes/entity/level/TileMap.h"
+#include "../../includes/level/TileMap.h"
 
 const static std::string NOTYPE_LAYER = "notype";
 const static std::string DOOR_LAYER = "doors";
 const static std::string SIGN_LAYER = "signs";
 
-TileMap::TileMap(std::string tileMapPath) {
+void TileMap::initialize(std::string tileMapPath) {
     this->tileMapPath = tileMapPath;
     this->loadTileMap();
 }

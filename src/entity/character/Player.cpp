@@ -4,7 +4,8 @@ const float PLAYER_WIDTH = 16.f;
 const float PLAYER_HEIGHT = 26.f;
 const float PLAYER_FRAME_TIME = 0.16f;
 
-Player::Player(sf::Texture* texture, float windowWidth, float windowHeight) : AnimatedEntity(texture) {
+void Player::initialize(sf::Texture* texture, float windowWidth, float windowHeight) {
+    AnimatedEntity::initialize(texture);
     this->setPosition( (windowWidth / 2) - ((this->getGlobalBounds().width /4) / 2), (windowHeight / 2) - ((this->getGlobalBounds().height /4) / 2));
     this->setFrameTime(sf::seconds(PLAYER_FRAME_TIME));
     initializeAnimations();

@@ -8,7 +8,7 @@
 class AnimatedEntity : public Entity, public sf::Sprite {
 
 public:
-    AnimatedEntity(sf::Texture *texture);
+    void initialize(sf::Texture *texture);
     void update(sf::Time deltaTime);
     void moveUp();
     void moveLeft();
