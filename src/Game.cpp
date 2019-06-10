@@ -33,15 +33,16 @@ void Game::run() {
 }
 
 void Game::update() {
-    sf::Time elapsedTime = framerateCounter->update(levelManager.getViewPosition());
+    sf::Time elapsedTime = framerateCounter->update();
     keyboardController.handleInput(&levelManager);
     levelManager.update(elapsedTime);
 }
 
 void Game::draw() {
     window->clear(sf::Color::Black);
-//    window->draw(framerateCounter->getFpsText());
     levelManager.draw(window.get());
+    window->setView(window->getDefaultView());
+    window->draw(framerateCounter->getFpsText());
     window->display();
 }
 

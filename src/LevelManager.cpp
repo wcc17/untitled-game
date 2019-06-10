@@ -1,13 +1,14 @@
 #include "../includes/LevelManager.h"
 
 void LevelManager::initialize(sf::Texture* playerTexture, sf::Vector2u windowSize) {
-    level.initialize(AssetPath::LEVEL_TILEMAP);
+    level.initialize(AssetPath::LEVEL_TILEMAP); //TODO: this should be passed to LevelManager or at least decided else where
     viewManager.initializeViewForLevel(level.getMapSizeInPixels(), windowSize);
     player.initialize(playerTexture, level.getMapSizeInPixels().x, level.getMapSizeInPixels().y);
 }
 
 void LevelManager::update(sf::Time elapsedTime) {
     viewManager.update(elapsedTime);
+    level.handleCollisions();
     player.update(elapsedTime, viewManager.getViewPosition());
 }
 
@@ -40,8 +41,4 @@ void LevelManager::handleMoveRight() {
 void LevelManager::handleMoveStop() {
     player.stop();
     viewManager.stop();
-}
-
-sf::Vector2f LevelManager::getViewPosition() {
-    return viewManager.getViewPosition();
 }

@@ -4,6 +4,7 @@
 #include "ViewManager.h"
 #include "entity/character/Player.h"
 #include "level/Level.h"
+#include "../includes/asset/AssetPath.h"
 
 class LevelManager {
 public:
@@ -16,8 +17,6 @@ public:
     void handleMoveDown();
     void handleMoveRight();
     void handleMoveStop();
-
-    sf::Vector2f getViewPosition();
 private:
     ViewManager viewManager;
     Level level;
