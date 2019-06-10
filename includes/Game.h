@@ -16,18 +16,19 @@ public:
     Game();
     void run();
 private:
-    //TODO: I'm not sure that all of these need to be pointers
     std::unique_ptr<sf::RenderWindow> window;
-    std::unique_ptr<FramerateCounter> framerateCounter;
-    std::unique_ptr<FontManager> fontManager;
-    std::unique_ptr<TextureManager> textureManager;
+
+    //NOTE: there is the possibility that memory issues might happen with all of these allocated this way. Could switch to pointers for certain classes if memory becomes an issue
+    FramerateCounter framerateCounter;
+    FontManager fontManager;
+    TextureManager textureManager;
     EventHandler eventHandler;
     KeyboardController keyboardController;
     LevelManager levelManager;
 
+    void initialize();
     void update();
     void draw();
-    void initializeManagers();
     void exit();
 };
 

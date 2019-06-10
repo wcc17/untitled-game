@@ -1,8 +1,6 @@
 #include "../../../includes/entity/character/AnimatedEntity.h"
 
 void AnimatedEntity::initialize(sf::Texture* texture) {
-    //TODO: make sure these are initialized properly compared to how they were when they were intiailized in the constructor
-    // : frameTime(sf::seconds(0.f)), currentTime(sf::seconds(0.f)) { 
     this->setTexture(*texture);
 }
 

@@ -7,15 +7,14 @@
 
 class FramerateCounter {
 
-private:
-    sf::Clock clock;
-    std::unique_ptr<sf::Text> fpsText;
-    int frames;
-
 public:
-    FramerateCounter(sf::Font* font);
+    void initialize(sf::Font* font);
     sf::Time update();
     sf::Text getFpsText();
+private:
+    sf::Clock clock;
+    sf::Text fpsText;
+    int frames;
 };
 
 

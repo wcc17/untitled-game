@@ -5,18 +5,15 @@ Game::Game() {
 //    window->setFramerateLimit(60);
     window->setVerticalSyncEnabled(true);
 
-    initializeManagers();
+    initialize();
 }
 
-void Game::initializeManagers() {
-    fontManager = std::make_unique<FontManager>();
-    textureManager = std::make_unique<TextureManager>();
+void Game::initialize() {
+    fontManager.loadFont(AssetPath::OPENSANS_REGULAR);
+    framerateCounter.initialize(fontManager.getFont(AssetPath::OPENSANS_REGULAR));
 
-    fontManager->loadFont(AssetPath::OPENSANS_REGULAR);
-    framerateCounter = std::make_unique<FramerateCounter>(fontManager->getFont(AssetPath::OPENSANS_REGULAR));
-
-    textureManager->loadTexture(AssetPath::PLAYER_TEXTURE);
-    levelManager.initialize(textureManager->getTexture(AssetPath::PLAYER_TEXTURE), window->getSize());
+    textureManager.loadTexture(AssetPath::PLAYER_TEXTURE); //TODO: should textureManager just be passed to LevelManager? LevelManager will eventually need to load textures based on something happening in the game. should game ever be loading textures?
+    levelManager.initialize(textureManager.getTexture(AssetPath::PLAYER_TEXTURE), window->getSize());
 }
 
 void Game::run() {
@@ -33,7 +30,7 @@ void Game::run() {
 }
 
 void Game::update() {
-    sf::Time elapsedTime = framerateCounter->update();
+    sf::Time elapsedTime = framerateCounter.update();
     keyboardController.handleInput(&levelManager);
     levelManager.update(elapsedTime);
 }
@@ -42,17 +39,13 @@ void Game::draw() {
     window->clear(sf::Color::Black);
     levelManager.draw(window.get());
     window->setView(window->getDefaultView());
-    window->draw(framerateCounter->getFpsText());
+    window->draw(framerateCounter.getFpsText());
     window->display();
 }
 
 void Game::exit() {
     window->close();
-    fontManager->releaseFonts();
-    textureManager->releaseTextures();
-
-    framerateCounter.reset();
-    textureManager.reset();
-    fontManager.reset();
+    fontManager.releaseFonts();
+    textureManager.releaseTextures();
     window.reset();
 }
