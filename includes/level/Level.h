@@ -12,12 +12,7 @@ class Level : public sf::Drawable, public sf::Transformable, public TileMap {
 public:
     void initialize(std::string tileMapPath);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-    void handleCollisions();
-
-private:
-    void handleNoTypeCollision();
-    void handleDoorCollision();
-    void handleSignCollision();
+    std::vector<Collidable> handleCollisions();
 };
 
 

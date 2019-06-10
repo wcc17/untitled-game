@@ -21,6 +21,10 @@ private:
     ViewManager viewManager;
     Level level;
     Player player;
+    void handleCollisions();
+    void handleNoTypeCollision();
+    void handleDoorCollision();
+    void handleSignCollision();
 };
 
 
