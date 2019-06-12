@@ -1,9 +1,9 @@
 #include "../includes/Game.h"
 
 Game::Game() {
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920,1080,32),"newnew");
-//    window->setFramerateLimit(60);
-    window->setVerticalSyncEnabled(true);
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(960*2,540*2,32),"newnew");
+    window->setFramerateLimit(60);
+//    window->setVerticalSyncEnabled(true);
 
     initialize();
 }

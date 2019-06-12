@@ -24,6 +24,7 @@ protected:
     void pauseAnimation();
     void stopAnimation();
     void setTextureRectBasedOnCurrentFrame();
+    sf::Vector2i getWidthOfEntityForCurrentFrame();
 
     Animation* currentAnimation;
     Animation walkingAnimationDown;

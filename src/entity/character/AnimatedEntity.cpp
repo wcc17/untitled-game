@@ -75,3 +75,7 @@ void AnimatedEntity::stop() {
 void AnimatedEntity::setFrameTime(sf::Time time) {
     this->frameTime = time;
 }
+
+sf::Vector2i AnimatedEntity::getWidthOfEntityForCurrentFrame() {
+    return sf::Vector2i(getTextureRect().width, getTextureRect().height);
+}

@@ -7,14 +7,14 @@ set(SOURCE_FILES src/main.cpp src/FramerateCounter.cpp src/asset/FontManager.cpp
         src/controller/BaseController.cpp src/controller/KeyboardController.cpp src/asset/TextureManager.cpp
         src/asset/BaseAssetManager.cpp src/asset/AssetPath.cpp src/entity/Entity.cpp src/entity/character/Player.cpp
         src/entity/character/Animation.cpp src/level/Level.cpp src/level/TileMap.cpp
-        src/entity/character/AnimatedEntity.cpp src/collidable/Collidable.cpp
+        src/entity/character/AnimatedEntity.cpp src/level/collidable/Collidable.cpp
         src/ViewManager.cpp src/LevelManager.cpp)
 
 set(INCLUDE_FILES includes/FramerateCounter.h includes/asset/FontManager.h includes/Game.h includes/EventHandler.h
         includes/controller/BaseController.h includes/controller/KeyboardController.h includes/asset/TextureManager.h
         includes/asset/BaseAssetManager.h includes/asset/AssetPath.h includes/entity/Entity.h includes/entity/character/Player.h
         includes/entity/character/Animation.h includes/level/Level.h includes/level/TileMap.h
-        includes/entity/character/AnimatedEntity.h includes/collidable/Collidable.h includes/collidable/CollidableType.h
+        includes/entity/character/AnimatedEntity.h includes/level/collidable/Collidable.h includes/level/collidable/CollidableType.h
         includes/ViewManager.h  includes/LevelManager.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES})

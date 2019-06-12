@@ -25,6 +25,7 @@ private:
     void handleNoTypeCollision();
     void handleDoorCollision();
     void handleSignCollision();
+    void handlePlayerCollision();
 };
 
 

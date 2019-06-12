@@ -210,6 +210,7 @@ void TileMap::loadRectangleObjects(tmx::Object object, std::string layerName) {
 
 CollidableType TileMap::getCollidableType(std::string layerName) {
 
+    //TODO: would it be better to use object.getType() instead of the layer? this has already caused confusion
     if(layerName == NOTYPE_LAYER) {
         return CollidableType::NO_TYPE;
     } else if(layerName == DOOR_LAYER) {

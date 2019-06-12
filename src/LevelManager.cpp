@@ -2,7 +2,7 @@
 
 void LevelManager::initialize(sf::Texture* playerTexture, sf::Vector2u windowSize) {
     level.initialize(AssetPath::LEVEL_TILEMAP); //TODO: this should be passed to LevelManager or at least decided else where
-    viewManager.initializeViewForLevel(level.getMapSizeInPixels(), windowSize);
+    viewManager.initializeViewForLevel(level.getMapSizeInPixels());
     player.initialize(playerTexture, level.getMapSizeInPixels().x, level.getMapSizeInPixels().y);
 }
 
@@ -19,15 +19,10 @@ void LevelManager::draw(sf::RenderWindow* window) {
 }
 
 void LevelManager::handleCollisions() {
-    std::vector<Collidable> collisions = level.handleCollisions();
+    std::vector<Collidable> collisions = level.handleCollisions(player.getGlobalBounds());
+
+    //TODO: eventually need to consider that these collisions will happen to more than just a player
     for(Collidable collidable : collisions) {
-        /**
-        * NOTE: on type. For now, these will all do pretty much the same thing
-        * Eventually, there will be objects that inherit from Collidable and they will all be in the "collidables" vector
-        * We can handle what to do with them in their own methods from here
-        * Checking a type variable instead of object type on purpose. This is more precise and it doesn't change anything
-        * This will eventually be doing a lot. Could potentially handle collisions in a LevelManager or GameManager or something like that.
-     */
         switch (collidable.getType()) {
             case CollidableType::NO_TYPE:
                 handleNoTypeCollision();
@@ -47,13 +42,22 @@ void LevelManager::handleCollisions() {
 
 void LevelManager::handleNoTypeCollision() {
     printf("colliding with a no type\n");
-};
+    handlePlayerCollision();
+}
+
 void LevelManager::handleDoorCollision() {
     printf("colliding with a door\n");
-};
+}
+
 void LevelManager::handleSignCollision() {
     printf("colliding with a sign\n");
-};
+    handlePlayerCollision();
+}
+
+void LevelManager::handlePlayerCollision() {
+    viewManager.undoMovement();
+    player.updatePlayerPosition(viewManager.getViewPosition());
+}
 
 void LevelManager::handleMoveUp() {
     player.moveUp();

@@ -13,7 +13,13 @@ void Player::initialize(sf::Texture* texture, float windowWidth, float windowHei
 
 void Player::update(sf::Time deltaTime, sf::Vector2f viewCenter) {
     AnimatedEntity::update(deltaTime);
-    setPosition(viewCenter);
+    updatePlayerPosition(viewCenter);
+}
+
+void Player::updatePlayerPosition(sf::Vector2f viewCenter) {
+    float newPlayerX = viewCenter.x - (getWidthOfEntityForCurrentFrame().x / 2);
+    float newPlayerY = viewCenter.y - (getWidthOfEntityForCurrentFrame().y / 2);
+    setPosition(newPlayerX, newPlayerY);
 }
 
 void Player::initializeAnimations() {

@@ -8,19 +8,22 @@
 
 class ViewManager {
 public:
-    void initializeViewForLevel(sf::Vector2f mapSizeInPixels, sf::Vector2u windowSize);
+    void initializeViewForLevel(sf::Vector2f mapSizeInPixels);
     void update(sf::Time deltaTime);
     sf::View getView() const;
 
+    void moveView(sf::Time deltaTime);
     void moveUp();
     void moveLeft();
     void moveDown();
     void moveRight();
     void stop();
+    void undoMovement();
     sf::Vector2f getViewPosition();
 private:
     sf::View view;
     sf::Vector2f movement;
+    sf::Vector2f previousPosition;
 
     void resetMovement();
 };

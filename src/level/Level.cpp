@@ -13,12 +13,13 @@ void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     }
 }
 
-std::vector<Collidable> Level::handleCollisions() {
+//TODO: only passing player bounds for now, but will eventually want anything that could collide with something (so probably a vector of rects)
+std::vector<Collidable> Level::handleCollisions(sf::FloatRect playerBounds) {
     std::vector<Collidable> collided;
     for(Collidable collidable : this->collidables) {
-//        if(collidable.getBoundingBox().intersects(mybutt)) {
-//            collided.push_back()
-//        }
+       if(collidable.getBoundingBox().intersects(playerBounds)) {
+           collided.push_back(collidable);
+       }
     }
 
     return collided;

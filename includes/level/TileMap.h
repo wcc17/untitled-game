@@ -8,8 +8,8 @@
 #include <tmxlite/ObjectGroup.hpp>
 #include <tmxlite/TileLayer.hpp>
 #include <tmxlite/Tileset.hpp>
-#include "../collidable/CollidableType.h"
-#include "../collidable/Collidable.h"
+#include "../level/collidable/CollidableType.h"
+#include "../level/collidable/Collidable.h"
 
 class TileMap {
 
