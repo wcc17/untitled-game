@@ -1,12 +1,12 @@
-#include "../includes/ViewManager.h"
+#include "../../includes/manager/ViewManager.h"
 
 const float MOVEMENT_SPEED = 80.f;
+const float VIEW_SIZE_X = 320.f;
+const float VIEW_SIZE_Y = 180.f;
 
 void ViewManager::initializeViewForLevel(sf::Vector2f mapSizeInPixels) {
     view.setCenter(sf::Vector2f(mapSizeInPixels.x / 2, mapSizeInPixels.y / 2));
-
-    //TODO: need to stick with a constant size that I like. This will not change depending on the window size
-    view.setSize(sf::Vector2f(320, 180));
+    view.setSize(sf::Vector2f(VIEW_SIZE_X, VIEW_SIZE_Y));
 }
 
 void ViewManager::update(sf::Time deltaTime) {
@@ -14,14 +14,9 @@ void ViewManager::update(sf::Time deltaTime) {
 }
 
 void ViewManager::moveView(sf::Time deltaTime) {
-    //    printf("position: %f, %f \n", view.getCenter().x, view.getCenter().y);
     previousPosition = view.getCenter();
-
     view.move(movement * deltaTime.asSeconds());
-
-    //NOTE: rounding the position gets rid of weird artifacting/flickering that was introduced after tile maps. any negative repercussions?
-    //NOTE: setting the position AFTER checking collisions, or else that will mess with the float precision collision detecting (i think)
-    view.setCenter(std::round(view.getCenter().x), std::round(view.getCenter().y));
+    roundViewCenter();
 }
 
 void ViewManager::moveUp() {
@@ -63,4 +58,10 @@ sf::View ViewManager::getView() const {
 
 sf::Vector2f ViewManager::getViewPosition() {
     return this->view.getCenter();
+}
+
+void ViewManager::roundViewCenter() {
+    //NOTE: rounding the position gets rid of weird artifacting/flickering that was introduced after tile maps. any negative repercussions?
+    //NOTE: setting the position AFTER checking collisions, or else that will mess with the float precision collision detecting (i think)
+    view.setCenter(std::round(view.getCenter().x), std::round(view.getCenter().y));
 }

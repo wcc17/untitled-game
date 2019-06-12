@@ -25,6 +25,7 @@ private:
     sf::Vector2f movement;
     sf::Vector2f previousPosition;
 
+    void roundViewCenter();
     void resetMovement();
 };
 

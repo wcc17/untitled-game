@@ -1,8 +1,9 @@
 #include "../../includes/level/TileMap.h"
 
-const static std::string NOTYPE_LAYER = "notype";
-const static std::string DOOR_LAYER = "doors";
-const static std::string SIGN_LAYER = "signs";
+const static std::string NOTYPE_OBJECT_TYPE = "notype";
+const static std::string DOOR_OBJECT_TYPE = "door";
+const static std::string SIGN_OBJECT_TYPE = "sign";
+const static std::string WALL_OBJECT_TYPE = "wall";
 
 void TileMap::initialize(std::string tileMapPath) {
     this->tileMapPath = tileMapPath;
@@ -61,7 +62,6 @@ void TileMap::loadTileLayer(tmx::TileLayer layer, tmx::Tileset tileset, tmx::Vec
             }
         }
     }
-
 
     //TODO: do i want support for a "foreground layer" that should be draw ABOVE the player
     vertices.push_back(layerVertices);
@@ -204,19 +204,18 @@ void TileMap::loadRectangleObjects(tmx::Object object, std::string layerName) {
     sf::Vector2f position(boundingBox.left, boundingBox.top);
     sf::Vector2f size(boundingBox.width, boundingBox.height);
 
-    CollidableType type = getCollidableType(layerName);
+    CollidableType type = getCollidableType(object.getType());
     collidables.push_back(Collidable (position, size, objectName, type));
 }
 
-CollidableType TileMap::getCollidableType(std::string layerName) {
+CollidableType TileMap::getCollidableType(std::string typeName) {
 
-    //TODO: would it be better to use object.getType() instead of the layer? this has already caused confusion
-    if(layerName == NOTYPE_LAYER) {
-        return CollidableType::NO_TYPE;
-    } else if(layerName == DOOR_LAYER) {
+    if(typeName == DOOR_OBJECT_TYPE) {
         return CollidableType::DOOR;
-    } else if(layerName == SIGN_LAYER) {
+    } else if(typeName == SIGN_OBJECT_TYPE) {
         return CollidableType::SIGN;
+    } else if(typeName == WALL_OBJECT_TYPE) {
+        return CollidableType::WALL;
     }
 
     printf("this type not yet supported\n");

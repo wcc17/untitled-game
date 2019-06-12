@@ -41,7 +41,7 @@ private:
     void flipX(sf::Vertex* quad);
     void flipD(sf::Vertex* quad);
     void loadRectangleObjects(tmx::Object object, std::string layerName);
-    CollidableType getCollidableType(std::string layerName);
+    CollidableType getCollidableType(std::string typeName);
 };
 
 

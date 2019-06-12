@@ -4,7 +4,8 @@
 enum CollidableType {
     NO_TYPE,
     DOOR,
-    SIGN
+    SIGN,
+    WALL
 };
 
 #endif //NEWNEW_COLLIDABLETYPE_H

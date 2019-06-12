@@ -1,9 +1,11 @@
-#include "../includes/LevelManager.h"
+#include "../../includes/manager/LevelManager.h"
 
-void LevelManager::initialize(sf::Texture* playerTexture, sf::Vector2u windowSize) {
-    level.initialize(AssetPath::LEVEL_TILEMAP); //TODO: this should be passed to LevelManager or at least decided else where
+void LevelManager::initialize() {
+    level.initialize(AssetPath::LEVEL_TILEMAP); //TODO: this should be decided else where when switching level logic is implemented. Probably in a GameManager one level up
     viewManager.initializeViewForLevel(level.getMapSizeInPixels());
-    player.initialize(playerTexture, level.getMapSizeInPixels().x, level.getMapSizeInPixels().y);
+
+    textureManager.loadTexture(AssetPath::PLAYER_TEXTURE);
+    player.initialize(textureManager.getTexture(AssetPath::PLAYER_TEXTURE), level.getMapSizeInPixels().x, level.getMapSizeInPixels().y);
 }
 
 void LevelManager::update(sf::Time elapsedTime) {
@@ -19,13 +21,12 @@ void LevelManager::draw(sf::RenderWindow* window) {
 }
 
 void LevelManager::handleCollisions() {
-    std::vector<Collidable> collisions = level.handleCollisions(player.getGlobalBounds());
-
     //TODO: eventually need to consider that these collisions will happen to more than just a player
+    std::vector<Collidable> collisions = level.handleCollisions(player.getGlobalBounds());
     for(Collidable collidable : collisions) {
         switch (collidable.getType()) {
-            case CollidableType::NO_TYPE:
-                handleNoTypeCollision();
+            case CollidableType::WALL:
+                handleWallCollision();
                 break;
             case CollidableType::DOOR:
                 handleDoorCollision();
@@ -40,17 +41,17 @@ void LevelManager::handleCollisions() {
     }
 }
 
-void LevelManager::handleNoTypeCollision() {
-    printf("colliding with a no type\n");
+void LevelManager::handleWallCollision() {
+    // printf("colliding with a wall\n");
     handlePlayerCollision();
 }
 
 void LevelManager::handleDoorCollision() {
-    printf("colliding with a door\n");
+    // printf("colliding with a door\n");
 }
 
 void LevelManager::handleSignCollision() {
-    printf("colliding with a sign\n");
+    // printf("colliding with a sign\n");
     handlePlayerCollision();
 }
 
@@ -82,4 +83,8 @@ void LevelManager::handleMoveRight() {
 void LevelManager::handleMoveStop() {
     player.stop();
     viewManager.stop();
+}
+
+void LevelManager::release() {
+    textureManager.releaseTextures();
 }
