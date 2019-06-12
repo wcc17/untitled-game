@@ -36,6 +36,7 @@ void Game::update() {
 }
 
 void Game::draw() {
+    //TODO: should I draw everything to a texture first? would that help with the cracks in the tiles when resizing the window?
     window->clear(sf::Color::Black);
     levelManager.draw(window.get());
     window->setView(window->getDefaultView());
