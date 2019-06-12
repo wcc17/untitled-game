@@ -1,6 +1,6 @@
 #include "../includes/ViewManager.h"
 
-const float MOVEMENT_SPEED = 100.f;
+const float MOVEMENT_SPEED = 80.f;
 
 void ViewManager::initializeViewForLevel(sf::Vector2f mapSizeInPixels) {
     view.setCenter(sf::Vector2f(mapSizeInPixels.x / 2, mapSizeInPixels.y / 2));
