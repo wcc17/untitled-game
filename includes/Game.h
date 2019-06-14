@@ -22,10 +22,10 @@ private:
     GameManager gameManager;
 
     void initialize();
-    void update();
+    std::vector<sf::Event> handleEvents();
+    void update(std::vector<sf::Event> events);
     void draw();
     void exit();
-    std::vector<sf::Event> handleEvents();
 };
 
 

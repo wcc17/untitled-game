@@ -9,7 +9,8 @@ set(SOURCE_FILES src/main.cpp src/FramerateCounter.cpp src/asset/FontManager.cpp
         src/entity/character/Animation.cpp src/level/Level.cpp src/level/TileMap.cpp
         src/entity/character/AnimatedEntity.cpp src/level/collidable/Collidable.cpp
         src/manager/ViewManager.cpp src/manager/LevelManager.cpp src/manager/TextManager.cpp 
-        src/manager/GameManager.cpp src/events/EventBus.cpp)
+        src/manager/GameManager.cpp src/events/HandlerFunctionBase.cpp
+        src/events/Event.cpp)
 
 set(INCLUDE_FILES includes/FramerateCounter.h includes/asset/FontManager.h includes/Game.h
         includes/controller/BaseController.h includes/controller/KeyboardController.h includes/asset/TextureManager.h
@@ -17,7 +18,9 @@ set(INCLUDE_FILES includes/FramerateCounter.h includes/asset/FontManager.h inclu
         includes/entity/character/Animation.h includes/level/Level.h includes/level/TileMap.h
         includes/entity/character/AnimatedEntity.h includes/level/collidable/Collidable.h includes/level/collidable/CollidableType.h
         includes/manager/ViewManager.h includes/manager/LevelManager.h includes/manager/TextManager.h 
-        includes/manager/GameManager.h includes/events/EventBus.h)
+        includes/manager/GameManager.h includes/events/EventBus.h includes/events/HandlerFunctionBase.h
+        includes/events/MemberFunctionHandler.h
+        includes/events/Event.h includes/controller/MoveEvent.h includes/controller/MoveDirection.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES})
 

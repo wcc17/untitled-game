@@ -1,7 +1,7 @@
 #include "../includes/Game.h"
 
 Game::Game() {
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(960*2,540*2,32),"newnew", sf::Style::Titlebar | sf::Style::Close);
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(960,540,32),"newnew", sf::Style::Titlebar | sf::Style::Close);
      window->setFramerateLimit(60);
 //   window->setVerticalSyncEnabled(true);
 
@@ -16,11 +16,10 @@ void Game::initialize() {
 
 void Game::run() {
     while(!shouldExitGame && window->isOpen()) {
-        //TODO: need to pass these events to LevelManager.update so that KeyboardController and other classes can see what events need to be handled
         std::vector<sf::Event> events = handleEvents();
 
         if(!shouldExitGame) {
-            update();
+            update(events);
             draw();
         }
     }
@@ -28,9 +27,9 @@ void Game::run() {
     exit();
 }
 
-void Game::update() {
+void Game::update(std::vector<sf::Event> events) {
     sf::Time deltaTime = framerateCounter.update();
-    gameManager.update(deltaTime);
+    gameManager.update(deltaTime, events);
 }
 
 std::vector<sf::Event> Game::handleEvents() {

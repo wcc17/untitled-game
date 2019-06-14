@@ -5,22 +5,22 @@
 #include <SFML/Graphics/View.hpp>
 #include <SFML/System/Time.hpp>
 #include <cmath>
+#include "../events/EventBus.h"
+#include "../controller/MoveEvent.h"
 
 class ViewManager {
 public:
+    void initialize(std::shared_ptr<EventBus> eventBus);
     void initializeViewForLevel(sf::Vector2f mapSizeInPixels);
     void update(sf::Time deltaTime);
     sf::View getView() const;
 
+    void onMoveEvent(MoveEvent* event);
     void moveView(sf::Time deltaTime);
-    void moveUp();
-    void moveLeft();
-    void moveDown();
-    void moveRight();
-    void stop();
     void undoMovement();
     sf::Vector2f getViewPosition();
 private:
+    std::shared_ptr<EventBus> eventBus;
     sf::View view;
     sf::Vector2f movement;
     sf::Vector2f previousPosition;

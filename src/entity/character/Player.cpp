@@ -4,16 +4,41 @@ const float PLAYER_WIDTH = 16.f;
 const float PLAYER_HEIGHT = 26.f;
 const float PLAYER_FRAME_TIME = 0.16f;
 
-void Player::initialize(sf::Texture* texture, float windowWidth, float windowHeight) {
+void Player::initialize(sf::Texture* texture, float windowWidth, float windowHeight, std::shared_ptr<EventBus> eventBus) {
     AnimatedEntity::initialize(texture);
+    this->eventBus = eventBus;
     this->setPosition( (windowWidth / 2) - ((this->getGlobalBounds().width /4) / 2), (windowHeight / 2) - ((this->getGlobalBounds().height /4) / 2));
     this->setFrameTime(sf::seconds(PLAYER_FRAME_TIME));
     initializeAnimations();
+
+    eventBus->subscribe(this, &Player::onMoveEvent);
 }
 
 void Player::update(sf::Time deltaTime, sf::Vector2f viewCenter) {
     AnimatedEntity::update(deltaTime);
     updatePlayerPosition(viewCenter);
+}
+
+void Player::onMoveEvent(MoveEvent* event) {
+    switch(event->direction) {
+        case MoveDirection::UP:
+            moveUp();
+            break;
+        case MoveDirection::LEFT:
+            moveLeft();
+            break;
+        case MoveDirection::DOWN:
+            moveDown();
+            break;
+        case MoveDirection::RIGHT:
+            moveRight();
+            break;
+        case MoveDirection::NONE:
+            stop();
+            break;
+        default:
+            break;
+    }
 }
 
 void Player::updatePlayerPosition(sf::Vector2f viewCenter) {

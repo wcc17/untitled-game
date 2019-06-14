@@ -1,11 +1,13 @@
 #include "../../includes/manager/LevelManager.h"
 
-void LevelManager::initialize() {
+void LevelManager::initialize(std::shared_ptr<EventBus> eventBus) {
     level.initialize(AssetPath::LEVEL_TILEMAP); //TODO: this should be decided else where when switching level logic is implemented. Probably in a GameManager one level up
-    viewManager.initializeViewForLevel(level.getMapSizeInPixels());
-
     textureManager.loadTexture(AssetPath::PLAYER_TEXTURE);
-    player.initialize(textureManager.getTexture(AssetPath::PLAYER_TEXTURE), level.getMapSizeInPixels().x, level.getMapSizeInPixels().y);
+
+    viewManager.initialize(eventBus);
+    viewManager.initializeViewForLevel(level.getMapSizeInPixels());
+    player.initialize(textureManager.getTexture(AssetPath::PLAYER_TEXTURE), level.getMapSizeInPixels().x,
+            level.getMapSizeInPixels().y, eventBus);
 }
 
 void LevelManager::update(sf::Time elapsedTime) {
@@ -58,31 +60,6 @@ void LevelManager::handleSignCollision() {
 void LevelManager::handlePlayerCollision() {
     viewManager.undoMovement();
     player.updatePlayerPosition(viewManager.getViewPosition());
-}
-
-void LevelManager::handleMoveUp() {
-    player.moveUp();
-    viewManager.moveUp();
-}
-
-void LevelManager::handleMoveLeft() {
-    player.moveLeft();
-    viewManager.moveLeft();
-}
-
-void LevelManager::handleMoveDown() {
-    player.moveDown();
-    viewManager.moveDown();
-}
-
-void LevelManager::handleMoveRight() {
-    player.moveRight();
-    viewManager.moveRight();
-}
-
-void LevelManager::handleMoveStop() {
-    player.stop();
-    viewManager.stop();
 }
 
 void LevelManager::release() {

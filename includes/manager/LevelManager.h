@@ -6,19 +6,14 @@
 #include "../level/Level.h"
 #include "../../includes/asset/AssetPath.h"
 #include "../../includes/asset/TextureManager.h"
+#include "../../includes/events/EventBus.h"
+#include "../controller/MoveEvent.h"
 
 class LevelManager {
 public:
-    void initialize();
+    void initialize(std::shared_ptr<EventBus> eventBus);
     void update(sf::Time elapsedTime);
     void draw(sf::RenderWindow* window);
-
-    void handleMoveUp();
-    void handleMoveLeft();
-    void handleMoveDown();
-    void handleMoveRight();
-    void handleMoveStop();
-
     void release();
 private:
     TextureManager textureManager;

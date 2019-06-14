@@ -3,16 +3,18 @@
 
 #include "LevelManager.h"
 #include "../controller/KeyboardController.h"
+#include "../events/EventBus.h"
 
 class GameManager {
 public:
     void initialize();
-    void update(sf::Time deltaTime);
+    void update(sf::Time deltaTime, std::vector<sf::Event> sfEvents);
     void draw(sf::RenderWindow* window);
     void release();
 private:
     LevelManager levelManager;
     KeyboardController keyboardController;
+    std::shared_ptr<EventBus> eventBus;
 };
 
 

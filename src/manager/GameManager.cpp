@@ -1,11 +1,14 @@
 #include "../../includes/manager/GameManager.h"
 
 void GameManager::initialize() {
-    levelManager.initialize();
+    eventBus = std::make_shared<EventBus>();
+
+    keyboardController.initialize(eventBus);
+    levelManager.initialize(eventBus);
 }
 
-void GameManager::update(sf::Time deltaTime) {
-    keyboardController.handleInput(&levelManager);
+void GameManager::update(sf::Time deltaTime, std::vector<sf::Event> sfEvents) {
+    keyboardController.handleInput(sfEvents);
     levelManager.update(deltaTime);
 }
 
@@ -15,4 +18,5 @@ void GameManager::draw(sf::RenderWindow* window) {
 
 void GameManager::release() {
     levelManager.release();
+    eventBus.reset();
 }

@@ -9,9 +9,13 @@
 class KeyboardController : public BaseController {
 
 public:
-    void handleInput(LevelManager* levelManager);
+    void initialize(std::shared_ptr<EventBus> eventBus);
+    void handleInput(std::vector<sf::Event> sfEvents);
     void handleKeyPressedEvent(sf::Keyboard::Key key);
     void handleKeyReleasedEvent(sf::Keyboard::Key key);
+
+private:
+    bool shouldSendStopMovementEvent = true;
 };
 
 
