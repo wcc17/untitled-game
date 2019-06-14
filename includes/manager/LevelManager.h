@@ -8,6 +8,7 @@
 #include "../../includes/asset/TextureManager.h"
 #include "../../includes/events/EventBus.h"
 #include "../controller/MoveEvent.h"
+#include "CollisionManager.h"
 
 class LevelManager {
 public:
@@ -18,13 +19,11 @@ public:
 private:
     TextureManager textureManager;
     ViewManager viewManager;
+    CollisionManager collisionManager;
     Level level;
     Player player;
-    void handleCollisions();
-    void handleWallCollision();
-    void handleDoorCollision();
-    void handleSignCollision();
-    void handlePlayerCollision();
+
+    std::vector<Collidable> getCollisions(sf::FloatRect playerBounds);
 };
 
 

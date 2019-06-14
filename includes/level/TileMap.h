@@ -16,15 +16,16 @@ class TileMap {
 public:
     void initialize(std::string tileMapPath);
     sf::Vector2f getMapSizeInPixels();
+    std::vector<Collidable> getMapCollidables();
 
 protected:
     sf::Texture texture;
     std::vector<sf::VertexArray> vertices;
-    std::vector<Collidable> collidables;
     sf::Vector2f mapSizeInPixels;
     void loadTileMap();
 
 private:
+    std::vector<Collidable> collidables;
     std::string tileMapPath;
     void loadTileLayer(tmx::TileLayer layer, tmx::Tileset tileset, tmx::Vector2u mapSizeInTiles, tmx::Vector2u tileSize);
     void loadObjectLayer(tmx::ObjectGroup layer);

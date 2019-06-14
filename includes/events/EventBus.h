@@ -40,8 +40,7 @@ public:
         handlers->push_back(new MemberFunctionHandler<T, EventType>(instance, memberFunction));
     }
 
-    //TODO: surely I would need an "unsubscribe" for objects that need to be deleted/taken out of scope?
-    //TODO: I need to make sure this isn't sending to something that isn't available anymore (out of scope). This will live longer than most objects
+    //TODO: surely I would need an "unsubscribe" for objects that need to be deleted/taken out of scope? I need to make sure this isn't sending to something that isn't available anymore (out of scope). This will live longer than most objects
 
 private:
     std::map<std::type_index, HandlerList*> subscribers;

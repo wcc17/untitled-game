@@ -225,3 +225,7 @@ CollidableType TileMap::getCollidableType(std::string typeName) {
 sf::Vector2f TileMap::getMapSizeInPixels() {
     return this->mapSizeInPixels;
 }
+
+std::vector<Collidable> TileMap::getMapCollidables() {
+    return this->collidables;
+}

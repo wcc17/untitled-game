@@ -7,6 +7,7 @@
 #include <cmath>
 #include "../events/EventBus.h"
 #include "../controller/MoveEvent.h"
+#include "CollisionEvent.h"
 
 class ViewManager {
 public:
@@ -16,6 +17,7 @@ public:
     sf::View getView() const;
 
     void onMoveEvent(MoveEvent* event);
+    void onCollisionEvent(CollisionEvent* event);
     void moveView(sf::Time deltaTime);
     void undoMovement();
     sf::Vector2f getViewPosition();

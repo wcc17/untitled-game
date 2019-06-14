@@ -7,6 +7,7 @@ const float VIEW_SIZE_Y = 180.f;
 void ViewManager::initialize(std::shared_ptr<EventBus> eventBus) {
     this->eventBus = eventBus;
     eventBus->subscribe(this, &ViewManager::onMoveEvent);
+    eventBus->subscribe(this, &ViewManager::onCollisionEvent);
 }
 
 void ViewManager::initializeViewForLevel(sf::Vector2f mapSizeInPixels) {
@@ -34,11 +35,15 @@ void ViewManager::onMoveEvent(MoveEvent* event) {
             movement.x += MOVEMENT_SPEED;
             break;
         case MoveDirection::NONE:
-//            movement.x += MOVEMENT_SPEED;
             break;
         default:
             break;
     }
+}
+
+void ViewManager::onCollisionEvent(CollisionEvent* event) {
+    printf("collision occurred\n");
+    //TODO: CollisionEvent has to have information on the collidables, not just their bouunding box and type of collision, but who the entity was that did the colliding
 }
 
 void ViewManager::moveView(sf::Time deltaTime) {
