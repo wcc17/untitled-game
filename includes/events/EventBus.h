@@ -40,7 +40,21 @@ public:
         handlers->push_back(new MemberFunctionHandler<T, EventType>(instance, memberFunction));
     }
 
-    //TODO: surely I would need an "unsubscribe" for objects that need to be deleted/taken out of scope? I need to make sure this isn't sending to something that isn't available anymore (out of scope). This will live longer than most objects
+//    //TODO: could I allow letting something unsubscribe from only one type of event?
+//    template<class T, class EventType> void unsubscribe(void (T::*memberFunction)(EventType *)) {
+//        HandlerList* handlers = subscribers[typeid(EventType)];
+//        if(handlers != nullptr) {
+//            for(std::list<HandlerFunctionBase*>::iterator it = handlers->begin(); it != handlers->end();) {
+//                if(*it == memberFunction) {
+//                    it = handlers->erase(it);
+//                } else {
+//                    ++it;
+//                }
+//            }
+//        }
+//
+//        printf("break\n");
+//    }
 
 private:
     std::map<std::type_index, HandlerList*> subscribers;

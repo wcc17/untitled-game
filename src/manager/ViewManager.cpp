@@ -1,4 +1,6 @@
-#include "../../includes/manager/ViewManager.h"
+#include <SFML/Graphics/PrimitiveType.hpp>
+#include "../../includes/view/ViewManager.h"
+#include "../../includes/entity/character/Player.h"
 
 const float MOVEMENT_SPEED = 80.f;
 const float VIEW_SIZE_X = 320.f;
@@ -19,7 +21,7 @@ void ViewManager::update(sf::Time deltaTime) {
     moveView(deltaTime);
 }
 
-void ViewManager::onMoveEvent(MoveEvent* event) {
+void ViewManager::onMoveEvent(ControllerMoveEvent* event) {
     resetMovement();
     switch(event->direction) {
         case MoveDirection::UP:
@@ -41,15 +43,56 @@ void ViewManager::onMoveEvent(MoveEvent* event) {
     }
 }
 
-void ViewManager::onCollisionEvent(CollisionEvent* event) {
-    printf("collision occurred\n");
-    //TODO: CollisionEvent has to have information on the collidables, not just their bouunding box and type of collision, but who the entity was that did the colliding
-}
-
 void ViewManager::moveView(sf::Time deltaTime) {
-    previousPosition = view.getCenter();
     view.move(movement * deltaTime.asSeconds());
     roundViewCenter();
+    eventBus->publish(new PlayerMoveEvent(view.getCenter()));
+}
+
+void ViewManager::onCollisionEvent(PlayerCollisionEvent* event) {
+    Collidable playerCollidable;
+    Collidable otherCollidable;
+    if(event->getCollision().first.getName() == Player::COLLIDABLE_NAME) {
+        playerCollidable = event->getCollision().first;
+        otherCollidable = event->getCollision().second;
+    } else if(event->getCollision().second.getName() == Player::COLLIDABLE_NAME) {
+        playerCollidable = event->getCollision().second;
+        otherCollidable = event->getCollision().first;
+    } else {
+        printf("Invalid player collision encountered\n");
+    }
+
+    fixPositionOnCollision(playerCollidable.getBoundingBox(), otherCollidable.getBoundingBox());
+}
+
+void ViewManager::fixPositionOnCollision(sf::FloatRect playerRect, sf::FloatRect otherRect) {
+    bool isColliding = true;
+    float left = playerRect.left;
+    float top = playerRect.top;
+    while(isColliding) {
+        if(movement.x > 0.f) {
+            view.move(-1, 0);
+            left -= 1;
+        } else if(movement.x < 0.f) {
+            view.move(1, 0);
+            left += 1;
+        }
+
+        if(movement.y > 0.f) {
+            view.move(0, -1);
+            top -= 1;
+        } else if(movement.y < 0.f) {
+            view.move(0, 1);
+            top += 1;
+        }
+
+        sf::FloatRect newBounds = sf::FloatRect(left, top, playerRect.width, playerRect.height);
+        if(!newBounds.intersects(otherRect)) {
+            isColliding = false;
+        }
+    }
+
+    eventBus->publish(new PlayerMoveEvent(view.getCenter()));
 }
 
 void ViewManager::resetMovement() {
@@ -57,16 +100,8 @@ void ViewManager::resetMovement() {
     movement.y = 0;
 }
 
-void ViewManager::undoMovement() {
-    view.setCenter(previousPosition);
-}
-
 sf::View ViewManager::getView() const {
     return this->view;
-}
-
-sf::Vector2f ViewManager::getViewPosition() {
-    return this->view.getCenter();
 }
 
 void ViewManager::roundViewCenter() {

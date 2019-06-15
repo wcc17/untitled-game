@@ -1,5 +1,5 @@
 #include "../../includes/controller/KeyboardController.h"
-#include "../../includes/controller/MoveEvent.h"
+#include "../../includes/controller/ControllerMoveEvent.h"
 
 void KeyboardController::initialize(std::shared_ptr<EventBus> eventBus) {
     BaseController::initialize(eventBus);
@@ -9,20 +9,20 @@ void KeyboardController::handleInput(std::vector<sf::Event> sfEvents) {
     BaseController::handleSfEvents(sfEvents);
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        eventBus->publish(new MoveEvent(MoveDirection::UP));
+        eventBus->publish(new ControllerMoveEvent(MoveDirection::UP));
         shouldSendStopMovementEvent = true;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        eventBus->publish(new MoveEvent(MoveDirection::LEFT));
+        eventBus->publish(new ControllerMoveEvent(MoveDirection::LEFT));
         shouldSendStopMovementEvent = true;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        eventBus->publish(new MoveEvent(MoveDirection::DOWN));
+        eventBus->publish(new ControllerMoveEvent(MoveDirection::DOWN));
         shouldSendStopMovementEvent = true;
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        eventBus->publish(new MoveEvent(MoveDirection::RIGHT));
+        eventBus->publish(new ControllerMoveEvent(MoveDirection::RIGHT));
         shouldSendStopMovementEvent = true;
     } else {
         if(shouldSendStopMovementEvent) {
-            eventBus->publish(new MoveEvent(MoveDirection::NONE));
+            eventBus->publish(new ControllerMoveEvent(MoveDirection::NONE));
             shouldSendStopMovementEvent = false;
         }
 

@@ -8,8 +8,7 @@
 #include <tmxlite/ObjectGroup.hpp>
 #include <tmxlite/TileLayer.hpp>
 #include <tmxlite/Tileset.hpp>
-#include "../level/collidable/CollidableType.h"
-#include "../level/collidable/Collidable.h"
+#include "../collisions/Collidable.h"
 
 class TileMap {
 
@@ -23,6 +22,7 @@ protected:
     std::vector<sf::VertexArray> vertices;
     sf::Vector2f mapSizeInPixels;
     void loadTileMap();
+    void release();
 
 private:
     std::vector<Collidable> collidables;

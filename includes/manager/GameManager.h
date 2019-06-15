@@ -1,7 +1,7 @@
 #ifndef NEWNEW_GAMEMANAGER_H
 #define NEWNEW_GAMEMANAGER_H
 
-#include "LevelManager.h"
+#include "../level/LevelManager.h"
 #include "../controller/KeyboardController.h"
 #include "../events/EventBus.h"
 

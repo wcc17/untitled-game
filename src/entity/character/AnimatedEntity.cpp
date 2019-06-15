@@ -1,15 +1,18 @@
 #include "../../../includes/entity/character/AnimatedEntity.h"
 
-void AnimatedEntity::initialize(sf::Texture* texture) {
+void AnimatedEntity::initialize(sf::Texture* texture, std::string name, CollidableType collidableType) {
+    this->name = name;
+    this->type = collidableType;
     this->setTexture(*texture);
 }
 
 void AnimatedEntity::update(sf::Time deltaTime) {
+    updateBoundingBox();
     if(!animationPaused && currentAnimation) {
         currentTime += deltaTime;
 
         if(currentTime > frameTime) {
-            //reset time, but keep the remainder
+            //reset time, but keep the remainder for next time
             currentTime = sf::microseconds(currentTime.asMicroseconds() % frameTime.asMicroseconds());
 
             if( (currentFrame + 1) < (currentAnimation->getSize())) {
@@ -78,4 +81,8 @@ void AnimatedEntity::setFrameTime(sf::Time time) {
 
 sf::Vector2i AnimatedEntity::getWidthOfEntityForCurrentFrame() {
     return sf::Vector2i(getTextureRect().width, getTextureRect().height);
+}
+
+void AnimatedEntity::updateBoundingBox() {
+    this->boundingBox = this->getGlobalBounds();
 }

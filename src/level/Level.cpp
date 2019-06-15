@@ -1,6 +1,6 @@
 #include "../../includes/level/Level.h"
 
-//TODO: can this just be one class (TileMap and Level)
+//TODO: should be called Scene instead
 void Level::initialize(std::string tileMapPath) {
     TileMap::initialize(tileMapPath);
 }
@@ -12,4 +12,8 @@ void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     for(sf::VertexArray vertexArray : vertices) {
         target.draw(vertexArray, states);
     }
+}
+
+void Level::release() {
+    TileMap::release();
 }

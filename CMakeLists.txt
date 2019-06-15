@@ -7,22 +7,25 @@ set(SOURCE_FILES src/main.cpp src/FramerateCounter.cpp src/asset/FontManager.cpp
         src/controller/BaseController.cpp src/controller/KeyboardController.cpp src/asset/TextureManager.cpp
         src/asset/BaseAssetManager.cpp src/asset/AssetPath.cpp src/entity/Entity.cpp src/entity/character/Player.cpp
         src/entity/character/Animation.cpp src/level/Level.cpp src/level/TileMap.cpp
-        src/entity/character/AnimatedEntity.cpp src/level/collidable/Collidable.cpp
-        src/manager/ViewManager.cpp src/manager/LevelManager.cpp src/manager/TextManager.cpp 
+        src/entity/character/AnimatedEntity.cpp src/collisions/Collidable.cpp
+        src/manager/ViewManager.cpp src/level/LevelManager.cpp src/manager/TextManager.cpp
         src/manager/GameManager.cpp src/events/HandlerFunctionBase.cpp
         src/events/Event.cpp
-        src/manager/CollisionManager.cpp)
+        src/collisions/CollisionManager.cpp
+        )
 
 set(INCLUDE_FILES includes/FramerateCounter.h includes/asset/FontManager.h includes/Game.h
         includes/controller/BaseController.h includes/controller/KeyboardController.h includes/asset/TextureManager.h
         includes/asset/BaseAssetManager.h includes/asset/AssetPath.h includes/entity/Entity.h includes/entity/character/Player.h
         includes/entity/character/Animation.h includes/level/Level.h includes/level/TileMap.h
-        includes/entity/character/AnimatedEntity.h includes/level/collidable/Collidable.h includes/level/collidable/CollidableType.h
-        includes/manager/ViewManager.h includes/manager/LevelManager.h includes/manager/TextManager.h 
+        includes/entity/character/AnimatedEntity.h includes/collisions/Collidable.h includes/collisions/CollidableType.h
+        includes/view/ViewManager.h includes/level/LevelManager.h includes/manager/TextManager.h
         includes/manager/GameManager.h includes/events/EventBus.h includes/events/HandlerFunctionBase.h
         includes/events/MemberFunctionHandler.h
-        includes/events/Event.h includes/controller/MoveEvent.h includes/controller/MoveDirection.h
-        includes/manager/CollisionManager.h includes/manager/CollisionEvent.h)
+        includes/events/Event.h includes/controller/ControllerMoveEvent.h includes/controller/MoveDirection.h
+        includes/collisions/CollisionManager.h
+        includes/collisions/PlayerCollisionEvent.h includes/collisions/EntityCollisionEvent.h
+        includes/controller/ControllerMoveEvent.h includes/view/PlayerMoveEvent.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES})
 

@@ -1,14 +1,14 @@
 #ifndef NEWNEW_LEVELMANAGER_H
 #define NEWNEW_LEVELMANAGER_H
 
-#include "ViewManager.h"
+#include "../view/ViewManager.h"
 #include "../entity/character/Player.h"
-#include "../level/Level.h"
-#include "../../includes/asset/AssetPath.h"
-#include "../../includes/asset/TextureManager.h"
-#include "../../includes/events/EventBus.h"
-#include "../controller/MoveEvent.h"
-#include "CollisionManager.h"
+#include "Level.h"
+#include "../asset/AssetPath.h"
+#include "../asset/TextureManager.h"
+#include "../events/EventBus.h"
+#include "../controller/ControllerMoveEvent.h"
+#include "../collisions/CollisionManager.h"
 
 class LevelManager {
 public:
@@ -23,7 +23,7 @@ private:
     Level level;
     Player player;
 
-    std::vector<Collidable> getCollisions(sf::FloatRect playerBounds);
+    std::vector<Collidable> getEntityCollidables();
 };
 
 

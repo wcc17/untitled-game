@@ -4,11 +4,12 @@
 #include <SFML/System/Time.hpp>
 #include "Animation.h"
 #include "../Entity.h"
+#include "../../collisions/Collidable.h"
 
-class AnimatedEntity : public Entity, public sf::Sprite {
+class AnimatedEntity : public Entity, public sf::Sprite, public Collidable {
 
 public:
-    void initialize(sf::Texture *texture);
+    void initialize(sf::Texture *texture, std::string name, CollidableType collidableType);
     void update(sf::Time deltaTime);
     void moveUp();
     void moveLeft();
@@ -18,26 +19,25 @@ public:
 
 protected:
     virtual void initializeAnimations() {};
-
     void setFrameTime(sf::Time time);
-    void playAnimation();
-    void pauseAnimation();
-    void stopAnimation();
-    void setTextureRectBasedOnCurrentFrame();
     sf::Vector2i getWidthOfEntityForCurrentFrame();
-
     Animation* currentAnimation;
     Animation walkingAnimationDown;
     Animation walkingAnimationLeft;
     Animation walkingAnimationRight;
     Animation walkingAnimationUp;
 
+private:
+    void playAnimation();
+    void pauseAnimation();
+    void stopAnimation();
+    void setTextureRectBasedOnCurrentFrame();
+    void updateBoundingBox();
     sf::Time frameTime;
     sf::Time currentTime;
     bool animationPaused = false;
     bool shouldAnimationLoop = true; //TODO: should be able to pass this value to the entity
     int currentFrame = 0;
-
 };
 
 

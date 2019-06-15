@@ -6,8 +6,8 @@
 #include <SFML/System/Time.hpp>
 #include <cmath>
 #include "../events/EventBus.h"
-#include "../controller/MoveEvent.h"
-#include "CollisionEvent.h"
+#include "../controller/ControllerMoveEvent.h"
+#include "../collisions/PlayerCollisionEvent.h"
 
 class ViewManager {
 public:
@@ -16,16 +16,14 @@ public:
     void update(sf::Time deltaTime);
     sf::View getView() const;
 
-    void onMoveEvent(MoveEvent* event);
-    void onCollisionEvent(CollisionEvent* event);
+    void onMoveEvent(ControllerMoveEvent* event);
+    void onCollisionEvent(PlayerCollisionEvent* event);
+    void fixPositionOnCollision(sf::FloatRect playerRect, sf::FloatRect otherRect);
     void moveView(sf::Time deltaTime);
-    void undoMovement();
-    sf::Vector2f getViewPosition();
 private:
     std::shared_ptr<EventBus> eventBus;
     sf::View view;
     sf::Vector2f movement;
-    sf::Vector2f previousPosition;
 
     void roundViewCenter();
     void resetMovement();

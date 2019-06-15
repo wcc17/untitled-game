@@ -12,7 +12,7 @@ sf::Time FramerateCounter::update() {
     frames++;
     sf::Time elapsedTime = clock.restart();
 
-    if (frames % 5 == 0) {
+    if (frames % 10 == 0) {
         float elapsed = elapsedTime.asSeconds();
         float fps = 1.0f / elapsed;
         fpsText.setString(std::to_string(fps));

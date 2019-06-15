@@ -14,6 +14,10 @@ public:
         (instance->*memberFunction)(static_cast<EventType*>(event));
     }
 
+    MemberFunction getMemberFunction() {
+        return this->memberFunction;
+    }
+
 private:
     T* instance;
     MemberFunction memberFunction;

@@ -1,25 +1,29 @@
 #include "../../../includes/entity/character/Player.h"
 
+const std::string Player::COLLIDABLE_NAME = "player";
 const float PLAYER_WIDTH = 16.f;
 const float PLAYER_HEIGHT = 26.f;
 const float PLAYER_FRAME_TIME = 0.16f;
 
 void Player::initialize(sf::Texture* texture, float windowWidth, float windowHeight, std::shared_ptr<EventBus> eventBus) {
-    AnimatedEntity::initialize(texture);
+    AnimatedEntity::initialize(texture, Player::COLLIDABLE_NAME, CollidableType::PLAYER);
     this->eventBus = eventBus;
-    this->setPosition( (windowWidth / 2) - ((this->getGlobalBounds().width /4) / 2), (windowHeight / 2) - ((this->getGlobalBounds().height /4) / 2));
+
+    //TODO: i want the initial position to be set by the tilemap
+    this->setPosition( (windowWidth / 2) - ((getBoundingBox().width /4) / 2), (windowHeight / 2) - ((getBoundingBox().height /4) / 2));
     this->setFrameTime(sf::seconds(PLAYER_FRAME_TIME));
     initializeAnimations();
 
-    eventBus->subscribe(this, &Player::onMoveEvent);
-}
+    eventBus->subscribe(this, &Player::onControllerMoveEvent);
+    eventBus->subscribe(this, &Player::onPlayerMoveEvent);
+//    eventBus->unsubscribe(&Player::onPlayerMoveEvent);
+} 
 
-void Player::update(sf::Time deltaTime, sf::Vector2f viewCenter) {
+void Player::update(sf::Time deltaTime) {
     AnimatedEntity::update(deltaTime);
-    updatePlayerPosition(viewCenter);
 }
 
-void Player::onMoveEvent(MoveEvent* event) {
+void Player::onControllerMoveEvent(ControllerMoveEvent* event) {
     switch(event->direction) {
         case MoveDirection::UP:
             moveUp();
@@ -39,6 +43,10 @@ void Player::onMoveEvent(MoveEvent* event) {
         default:
             break;
     }
+}
+
+void Player::onPlayerMoveEvent(PlayerMoveEvent* event) {
+    updatePlayerPosition(event->viewCenter);
 }
 
 void Player::updatePlayerPosition(sf::Vector2f viewCenter) {

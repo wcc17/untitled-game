@@ -5,6 +5,7 @@ const static std::string DOOR_OBJECT_TYPE = "door";
 const static std::string SIGN_OBJECT_TYPE = "sign";
 const static std::string WALL_OBJECT_TYPE = "wall";
 
+//TODO: should I split this up into Tile loading and Object loading? Its a pretty big class
 void TileMap::initialize(std::string tileMapPath) {
     this->tileMapPath = tileMapPath;
     this->loadTileMap();
@@ -205,7 +206,7 @@ void TileMap::loadRectangleObjects(tmx::Object object, std::string layerName) {
     sf::Vector2f size(boundingBox.width, boundingBox.height);
 
     CollidableType type = getCollidableType(object.getType());
-    collidables.push_back(Collidable (position, size, objectName, type));
+    collidables.push_back(Collidable(objectName, type, position, size));
 }
 
 CollidableType TileMap::getCollidableType(std::string typeName) {
@@ -228,4 +229,8 @@ sf::Vector2f TileMap::getMapSizeInPixels() {
 
 std::vector<Collidable> TileMap::getMapCollidables() {
     return this->collidables;
+}
+
+void TileMap::release() {
+    collidables.clear();
 }
