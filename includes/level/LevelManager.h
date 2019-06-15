@@ -24,8 +24,6 @@ private:
     NpcManager npcManager;
     Scene scene;
     Player player;
-
-    std::vector<Collidable> getEntityCollidables();
 };
 
 

@@ -44,24 +44,15 @@ void ViewManager::onMoveEvent(ControllerMoveEvent* event) {
 }
 
 void ViewManager::moveView(sf::Time deltaTime) {
+    //TODO: players bottom left coordinate (left, top + height) should always match up to the 8x8 "tiles" designated on the tileset from Tiled
     view.move(movement * deltaTime.asSeconds());
     roundViewCenter();
     eventBus->publish(new PlayerMoveEvent(view.getCenter()));
 }
 
 void ViewManager::onCollisionEvent(PlayerCollisionEvent* event) {
-    Collidable playerCollidable;
-    Collidable otherCollidable;
-    if(event->getCollision().first.getName() == Player::COLLIDABLE_NAME) {
-        playerCollidable = event->getCollision().first;
-        otherCollidable = event->getCollision().second;
-    } else if(event->getCollision().second.getName() == Player::COLLIDABLE_NAME) {
-        playerCollidable = event->getCollision().second;
-        otherCollidable = event->getCollision().first;
-    } else {
-        printf("Invalid player collision encountered\n");
-    }
-
+    Collidable playerCollidable = event->getCollision().first;
+    Collidable otherCollidable = event->getCollision().second;
     fixPositionOnCollision(playerCollidable.getBoundingBox(), otherCollidable.getBoundingBox());
 }
 

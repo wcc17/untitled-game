@@ -1,12 +1,20 @@
 #include "../../../includes/entity/character/NpcEntity.h"
 
-void NpcEntity::initialize(sf::Texture* texture) {
-    //TODO: name should come from the TileSet. Not sure how I'll swing this yet
-    AnimatedEntity::initialize(texture, "npc1", CollidableType::NPC);
+void NpcEntity::initialize(sf::Texture* texture, std::string npcName, CollidableType type, sf::FloatRect bounds) {
+    AnimatedEntity::initialize(texture, npcName, type);
+    boundingBox.left = bounds.left;
+    boundingBox.top = bounds.top;
+    boundingBox.width = 16.f;
+    boundingBox.height = 26.f;
 
-//    this->setPosition(); //TODO: position needs to be set before initializing animations?
-    this->setFrameTime(sf::seconds(0.16f)); //TODO: not sure where I want to load this from yet
+    setPosition(sf::Vector2f(boundingBox.left, boundingBox.top));
+    setFrameTime(sf::seconds(0.16f)); //TODO: not sure where I want to load this from yet
+
     initializeAnimations();
+}
+
+void NpcEntity::update(sf::Time deltaTime) {
+    AnimatedEntity::update(deltaTime);
 }
 
 //TODO: this is the exact same as Player. I think this won't always be the same for specific types of Entities. Leaving for now

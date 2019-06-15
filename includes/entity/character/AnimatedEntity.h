@@ -2,11 +2,11 @@
 #define NEWNEW_ANIMATEDENTITY_H
 
 #include <SFML/System/Time.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include "Animation.h"
-#include "../Entity.h"
 #include "../../collisions/Collidable.h"
 
-class AnimatedEntity : public Entity, public sf::Sprite, public Collidable {
+class AnimatedEntity : public sf::Sprite, public Collidable {
 
 public:
     void initialize(sf::Texture *texture, std::string name, CollidableType collidableType);
