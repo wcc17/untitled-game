@@ -7,7 +7,7 @@ enum CollidableType {
     SIGN,
     WALL,
     PLAYER,
-    ENTITY
+    NPC
 };
 
 #endif //NEWNEW_COLLIDABLETYPE_H

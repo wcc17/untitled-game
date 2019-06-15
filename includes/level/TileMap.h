@@ -2,37 +2,20 @@
 #define NEWNEW_TILEMAP_H
 
 
-#include <SFML/Graphics/VertexArray.hpp>
-#include <SFML/Graphics/Texture.hpp>
-#include <tmxlite/Map.hpp>
-#include <tmxlite/ObjectGroup.hpp>
 #include <tmxlite/TileLayer.hpp>
 #include <tmxlite/Tileset.hpp>
-#include "../collisions/Collidable.h"
+#include <SFML/Graphics/Vertex.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
 
 class TileMap {
 
-public:
-    void initialize(std::string tileMapPath);
-    sf::Vector2f getMapSizeInPixels();
-    std::vector<Collidable> getMapCollidables();
-
 protected:
-    sf::Texture texture;
     std::vector<sf::VertexArray> vertices;
-    sf::Vector2f mapSizeInPixels;
-    void loadTileMap();
-    void release();
-
-private:
-    std::vector<Collidable> collidables;
-    std::string tileMapPath;
     void loadTileLayer(tmx::TileLayer layer, tmx::Tileset tileset, tmx::Vector2u mapSizeInTiles, tmx::Vector2u tileSize);
-    void loadObjectLayer(tmx::ObjectGroup layer);
     bool isTileIdTransparent(uint32_t layerTileId);
     void setVertexPositionForTile(sf::Vertex* quad, int x, int y, tmx::Vector2u tilesetTileImageSize);
     void setVertexTextureCoordsForTile(sf::Vertex* quad, int x, int y, tmx::Vector2u tilesetTileImagePosition,
-            tmx::Vector2u tilesetTileImageSize);
+                                       tmx::Vector2u tilesetTileImageSize);
     bool tileHasFlip(uint8_t flipFlags);
     bool isHorizontalFlip(uint8_t flipFlags);
     bool isVerticalFlip(uint8_t flipFlags);
@@ -41,8 +24,6 @@ private:
     void flipY(sf::Vertex* quad);
     void flipX(sf::Vertex* quad);
     void flipD(sf::Vertex* quad);
-    void loadRectangleObjects(tmx::Object object, std::string layerName);
-    CollidableType getCollidableType(std::string typeName);
 };
 
 

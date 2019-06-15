@@ -16,7 +16,7 @@ void CollisionManager::handleCollisions(std::vector<Collidable> entityCollidable
             eventBus->publish(new PlayerCollisionEvent(collision));
         }
 
-        if (isTypePartOfCollision(CollidableType::ENTITY, collision)) {
+        if (isTypePartOfCollision(CollidableType::NPC, collision)) {
             //TODO: implement once NPCs are in the game
         }
     }

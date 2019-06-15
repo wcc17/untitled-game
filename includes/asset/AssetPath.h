@@ -13,6 +13,7 @@ public:
     static const std::string OPENSANS_REGULAR;
     static const std::string OPENSANS_BOLD;
     static const std::string PLAYER_TEXTURE;
+    static const std::string NPC_TEXTURE;
     static const std::string LEVEL_TILEMAP;
 };
 

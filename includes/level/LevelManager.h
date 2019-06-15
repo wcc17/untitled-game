@@ -3,12 +3,13 @@
 
 #include "../view/ViewManager.h"
 #include "../entity/character/Player.h"
-#include "Level.h"
+#include "Scene.h"
 #include "../asset/AssetPath.h"
 #include "../asset/TextureManager.h"
 #include "../events/EventBus.h"
 #include "../controller/ControllerMoveEvent.h"
 #include "../collisions/CollisionManager.h"
+#include "../npc/NpcManager.h"
 
 class LevelManager {
 public:
@@ -20,7 +21,8 @@ private:
     TextureManager textureManager;
     ViewManager viewManager;
     CollisionManager collisionManager;
-    Level level;
+    NpcManager npcManager;
+    Scene scene;
     Player player;
 
     std::vector<Collidable> getEntityCollidables();
