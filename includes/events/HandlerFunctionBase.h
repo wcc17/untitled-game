@@ -7,7 +7,7 @@
 class HandlerFunctionBase {
 public:
     void execute(Event* event);
-
+    virtual ~HandlerFunctionBase() {};
 private:
     virtual void call(Event* event) = 0;
 };

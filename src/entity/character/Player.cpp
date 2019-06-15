@@ -16,7 +16,6 @@ void Player::initialize(sf::Texture* texture, float windowWidth, float windowHei
 
     eventBus->subscribe(this, &Player::onControllerMoveEvent);
     eventBus->subscribe(this, &Player::onPlayerMoveEvent);
-//    eventBus->unsubscribe(&Player::onPlayerMoveEvent);
 } 
 
 void Player::update(sf::Time deltaTime) {

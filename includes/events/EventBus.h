@@ -1,7 +1,7 @@
 #ifndef NEWNEW_EVENTBUS_H
 #define NEWNEW_EVENTBUS_H
 
-#include "../../includes/events/MemberFunctionHandler.h"
+#include "MemberFunctionHandler.h"
 #include <list>
 #include <typeindex>
 #include <map>
@@ -38,23 +38,34 @@ public:
         }
 
         handlers->push_back(new MemberFunctionHandler<T, EventType>(instance, memberFunction));
+        handlers = NULL;
     }
 
-//    //TODO: could I allow letting something unsubscribe from only one type of event?
-//    template<class T, class EventType> void unsubscribe(void (T::*memberFunction)(EventType *)) {
-//        HandlerList* handlers = subscribers[typeid(EventType)];
-//        if(handlers != nullptr) {
-//            for(std::list<HandlerFunctionBase*>::iterator it = handlers->begin(); it != handlers->end();) {
-//                if(*it == memberFunction) {
-//                    it = handlers->erase(it);
-//                } else {
-//                    ++it;
-//                }
-//            }
-//        }
-//
-//        printf("break\n");
-//    }
+    template<class T, class EventType> void unsubscribe(T* instance, void (T::*memberFunction)(EventType *)) {
+        HandlerList* handlers = subscribers[typeid(EventType)];
+        if(handlers != nullptr) {
+
+            std::list<HandlerFunctionBase*>::iterator it = handlers->begin();
+            std::list<HandlerFunctionBase*>::iterator end = handlers->end();
+            while (it != end) {
+                MemberFunctionHandler<T, EventType>* handler = dynamic_cast<MemberFunctionHandler<T, EventType>*>(*it);
+
+                if(handler == NULL) {
+                    //NOTE: dynamic_cast returning null means that we tried to assign a class to the object that doesn't actually match what class it is. If thats the case here, we don't even need to check it because its definitely not the correct MemberFunction
+                    ++it; //iterate normally, nothing to do here
+                } else {
+                    if(handler->getMemberFunction() == memberFunction) {
+                        delete* it;
+                        it = handlers->erase(it);
+                    } else {
+                        ++it;
+                    }
+                }
+            }
+        }
+
+        handlers = NULL; //TODO: dangling pointer if not set to NULL?
+    }
 
 private:
     std::map<std::type_index, HandlerList*> subscribers;
