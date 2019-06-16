@@ -3,47 +3,32 @@
 const float PLAYER_WIDTH = 16.f;
 const float PLAYER_HEIGHT = 26.f;
 const float PLAYER_FRAME_TIME = 0.16f;
+const float MOVEMENT_SPEED = 80.f;
 
-void Player::initialize(sf::Texture* texture, std::string collidableName, CollidableType type, sf::FloatRect initialBoundingBox) {
-    AnimatedEntity::initialize(texture, collidableName, type);
+void Player::initialize(sf::Texture* texture, std::string collidableName, CollidableType collidableType, sf::FloatRect initialBoundingBox) {
+    AnimatedEntity::initialize(texture);
+    MovableEntity::initialize(MOVEMENT_SPEED);
+    this->name = collidableName;
+    this->type = collidableType;
 
-    this->setPosition(initialBoundingBox.left, initialBoundingBox.top);
-//    this->setPosition( (960 / 2) - ((getBoundingBox().width /4) / 2), (540 / 2) - ((getBoundingBox().height /4) / 2));
-//    this->setPosition( (windowWidth / 2) - ((getBoundingBox().width /4) / 2), (windowHeight / 2) - ((getBoundingBox().height /4) / 2));
+    this->setPosition(sf::Vector2f(initialBoundingBox.left, initialBoundingBox.top));
     this->setFrameTime(sf::seconds(PLAYER_FRAME_TIME));
     initializeAnimations();
 }
 
+void Player::move(sf::Time deltaTime) {
+    Sprite::move(movement * deltaTime.asSeconds());
+    AnimatedEntity::move(currentDirection);
+}
+
 void Player::update(sf::Time deltaTime) {
+    updateBoundingBox(this->getGlobalBounds());
     AnimatedEntity::update(deltaTime);
+    MovableEntity::update(deltaTime);
 }
 
 void Player::onControllerMoveEvent(MoveDirection direction) {
-    switch(direction) {
-        case MoveDirection::UP:
-            moveUp();
-            break;
-        case MoveDirection::LEFT:
-            moveLeft();
-            break;
-        case MoveDirection::DOWN:
-            moveDown();
-            break;
-        case MoveDirection::RIGHT:
-            moveRight();
-            break;
-        case MoveDirection::NONE:
-            stop();
-            break;
-        default:
-            break;
-    }
-}
-
-void Player::setPlayerPositionFromViewCenter(sf::Vector2f viewCenter) {
-    float newPlayerX = viewCenter.x - (getWidthOfEntityForCurrentFrame().x / 2);
-    float newPlayerY = viewCenter.y - (getWidthOfEntityForCurrentFrame().y / 2);
-    setPosition(newPlayerX, newPlayerY);
+    MovableEntity::onMoveEvent(direction);
 }
 
 void Player::initializeAnimations() {
@@ -73,5 +58,5 @@ void Player::initializeAnimations() {
 
     this->currentAnimation = &walkingAnimationDown;
     setTextureRectBasedOnCurrentFrame();
-    updateBoundingBox();
+    updateBoundingBox(this->getGlobalBounds());
 }

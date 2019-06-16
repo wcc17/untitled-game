@@ -16,22 +16,19 @@ public:
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* playerTexture, Collidable playerCollidable);
     void update(sf::Time deltaTime);
     void draw(sf::RenderWindow* window);
+    void move(sf::Time deltaTime);
     Player getPlayer() const;
     sf::View getView() const;
 
 private:
     void onMoveEvent(ControllerMoveEvent* event);
     void onCollisionEvent(PlayerCollisionEvent* event);
-    void fixPositionOnCollision(sf::FloatRect playerRect, sf::FloatRect otherRect);
-    void moveView(sf::Time deltaTime);
-    void moveView(sf::Vector2f movementVector);
     void setViewCenterFromPlayerPosition();
-    void roundViewCenter();
-    void resetMovement();
+    void adjustPlayerAndViewPositions();
+
 
     std::shared_ptr<EventBus> eventBus;
     sf::View view;
-    sf::Vector2f movement;
     Player player;
 };
 

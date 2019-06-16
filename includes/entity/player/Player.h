@@ -5,15 +5,15 @@
 #include "../character/AnimatedEntity.h"
 #include "../../events/EventBus.h"
 #include "../../controller/ControllerMoveEvent.h"
+#include "../character/MovableEntity.h"
 
-class Player : public AnimatedEntity {
+class Player : public AnimatedEntity, public MovableEntity, public Collidable {
 
 public:
-    static const std::string COLLIDABLE_NAME;
-    void initialize(sf::Texture* texture, std::string collidableName, CollidableType type, sf::FloatRect initialBoundingBox);
+    void initialize(sf::Texture* texture, std::string collidableName, CollidableType collidableType, sf::FloatRect initialBoundingBox);
     void onControllerMoveEvent(MoveDirection direction);
     void update(sf::Time deltaTime);
-    void setPlayerPositionFromViewCenter(sf::Vector2f viewCenter);
+    void move(sf::Time deltaTime);
 protected:
     void initializeAnimations();
 };

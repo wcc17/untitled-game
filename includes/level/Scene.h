@@ -16,12 +16,16 @@ public:
     void initialize(std::string tileMapPath);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void release();
-    sf::Vector2f getMapSizeInPixels();
+    sf::Vector2u getMapSizeInPixels();
+    sf::Vector2u getMapSizeInTiles();
+    sf::Vector2u getMapTileSize();
 
 private:
     sf::Texture texture;
-    sf::Vector2f mapSizeInPixels;
     std::string tileMapPath;
+    sf::Vector2u mapSizeInPixels;
+    sf::Vector2u mapSizeInTiles;
+    sf::Vector2u tileSize;
 
     void loadTileMap();
 };

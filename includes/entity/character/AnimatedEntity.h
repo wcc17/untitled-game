@@ -5,23 +5,20 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include "Animation.h"
 #include "../../collisions/Collidable.h"
+#include "../../controller/MoveDirection.h"
+#include <cmath>
 
-class AnimatedEntity : public sf::Sprite, public Collidable {
+class AnimatedEntity : public sf::Sprite {
 
 public:
-    void initialize(sf::Texture *texture, std::string name, CollidableType collidableType);
+    void initialize(sf::Texture *texture);
     void update(sf::Time deltaTime);
-    void moveUp();
-    void moveLeft();
-    void moveDown();
-    void moveRight();
+    void move(MoveDirection direction);
     void stop();
 
 protected:
     virtual void initializeAnimations() {};
     void setFrameTime(sf::Time time);
-    sf::Vector2i getWidthOfEntityForCurrentFrame();
-    void updateBoundingBox();
     void setTextureRectBasedOnCurrentFrame();
     Animation* currentAnimation;
     Animation walkingAnimationDown;
@@ -30,6 +27,10 @@ protected:
     Animation walkingAnimationUp;
 
 private:
+    void moveUp();
+    void moveLeft();
+    void moveDown();
+    void moveRight();
     void playAnimation();
     void pauseAnimation();
     void stopAnimation();

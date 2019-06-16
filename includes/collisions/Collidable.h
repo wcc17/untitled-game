@@ -10,9 +10,11 @@ class Collidable {
 public:
     Collidable();
     Collidable(std::string name, CollidableType type, sf::Vector2f position, sf::Vector2f size);
+    sf::Vector2f getFixedPositionAfterCollision(sf::FloatRect entityRect, sf::FloatRect otherRect, sf::Vector2f movement);
+    void updateBoundingBox(sf::FloatRect newBounds);
     CollidableType getType();
     std::string getName();
-    virtual sf::FloatRect getBoundingBox();
+    sf::FloatRect getBoundingBox();
 protected:
     std::string name;
     CollidableType type;

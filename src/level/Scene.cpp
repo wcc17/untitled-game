@@ -17,14 +17,15 @@ void Scene::loadTileMap() {
     texture.loadFromFile(tileset.getImagePath());
 
     //tile count and tile size
-    tmx::Vector2u mapSizeInTiles = map.getTileCount();
-    tmx::Vector2u tileSize = map.getTileSize();
-    mapSizeInPixels = sf::Vector2f(mapSizeInTiles.x * tileSize.x, mapSizeInTiles.y * tileSize.y);
+    mapSizeInTiles = sf::Vector2u(map.getTileCount().x, map.getTileCount().y);
+    tileSize = sf::Vector2u(map.getTileSize().x, map.getTileSize().y);
+    mapSizeInPixels = sf::Vector2u(mapSizeInTiles.x * tileSize.x, mapSizeInTiles.y * tileSize.y);
+
 
     const auto& layers = map.getLayers();
     for(const auto& layer : layers) {
         if(layer->getType() == tmx::Layer::Type::Tile) {
-            loadTileLayer(layer->getLayerAs<tmx::TileLayer>(), tileset, mapSizeInTiles, tileSize);
+            loadTileLayer(layer->getLayerAs<tmx::TileLayer>(), tileset, map.getTileCount(), map.getTileSize());
         } else if(layer->getType() == tmx::Layer::Type::Object) {
             loadObjectLayer(layer->getLayerAs<tmx::ObjectGroup>());
         } else {
@@ -44,7 +45,15 @@ void Scene::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     }
 }
 
-sf::Vector2f Scene::getMapSizeInPixels() {
+sf::Vector2u Scene::getMapSizeInPixels() {
+    return this->mapSizeInPixels;
+}
+
+sf::Vector2u Scene::getMapSizeInTiles() {
+    return this->mapSizeInPixels;
+}
+
+sf::Vector2u Scene::getMapTileSize() {
     return this->mapSizeInPixels;
 }
 

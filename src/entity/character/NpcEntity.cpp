@@ -1,7 +1,10 @@
 #include "../../../includes/entity/character/NpcEntity.h"
 
-void NpcEntity::initialize(sf::Texture* texture, std::string npcName, CollidableType type, sf::FloatRect bounds) {
-    AnimatedEntity::initialize(texture, npcName, type);
+void NpcEntity::initialize(sf::Texture* texture, std::string npcName, CollidableType collidableType, sf::FloatRect bounds) {
+    AnimatedEntity::initialize(texture);
+    name = npcName;
+    type = collidableType;
+
     boundingBox.left = bounds.left;
     boundingBox.top = bounds.top;
     boundingBox.width = 16.f;
@@ -14,7 +17,9 @@ void NpcEntity::initialize(sf::Texture* texture, std::string npcName, Collidable
 }
 
 void NpcEntity::update(sf::Time deltaTime) {
+    updateBoundingBox(this->getGlobalBounds());
     AnimatedEntity::update(deltaTime);
+    MovableEntity::update(deltaTime);
 }
 
 //TODO: this is the exact same as Player. I think this won't always be the same for specific types of Entities. Leaving for now
@@ -47,4 +52,6 @@ void NpcEntity::initializeAnimations() {
     walkingAnimationLeft.addFrame(sf::IntRect(16.f*3, 26.f*3, 16.f, 26.f));
 
     this->currentAnimation = &walkingAnimationDown;
+    setTextureRectBasedOnCurrentFrame();
+    updateBoundingBox(this->getGlobalBounds());
 }
