@@ -11,6 +11,7 @@ public:
     void loadObjectLayer(tmx::ObjectGroup layer);
     std::vector<Collidable> getMapCollidables();
     std::vector<Collidable> getNpcCollidables();
+    Collidable getPlayerCollidable();
 
 protected:
     void release();
@@ -18,6 +19,7 @@ protected:
 private:
     std::vector<Collidable> mapCollidables;
     std::vector<Collidable> npcCollidables;
+    Collidable playerCollidable;
     void loadRectangleObjects(tmx::Object object, std::string layerName);
     CollidableType getCollidableType(std::string typeName);
 };

@@ -5,7 +5,7 @@
 #include "../events/EventBus.h"
 #include "Collidable.h"
 #include "../entity/character/NpcEntity.h"
-#include "../entity/character/Player.h"
+#include "../entity/player/Player.h"
 
 class CollisionManager {
 public:

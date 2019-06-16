@@ -1,29 +1,25 @@
-#include "../../../includes/entity/character/Player.h"
+#include "../../../includes/entity/player/Player.h"
 
-const std::string Player::COLLIDABLE_NAME = "player";
 const float PLAYER_WIDTH = 16.f;
 const float PLAYER_HEIGHT = 26.f;
 const float PLAYER_FRAME_TIME = 0.16f;
 
-void Player::initialize(sf::Texture* texture, float windowWidth, float windowHeight, std::shared_ptr<EventBus> eventBus) {
-    AnimatedEntity::initialize(texture, Player::COLLIDABLE_NAME, CollidableType::PLAYER);
-    this->eventBus = eventBus;
+void Player::initialize(sf::Texture* texture, std::string collidableName, CollidableType type, sf::FloatRect initialBoundingBox) {
+    AnimatedEntity::initialize(texture, collidableName, type);
 
-    //TODO: i want the initial position to be set by the tilemap
-    this->setPosition( (windowWidth / 2) - ((getBoundingBox().width /4) / 2), (windowHeight / 2) - ((getBoundingBox().height /4) / 2));
+    this->setPosition(initialBoundingBox.left, initialBoundingBox.top);
+//    this->setPosition( (960 / 2) - ((getBoundingBox().width /4) / 2), (540 / 2) - ((getBoundingBox().height /4) / 2));
+//    this->setPosition( (windowWidth / 2) - ((getBoundingBox().width /4) / 2), (windowHeight / 2) - ((getBoundingBox().height /4) / 2));
     this->setFrameTime(sf::seconds(PLAYER_FRAME_TIME));
     initializeAnimations();
-
-    eventBus->subscribe(this, &Player::onControllerMoveEvent);
-    eventBus->subscribe(this, &Player::onPlayerMoveEvent);
 }
 
 void Player::update(sf::Time deltaTime) {
     AnimatedEntity::update(deltaTime);
 }
 
-void Player::onControllerMoveEvent(ControllerMoveEvent* event) {
-    switch(event->direction) {
+void Player::onControllerMoveEvent(MoveDirection direction) {
+    switch(direction) {
         case MoveDirection::UP:
             moveUp();
             break;
@@ -44,11 +40,7 @@ void Player::onControllerMoveEvent(ControllerMoveEvent* event) {
     }
 }
 
-void Player::onPlayerMoveEvent(PlayerMoveEvent* event) {
-    updatePlayerPosition(event->viewCenter);
-}
-
-void Player::updatePlayerPosition(sf::Vector2f viewCenter) {
+void Player::setPlayerPositionFromViewCenter(sf::Vector2f viewCenter) {
     float newPlayerX = viewCenter.x - (getWidthOfEntityForCurrentFrame().x / 2);
     float newPlayerY = viewCenter.y - (getWidthOfEntityForCurrentFrame().y / 2);
     setPosition(newPlayerX, newPlayerY);
@@ -80,4 +72,6 @@ void Player::initializeAnimations() {
     walkingAnimationLeft.addFrame(sf::IntRect(PLAYER_WIDTH*3, PLAYER_HEIGHT*3, PLAYER_WIDTH, PLAYER_HEIGHT));
 
     this->currentAnimation = &walkingAnimationDown;
+    setTextureRectBasedOnCurrentFrame();
+    updateBoundingBox();
 }

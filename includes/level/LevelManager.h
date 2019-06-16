@@ -1,8 +1,7 @@
 #ifndef NEWNEW_LEVELMANAGER_H
 #define NEWNEW_LEVELMANAGER_H
 
-#include "../view/ViewManager.h"
-#include "../entity/character/Player.h"
+#include "../entity/player/PlayerManager.h"
 #include "Scene.h"
 #include "../asset/AssetPath.h"
 #include "../asset/TextureManager.h"
@@ -19,11 +18,10 @@ public:
     void release();
 private:
     TextureManager textureManager;
-    ViewManager viewManager;
+    PlayerManager playerManager;
     CollisionManager collisionManager;
     NpcManager npcManager;
     Scene scene;
-    Player player;
 };
 
 

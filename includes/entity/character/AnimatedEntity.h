@@ -21,6 +21,8 @@ protected:
     virtual void initializeAnimations() {};
     void setFrameTime(sf::Time time);
     sf::Vector2i getWidthOfEntityForCurrentFrame();
+    void updateBoundingBox();
+    void setTextureRectBasedOnCurrentFrame();
     Animation* currentAnimation;
     Animation walkingAnimationDown;
     Animation walkingAnimationLeft;
@@ -31,8 +33,6 @@ private:
     void playAnimation();
     void pauseAnimation();
     void stopAnimation();
-    void setTextureRectBasedOnCurrentFrame();
-    void updateBoundingBox();
     sf::Time frameTime;
     sf::Time currentTime;
     bool animationPaused = false;

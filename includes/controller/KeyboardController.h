@@ -3,7 +3,7 @@
 
 #include <SFML/Window/Keyboard.hpp>
 #include "BaseController.h"
-#include "../entity/character/Player.h"
+#include "../entity/player/Player.h"
 #include "../level/LevelManager.h"
 
 class KeyboardController : public BaseController {

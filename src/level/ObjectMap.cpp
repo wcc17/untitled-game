@@ -5,6 +5,7 @@ const static std::string DOOR_OBJECT_TYPE = "door";
 const static std::string SIGN_OBJECT_TYPE = "sign";
 const static std::string WALL_OBJECT_TYPE = "wall";
 const static std::string NPC_OBJECT_TYPE = "npc";
+const static std::string PLAYER_OBJECT_TYPE = "player";
 
 void ObjectMap::loadObjectLayer(tmx::ObjectGroup layer) {
     std::string layerName = layer.getName();
@@ -32,6 +33,8 @@ void ObjectMap::loadRectangleObjects(tmx::Object object, std::string layerName) 
     Collidable collidable = Collidable(objectName, type, position, size);
     if(type == CollidableType::NPC) {
         npcCollidables.push_back(collidable);
+    } else if(type == CollidableType::PLAYER) {
+        playerCollidable = collidable;
     } else {
         mapCollidables.push_back(collidable);
     }
@@ -47,6 +50,8 @@ CollidableType ObjectMap::getCollidableType(std::string typeName) {
         return CollidableType::WALL;
     } else if(typeName == NPC_OBJECT_TYPE) {
         return CollidableType::NPC;
+    } else if(typeName == PLAYER_OBJECT_TYPE) {
+        return CollidableType::PLAYER;
     }
 
     printf("this type not yet supported\n");
@@ -59,6 +64,10 @@ std::vector<Collidable> ObjectMap::getMapCollidables() {
 
 std::vector<Collidable> ObjectMap::getNpcCollidables() {
     return this->npcCollidables;
+}
+
+Collidable ObjectMap::getPlayerCollidable() {
+    return this->playerCollidable;
 }
 
 void ObjectMap::release() {
