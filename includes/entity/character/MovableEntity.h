@@ -10,7 +10,7 @@ class MovableEntity {
 public:
     void initialize(float moveSpeed);
     void update(sf::Time deltaTime);
-    void onMoveEvent(MoveDirection direction);
+    void move(MoveDirection direction);
     sf::Vector2f getMovement();
 
 protected:

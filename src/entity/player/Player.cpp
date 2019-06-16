@@ -16,7 +16,8 @@ void Player::initialize(sf::Texture* texture, std::string collidableName, Collid
     initializeAnimations();
 }
 
-void Player::move(sf::Time deltaTime) {
+void Player::move(sf::Time deltaTime, MoveDirection direction) {
+    MovableEntity::move(direction);
     Sprite::move(movement * deltaTime.asSeconds());
     AnimatedEntity::move(currentDirection);
 }
@@ -25,10 +26,6 @@ void Player::update(sf::Time deltaTime) {
     updateBoundingBox(this->getGlobalBounds());
     AnimatedEntity::update(deltaTime);
     MovableEntity::update(deltaTime);
-}
-
-void Player::onControllerMoveEvent(MoveDirection direction) {
-    MovableEntity::onMoveEvent(direction);
 }
 
 void Player::initializeAnimations() {

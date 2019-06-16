@@ -8,9 +8,11 @@ void MovableEntity::initialize(float moveSpeed) {
 void MovableEntity::update(sf::Time deltaTime) {
 }
 
-void MovableEntity::onMoveEvent(MoveDirection direction) {
+void MovableEntity::move(MoveDirection direction) {
     //TODO: should I re-call this method if the state changes or just wait until the next frame?
     //TODO: the state machine idea would be to call state->onMoveEvent(this, direction) for each state. wouldn't have to switch on state anymore
+
+    resetMovement();
 
     switch(state) {
         case STATE_STANDING:
@@ -64,6 +66,7 @@ void MovableEntity::handleStandingState(MoveDirection direction) {
 }
 
 void MovableEntity::handleMovingState(MoveDirection direction) {
+    currentDirection = direction;
     if(direction == MoveDirection::NONE) {
         //TODO: here we decide if we haven't reached the goal yet
         bool haveReachedGoal = true;
@@ -81,6 +84,8 @@ void MovableEntity::handleMovingState(MoveDirection direction) {
 }
 
 void MovableEntity::handleMovingToGoalState(MoveDirection direction) {
+    currentDirection = direction;
+    
     //TODO: here we decide if we haven't reached the goal yet
     bool haveReachedGoal = true;
     if(haveReachedGoal) {
@@ -103,7 +108,6 @@ void MovableEntity::handleMovingToGoalState(MoveDirection direction) {
 
 void MovableEntity::setMovementForCurrentDirection() {
 
-    resetMovement();
     switch(currentDirection) {
         case MoveDirection::UP:
             movement.y -= moveSpeed;

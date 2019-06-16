@@ -15,22 +15,37 @@ void PlayerManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* 
 }
 
 void PlayerManager::update(sf::Time deltaTime) {
-    move(deltaTime);
+    player.move(deltaTime, currentDirection);
+    adjustPlayerAndViewPositions();
+
     player.update(deltaTime);
+
+    currentDirection = MoveDirection::NONE;
 }
 
 void PlayerManager::draw(sf::RenderWindow* window) {
     window->draw(player);
 }
 
-void PlayerManager::move(sf::Time deltaTime) {
-    player.move(deltaTime);
-    adjustPlayerAndViewPositions();
-}
-
-//called only when a button is pressed, does not actually move the player
 void PlayerManager::onMoveEvent(ControllerMoveEvent* event) {
-    player.onControllerMoveEvent(event->direction);
+    //called only when a button is pressed, does not actually move the player
+    switch(event->direction) {
+        case MoveDirection::UP:
+            printf("up\n");
+            break;
+        case MoveDirection::LEFT:
+            printf("left\n");
+            break;
+        case MoveDirection::DOWN:
+            printf("down\n");
+            break;
+        case MoveDirection::RIGHT:
+            printf("right\n");
+            break;
+        default:
+            break;
+    }
+    currentDirection = event->direction;
 }
 
 void PlayerManager::onCollisionEvent(PlayerCollisionEvent* event) {
