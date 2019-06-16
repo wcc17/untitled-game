@@ -18,7 +18,12 @@ protected:
     MoveDirection currentDirection;
 
 private:
+    void setMovementForCurrentDirection();
+    void handleStandingState(MoveDirection direction);
+    void handleMovingState(MoveDirection direction);
+    void handleMovingToGoalState(MoveDirection direction);
     void resetMovement();
+    MoveDirection previousDirection;
     float moveSpeed;
     EntityState state;
 };
