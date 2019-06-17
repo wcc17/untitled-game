@@ -14,13 +14,19 @@ void PlayerManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* 
     eventBus->subscribe(this, &PlayerManager::onCollisionEvent);
 }
 
-void PlayerManager::update(sf::Time deltaTime) {
-    player.move(deltaTime, currentDirection);
+void PlayerManager::update(sf::Time deltaTime, sf::Vector2u mapTileSize, sf::Vector2u mapSizeInPixels) {
+    //TODO: should the move function be moved into Player now?
+    player.move(deltaTime, currentDirection, mapTileSize, mapSizeInPixels);
     adjustPlayerAndViewPositions();
 
     player.update(deltaTime);
 
     currentDirection = MoveDirection::NONE;
+
+//    printf("position: (%f, %f)\n", player.getPosition().x, player.getPosition().y);
+//    if(((int)player.getPosition().x) % 8) {
+//        printf("break\n");
+//    }
 }
 
 void PlayerManager::draw(sf::RenderWindow* window) {
@@ -28,23 +34,6 @@ void PlayerManager::draw(sf::RenderWindow* window) {
 }
 
 void PlayerManager::onMoveEvent(ControllerMoveEvent* event) {
-    //called only when a button is pressed, does not actually move the player
-    switch(event->direction) {
-        case MoveDirection::UP:
-            printf("up\n");
-            break;
-        case MoveDirection::LEFT:
-            printf("left\n");
-            break;
-        case MoveDirection::DOWN:
-            printf("down\n");
-            break;
-        case MoveDirection::RIGHT:
-            printf("right\n");
-            break;
-        default:
-            break;
-    }
     currentDirection = event->direction;
 }
 
@@ -61,6 +50,8 @@ void PlayerManager::adjustPlayerAndViewPositions() {
     //NOTE: rounding the position gets rid of weird artifacting/flickering that was introduced after tile maps. any negative repercussions yet?
     setViewCenterFromPlayerPosition(); //first set the view center
     view.setCenter(std::round(view.getCenter().x), std::round(view.getCenter().y)); //round the view
+
+    //TODO: should this be done in MovableEntity so NPCs can also share this?
     player.setPosition(std::round(player.getPosition().x), std::round(player.getPosition().y));
 }
 

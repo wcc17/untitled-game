@@ -1,7 +1,7 @@
 #include "../../../includes/entity/player/Player.h"
 
 const float PLAYER_WIDTH = 16.f;
-const float PLAYER_HEIGHT = 26.f;
+const float PLAYER_HEIGHT = 24.f;
 const float PLAYER_FRAME_TIME = 0.16f;
 const float MOVEMENT_SPEED = 80.f;
 
@@ -16,9 +16,8 @@ void Player::initialize(sf::Texture* texture, std::string collidableName, Collid
     initializeAnimations();
 }
 
-void Player::move(sf::Time deltaTime, MoveDirection direction) {
-    MovableEntity::move(direction);
-    Sprite::move(movement * deltaTime.asSeconds());
+void Player::move(sf::Time deltaTime, MoveDirection direction, sf::Vector2u mapTileSize, sf::Vector2u mapSizeInPixels) {
+    MovableEntity::move(deltaTime, direction, mapTileSize, mapSizeInPixels);
     AnimatedEntity::move(currentDirection);
 }
 

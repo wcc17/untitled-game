@@ -7,8 +7,8 @@ void NpcEntity::initialize(sf::Texture* texture, std::string npcName, Collidable
 
     boundingBox.left = bounds.left;
     boundingBox.top = bounds.top;
-    boundingBox.width = 16.f;
-    boundingBox.height = 26.f;
+    boundingBox.width = 16.f; //TODO: constants
+    boundingBox.height = 24.f; //TODO: constants
 
     setPosition(sf::Vector2f(boundingBox.left, boundingBox.top));
     setFrameTime(sf::seconds(0.16f)); //TODO: not sure where I want to load this from yet

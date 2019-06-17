@@ -12,6 +12,7 @@ Collidable::Collidable(std::string name, CollidableType type, sf::Vector2f posit
 }
 
 //TODO: this can be reused for the NPCs for the most part. Maybe in Collidable?
+//TODO: EVERYTHING needs to be multiples of  tile size, including the character textures (its frames). There should be a check to ensure this is happening so that I don't forget
 sf::Vector2f Collidable::getFixedPositionAfterCollision(sf::FloatRect entityRect, sf::FloatRect otherRect, sf::Vector2f movement) {
     bool isColliding = true;
     float left = entityRect.left;

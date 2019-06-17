@@ -13,7 +13,7 @@ void LevelManager::initialize(std::shared_ptr<EventBus> eventBus) {
 }
 
 void LevelManager::update(sf::Time elapsedTime) {
-    playerManager.update(elapsedTime);
+    playerManager.update(elapsedTime, scene.getMapTileSize(), scene.getMapSizeInPixels());
     npcManager.update(elapsedTime);
     collisionManager.handleCollisions(playerManager.getPlayer(), npcManager.getNpcEntities(), scene.getMapCollidables());
 }

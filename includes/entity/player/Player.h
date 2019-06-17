@@ -12,7 +12,7 @@ class Player : public AnimatedEntity, public MovableEntity, public Collidable {
 public:
     void initialize(sf::Texture* texture, std::string collidableName, CollidableType collidableType, sf::FloatRect initialBoundingBox);
     void update(sf::Time deltaTime);
-    void move(sf::Time deltaTime, MoveDirection direction);
+    void move(sf::Time deltaTime, MoveDirection direction, sf::Vector2u mapTileSize, sf::Vector2u mapSizeInPixels);
 protected:
     void initializeAnimations();
 };

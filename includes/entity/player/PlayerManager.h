@@ -14,7 +14,7 @@
 class PlayerManager {
 public:
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* playerTexture, Collidable playerCollidable);
-    void update(sf::Time deltaTime);
+    void update(sf::Time deltaTime, sf::Vector2u mapTileSize, sf::Vector2u mapSizeInPixels);
     void draw(sf::RenderWindow* window);
     Player getPlayer() const;
     sf::View getView() const;
