@@ -16,15 +16,14 @@ void Player::initialize(sf::Texture* texture, std::string collidableName, Collid
     initializeAnimations();
 }
 
-void Player::move(sf::Time deltaTime, MoveDirection direction, sf::Vector2u mapTileSize, sf::Vector2u mapSizeInPixels) {
-    MovableEntity::move(deltaTime, direction, mapTileSize, mapSizeInPixels);
+void Player::move(sf::Time deltaTime, MoveDirection direction, sf::Vector2u mapTileSize) {
+    MovableEntity::move(deltaTime, direction, mapTileSize);
     AnimatedEntity::move(currentDirection);
 }
 
 void Player::update(sf::Time deltaTime) {
     updateBoundingBox(this->getGlobalBounds());
     AnimatedEntity::update(deltaTime);
-    MovableEntity::update(deltaTime);
 }
 
 void Player::initializeAnimations() {

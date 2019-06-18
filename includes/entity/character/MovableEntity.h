@@ -10,22 +10,26 @@
 class MovableEntity : virtual public sf::Sprite {
 public:
     void initialize(float moveSpeed);
-    void update(sf::Time deltaTime);
-    void move(sf::Time deltaTime, MoveDirection direction, sf::Vector2u mapTileSize, sf::Vector2u mapSizeInPixels);
-    sf::Vector2f getMovement();
+    void move(sf::Time deltaTime, MoveDirection direction, sf::Vector2u mapTileSize);
+    sf::Vector2f getFixedPositionAfterCollision(sf::FloatRect entityRect, sf::FloatRect otherRect, MoveDirection direction);
+    MoveDirection getCurrentDirection();
 
 protected:
-    sf::Vector2f movement;
     MoveDirection currentDirection;
 
 private:
-    void setRegularMovement();
-    void setGoalLimitedMovement(sf::Time deltaTime, sf::Vector2u mapTileSize, sf::Vector2u mapSizeInPixels);
-    void handleStandingState(MoveDirection direction);
-    void handleMovingState(MoveDirection direction, sf::Time deltaTime, sf::Vector2u mapTileSize, sf::Vector2u mapSizeInPixels);
-    void handleMovingToGoalState(MoveDirection direction, sf::Time deltaTime, sf::Vector2u mapTileSize, sf::Vector2u mapSizeInPixels);
-    bool movementGoalReached(sf::Time deltaTime, sf::Vector2u mapTileSize, sf::Vector2u mapSizeInPixels);
-    void resetMovement();
+    void handleStandingState(MoveDirection direction, sf::Time deltaTime);
+    void handleMovingState(MoveDirection direction, sf::Time deltaTime, sf::Vector2u mapTileSize);
+
+    sf::Vector2f getRegularMovement(float speed);
+    sf::Vector2f getGoalLimitedMovement(sf::Time deltaTime, sf::Vector2u mapTileSize);
+    bool movementGoalReached(sf::Vector2u mapTileSize);
+    void performRegularMove(sf::Time deltaTime);
+    void performGoalLimitedMove(sf::Time deltaTime, sf::Vector2u mapTileSize);
+
+    static int getTileSizeForDirection(MoveDirection direction, sf::Vector2u mapTileSize);
+    static int getChangingPosition(MoveDirection direction, sf::Vector2f position);
+
     MoveDirection previousDirection;
     float moveSpeed;
     EntityState state;
