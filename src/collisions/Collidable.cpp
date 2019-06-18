@@ -11,37 +11,6 @@ Collidable::Collidable(std::string name, CollidableType type, sf::Vector2f posit
     this->type = type;
 }
 
-//TODO: this can be reused for the NPCs for the most part. Maybe in Collidable?
-sf::Vector2f Collidable::getFixedPositionAfterCollision(sf::FloatRect entityRect, sf::FloatRect otherRect, sf::Vector2f movement) {
-    bool isColliding = true;
-    float left = entityRect.left;
-    float top = entityRect.top;
-    while(isColliding) {
-        if(movement.x == 0.f && movement.y == 0.f) {
-            printf("error with player collision - the player didn't move into this collision so theres no way to move him out\n");
-        }
-
-        if(movement.x > 0.f) {
-            left -= 1;
-        } else if(movement.x < 0.f) {
-            left += 1;
-        }
-
-        if(movement.y > 0.f) {
-            top -= 1;
-        } else if(movement.y < 0.f) {
-            top += 1;
-        }
-
-        sf::FloatRect newBounds = sf::FloatRect(left, top, entityRect.width, entityRect.height);
-        if(!newBounds.intersects(otherRect)) {
-            isColliding = false;
-        }
-    }
-
-    return sf::Vector2f(left, top);
-}
-
 void Collidable::updateBoundingBox(sf::FloatRect newBounds) {
     this->boundingBox = newBounds;
 }

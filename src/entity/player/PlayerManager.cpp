@@ -14,38 +14,38 @@ void PlayerManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* 
     eventBus->subscribe(this, &PlayerManager::onCollisionEvent);
 }
 
-void PlayerManager::update(sf::Time deltaTime) {
-    move(deltaTime);
+void PlayerManager::update(sf::Time deltaTime, sf::Vector2u mapTileSize) {
+    //TODO: should the move function be moved into Player now? for now, player.update() has to be called after adjustPlayerAndViewPositions and thats dumb.
+    player.move(deltaTime, currentDirection, mapTileSize);
+    adjustPlayerAndViewPositions();
     player.update(deltaTime);
+    currentDirection = MoveDirection::NONE;
 }
 
 void PlayerManager::draw(sf::RenderWindow* window) {
     window->draw(player);
 }
 
-void PlayerManager::move(sf::Time deltaTime) {
-    player.move(deltaTime);
-    adjustPlayerAndViewPositions();
-}
-
-//called only when a button is pressed, does not actually move the player
 void PlayerManager::onMoveEvent(ControllerMoveEvent* event) {
-    player.onControllerMoveEvent(event->direction);
+    currentDirection = event->direction;
 }
 
+//TODO: need to change how Collidable is inherited before the below stuff can change
+//TODO: revisit this. Is there any point in a PlayerCollisionEvent having the player bounding box? We already know its the player
+//TODO: need to refactor how getGlobalBounds and boundingBox work together. Having two variables do the same thing is dumb
 void PlayerManager::onCollisionEvent(PlayerCollisionEvent* event) {
     Collidable playerCollidable = event->getCollision().first;
     Collidable otherCollidable = event->getCollision().second;
 
-    sf::Vector2f newPosition = player.getFixedPositionAfterCollision(playerCollidable.getBoundingBox(), otherCollidable.getBoundingBox(), player.getMovement());
-    player.setPosition(newPosition);
+    player.getFixedPositionAfterCollision(playerCollidable.getBoundingBox(), otherCollidable.getBoundingBox(), player.getCurrentDirection());
     adjustPlayerAndViewPositions();
 }
 
 void PlayerManager::adjustPlayerAndViewPositions() {
-    //NOTE: rounding the position gets rid of weird artifacting/flickering that was introduced after tile maps. any negative repercussions yet?
-    setViewCenterFromPlayerPosition(); //first set the view center
-    view.setCenter(std::round(view.getCenter().x), std::round(view.getCenter().y)); //round the view
+    setViewCenterFromPlayerPosition();
+    view.setCenter(std::round(view.getCenter().x), std::round(view.getCenter().y));
+
+    //TODO: should this be done in MovableEntity so NPCs can also share this rounding functionality?
     player.setPosition(std::round(player.getPosition().x), std::round(player.getPosition().y));
 }
 

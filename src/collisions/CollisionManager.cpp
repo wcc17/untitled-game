@@ -7,7 +7,7 @@ void CollisionManager::initialize(std::shared_ptr<EventBus> eventBus) {
     this->eventBus = eventBus;
 }
 
-void CollisionManager::handleCollisions(Player player, std::vector<NpcEntity*> entities,
+void CollisionManager::handleCollisions(Player player, std::vector<std::shared_ptr<NpcEntity>> entities,
         std::vector<Collidable> mapCollidables) {
 
     bool collisionOccurred = publishCollisionsWithPlayerAndEntities(player, entities);
@@ -31,8 +31,8 @@ bool CollisionManager::publishCollisionsWithPlayerAndMap(Player player, std::vec
     return false;
 }
 
-bool CollisionManager::publishCollisionsWithPlayerAndEntities(Player player, std::vector<NpcEntity*> entities) {
-    for(NpcEntity* npc : entities) {
+bool CollisionManager::publishCollisionsWithPlayerAndEntities(Player player, std::vector<std::shared_ptr<NpcEntity>> entities) {
+    for(std::shared_ptr<NpcEntity> npc : entities) {
         if(collisionOccurred(player, *npc)) {
             eventBus->publish(new PlayerCollisionEvent(std::make_pair(player, *npc)));
             return true;

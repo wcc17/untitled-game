@@ -11,9 +11,8 @@ class Player : public AnimatedEntity, public MovableEntity, public Collidable {
 
 public:
     void initialize(sf::Texture* texture, std::string collidableName, CollidableType collidableType, sf::FloatRect initialBoundingBox);
-    void onControllerMoveEvent(MoveDirection direction);
     void update(sf::Time deltaTime);
-    void move(sf::Time deltaTime);
+    void move(sf::Time deltaTime, MoveDirection direction, sf::Vector2u mapTileSize);
 protected:
     void initializeAnimations();
 };

@@ -13,7 +13,7 @@ void LevelManager::initialize(std::shared_ptr<EventBus> eventBus) {
 }
 
 void LevelManager::update(sf::Time elapsedTime) {
-    playerManager.update(elapsedTime);
+    playerManager.update(elapsedTime, scene.getMapTileSize());
     npcManager.update(elapsedTime);
     collisionManager.handleCollisions(playerManager.getPlayer(), npcManager.getNpcEntities(), scene.getMapCollidables());
 }
@@ -29,4 +29,5 @@ void LevelManager::draw(sf::RenderWindow* window) {
 void LevelManager::release() {
     textureManager.releaseTextures();
     scene.release(); //TODO: will eventually be called somewhere else when the level changes
+    npcManager.release();
 }

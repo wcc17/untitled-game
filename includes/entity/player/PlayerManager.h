@@ -14,9 +14,8 @@
 class PlayerManager {
 public:
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* playerTexture, Collidable playerCollidable);
-    void update(sf::Time deltaTime);
+    void update(sf::Time deltaTime, sf::Vector2u mapTileSize);
     void draw(sf::RenderWindow* window);
-    void move(sf::Time deltaTime);
     Player getPlayer() const;
     sf::View getView() const;
 
@@ -26,7 +25,7 @@ private:
     void setViewCenterFromPlayerPosition();
     void adjustPlayerAndViewPositions();
 
-
+    MoveDirection currentDirection = MoveDirection::NONE;
     std::shared_ptr<EventBus> eventBus;
     sf::View view;
     Player player;

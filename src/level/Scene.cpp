@@ -12,7 +12,7 @@ void Scene::loadTileMap() {
         //TODO: exit the application after printing the error that the file couldn't be loaded
     }
 
-    //NOTE: this assumes that each level is only going to have a single tileset
+    //TODO: this assumes that each level is only going to have a single tileset
     tmx::Tileset tileset = map.getTilesets()[0];
     texture.loadFromFile(tileset.getImagePath());
 
@@ -50,11 +50,11 @@ sf::Vector2u Scene::getMapSizeInPixels() {
 }
 
 sf::Vector2u Scene::getMapSizeInTiles() {
-    return this->mapSizeInPixels;
+    return this->mapSizeInTiles;
 }
 
 sf::Vector2u Scene::getMapTileSize() {
-    return this->mapSizeInPixels;
+    return this->tileSize;
 }
 
 void Scene::release() {

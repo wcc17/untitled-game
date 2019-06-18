@@ -8,7 +8,7 @@
 #include "../../controller/MoveDirection.h"
 #include <cmath>
 
-class AnimatedEntity : public sf::Sprite {
+class AnimatedEntity : virtual public sf::Sprite {
 
 public:
     void initialize(sf::Texture *texture);

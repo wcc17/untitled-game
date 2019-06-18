@@ -2,8 +2,8 @@
 
 Game::Game() {
     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(960,540,32),"newnew", sf::Style::Titlebar | sf::Style::Close);
-     window->setFramerateLimit(60);
-//   window->setVerticalSyncEnabled(true);
+      window->setFramerateLimit(60);
+//    window->setVerticalSyncEnabled(true);
 
     initialize();
 }
