@@ -14,11 +14,11 @@ set(SOURCE_FILES src/main.cpp
         src/asset/AssetPath.cpp
         src/entity/player/Player.cpp
         src/entity/character/Animation.cpp
-        src/level/Scene.cpp
+        src/scene/Scene.cpp
         src/entity/character/AnimatedEntity.cpp
         src/collisions/Collidable.cpp
         src/entity/player/PlayerManager.cpp
-        src/level/LevelManager.cpp
+        src/scene/SceneManager.cpp
         src/manager/TextManager.cpp
         src/manager/GameManager.cpp
         src/events/HandlerFunctionBase.cpp
@@ -26,8 +26,8 @@ set(SOURCE_FILES src/main.cpp
         src/collisions/CollisionManager.cpp
         src/npc/NpcManager.cpp
         src/entity/character/NpcEntity.cpp
-        src/level/ObjectMap.cpp
-        includes/level/TileMap.cpp
+        src/scene/ObjectMap.cpp
+        includes/scene/TileMap.cpp
         src/entity/character/MovableEntity.cpp )
 
 set(INCLUDE_FILES includes/FramerateCounter.h
@@ -40,19 +40,19 @@ set(INCLUDE_FILES includes/FramerateCounter.h
         includes/asset/AssetPath.h
         includes/entity/player/Player.h
         includes/entity/character/Animation.h
-        includes/level/Scene.h
+        includes/scene/Scene.h
         includes/entity/character/AnimatedEntity.h
         includes/collisions/Collidable.h
         includes/entity/player/PlayerManager.h
-        includes/level/LevelManager.h
+        includes/scene/SceneManager.h
         includes/manager/TextManager.h
         includes/manager/GameManager.h
         includes/events/Event.h
         includes/collisions/CollisionManager.h
         includes/npc/NpcManager.h
         includes/entity/character/NpcEntity.h
-        includes/level/ObjectMap.h
-        includes/level/TileMap.h
+        includes/scene/ObjectMap.h
+        includes/scene/TileMap.h
         includes/entity/character/MovableEntity.h)
 
 set(INCLUDE_ONLY_FILES includes/collisions/PlayerCollisionEvent.h

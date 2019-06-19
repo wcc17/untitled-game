@@ -4,19 +4,19 @@ void GameManager::initialize() {
     eventBus = std::make_shared<EventBus>();
 
     keyboardController.initialize(eventBus);
-    levelManager.initialize(eventBus);
+    sceneManager.initialize(eventBus);
 }
 
 void GameManager::update(sf::Time deltaTime, std::vector<sf::Event> sfEvents) {
     keyboardController.handleInput(sfEvents);
-    levelManager.update(deltaTime);
+    sceneManager.update(deltaTime);
 }
 
 void GameManager::draw(sf::RenderWindow* window) {
-    levelManager.draw(window);
+    sceneManager.draw(window);
 }
 
 void GameManager::release() {
-    levelManager.release();
+    sceneManager.release();
     eventBus.reset();
 }

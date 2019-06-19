@@ -1,7 +1,7 @@
-#include "../../includes/level/LevelManager.h"
+#include "../../includes/scene/SceneManager.h"
 
-void LevelManager::initialize(std::shared_ptr<EventBus> eventBus) {
-    scene.initialize(AssetPath::LEVEL_TILEMAP); //TODO: this should be decided else where when switching scene logic is implemented. Probably in a GameManager one level up
+void SceneManager::initialize(std::shared_ptr<EventBus> eventBus) {
+    scene.initialize(AssetPath::SCENE_TILEMAP); //TODO: this should be decided else where when switching scene logic is implemented. Probably in a GameManager one scene up
 
     textureManager.loadTexture(AssetPath::PLAYER_TEXTURE);
     playerManager.initialize(eventBus, textureManager.getTexture(AssetPath::PLAYER_TEXTURE), scene.getPlayerCollidable());
@@ -12,20 +12,20 @@ void LevelManager::initialize(std::shared_ptr<EventBus> eventBus) {
     collisionManager.initialize(eventBus);
 }
 
-void LevelManager::update(sf::Time elapsedTime) {
+void SceneManager::update(sf::Time elapsedTime) {
     playerManager.update(elapsedTime, scene.getMapTileSize());
     npcManager.update(elapsedTime);
     collisionManager.handleCollisions(playerManager.getPlayer(), npcManager.getNpcEntities(), scene.getMapCollidables());
 }
 
-void LevelManager::draw(sf::RenderWindow* window) {
+void SceneManager::draw(sf::RenderWindow* window) {
     window->setView(playerManager.getView());
     window->draw(scene);
     npcManager.draw(window);
     playerManager.draw(window);
 }
 
-void LevelManager::release() {
+void SceneManager::release() {
     textureManager.releaseTextures();
     scene.release(); //TODO: will eventually be called somewhere else when the scene changes
     npcManager.release();

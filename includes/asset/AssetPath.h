@@ -14,7 +14,7 @@ public:
     static const std::string OPENSANS_BOLD;
     static const std::string PLAYER_TEXTURE;
     static const std::string NPC_TEXTURE;
-    static const std::string LEVEL_TILEMAP;
+    static const std::string SCENE_TILEMAP;
 };
 
 #endif //NEWNEW_ASSETPATH_H

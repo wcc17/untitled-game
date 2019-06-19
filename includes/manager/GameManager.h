@@ -1,7 +1,7 @@
 #ifndef NEWNEW_GAMEMANAGER_H
 #define NEWNEW_GAMEMANAGER_H
 
-#include "../level/LevelManager.h"
+#include "../scene/SceneManager.h"
 #include "../controller/KeyboardController.h"
 #include "../events/EventBus.h"
 
@@ -12,7 +12,7 @@ public:
     void draw(sf::RenderWindow* window);
     void release();
 private:
-    LevelManager levelManager;
+    SceneManager sceneManager;
     KeyboardController keyboardController;
     std::shared_ptr<EventBus> eventBus;
 };

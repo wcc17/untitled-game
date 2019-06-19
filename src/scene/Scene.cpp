@@ -1,4 +1,4 @@
-#include "../../includes/level/Scene.h"
+#include "../../includes/scene/Scene.h"
 
 void Scene::initialize(std::string tileMapPath) {
     this->tileMapPath = tileMapPath;
@@ -12,7 +12,7 @@ void Scene::loadTileMap() {
         //TODO: exit the application after printing the error that the file couldn't be loaded
     }
 
-    //TODO: this assumes that each level is only going to have a single tileset
+    //TODO: this assumes that each scene is only going to have a single tileset
     tmx::Tileset tileset = map.getTilesets()[0];
     texture.loadFromFile(tileset.getImagePath());
 

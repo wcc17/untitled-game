@@ -1,5 +1,5 @@
-#ifndef NEWNEW_LEVELMANAGER_H
-#define NEWNEW_LEVELMANAGER_H
+#ifndef NEWNEW_SCENEMANAGER_H
+#define NEWNEW_SCENEMANAGER_H
 
 #include "../entity/player/PlayerManager.h"
 #include "Scene.h"
@@ -10,7 +10,7 @@
 #include "../collisions/CollisionManager.h"
 #include "../npc/NpcManager.h"
 
-class LevelManager {
+class SceneManager {
 public:
     void initialize(std::shared_ptr<EventBus> eventBus);
     void update(sf::Time elapsedTime);
@@ -25,4 +25,4 @@ private:
 };
 
 
-#endif //NEWNEW_LEVELMANAGER_H
+#endif //NEWNEW_SCENEMANAGER_H
