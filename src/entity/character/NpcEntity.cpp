@@ -11,12 +11,13 @@ void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable) {
     type = collidable.getType();
     setPosition(collidable.getBoundingBox().left, collidable.getBoundingBox().top);
     setFrameTime(sf::seconds(0.16f)); //TODO: not sure where I want to load this from yet
+    currentDirection = MoveDirection::NONE; //TODO: this shouldn't be needed later
 
     initializeAnimations();
 }
 
 void NpcEntity::update(sf::Time deltaTime) {
-    AnimatedEntity::update(deltaTime);
+    AnimatedEntity::update(deltaTime, currentDirection);
 }
 
 //TODO: EVERYTHING needs to be multiples of  tile size, including the character textures (its frames). There should be a check to ensure this is happening so that I don't forget

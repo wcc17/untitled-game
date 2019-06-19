@@ -25,7 +25,6 @@ private:
     void setViewCenterFromPlayerPosition();
     void adjustPlayerAndViewPositions();
 
-    MoveDirection currentDirection = MoveDirection::NONE;
     std::shared_ptr<EventBus> eventBus;
     sf::View view;
     Player player;

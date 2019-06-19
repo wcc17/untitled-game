@@ -13,9 +13,6 @@ public:
     void handleInput(std::vector<sf::Event> sfEvents);
     void handleKeyPressedEvent(sf::Keyboard::Key key);
     void handleKeyReleasedEvent(sf::Keyboard::Key key);
-
-private:
-    bool shouldSendStopMovementEvent = true;
 };
 
 

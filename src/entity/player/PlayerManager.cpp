@@ -17,10 +17,9 @@ void PlayerManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* 
 void PlayerManager::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     //TODO: the move function should be moved into Player now? for now, player.update() has to be called after adjustPlayerAndViewPositions and thats dumb.
     //TODO: to fix, player should keep a copy of its unrounded position so that it can be used to update the view position
-    player.move(deltaTime, currentDirection, mapTileSize);
+    player.move(deltaTime, mapTileSize);
     adjustPlayerAndViewPositions();
     player.update(deltaTime);
-    currentDirection = MoveDirection::NONE;
 }
 
 void PlayerManager::draw(sf::RenderWindow* window) {
@@ -28,11 +27,11 @@ void PlayerManager::draw(sf::RenderWindow* window) {
 }
 
 void PlayerManager::onMoveEvent(ControllerMoveEvent* event) {
-    currentDirection = event->direction;
+    player.setCurrentDirection(event->direction);
 }
 
 void PlayerManager::onCollisionEvent(PlayerCollisionEvent* event) {
-    player.fixPositionAfterCollision(event->collidedWith, player.getCurrentDirection());
+    player.fixPositionAfterCollision(event->collidedWith);
     adjustPlayerAndViewPositions();
 }
 

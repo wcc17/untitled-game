@@ -4,7 +4,9 @@ void AnimatedEntity::initialize(sf::Texture* texture) {
     this->setTexture(*texture);
 }
 
-void AnimatedEntity::update(sf::Time deltaTime) {
+void AnimatedEntity::update(sf::Time deltaTime, MoveDirection direction) {
+    move(direction);
+
     if(!animationPaused && currentAnimation) {
         currentTime += deltaTime;
 

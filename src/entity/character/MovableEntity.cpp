@@ -5,36 +5,31 @@ void MovableEntity::initialize(float moveSpeed) {
     this->state = STATE_STANDING;
 }
 
-//TODO: this should be called in an update function, ditch the seperate move function?
-void MovableEntity::move(sf::Time deltaTime, const MoveDirection& direction, const sf::Vector2u& mapTileSize) {
+void MovableEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     //TODO: the state machine idea would be to call state->onMoveEvent(this, direction) for each state. wouldn't have to switch on state anymore
     //TODO: is it worth it at this point to move to the state machine? what sort of states do i need to implement if thats the case?
 
     switch(state) {
         case STATE_STANDING:
-            handleStandingState(direction, deltaTime);
+            handleStandingState(deltaTime);
             break;
         case STATE_MOVING:
-            handleMovingState(direction, deltaTime, mapTileSize);
+            handleMovingState(deltaTime, mapTileSize);
             break;
     }
 }
 
-void MovableEntity::handleStandingState(const MoveDirection& direction, sf::Time deltaTime) {
-    currentDirection = direction;
-
-    if(direction != MoveDirection::NONE) {
+void MovableEntity::handleStandingState(sf::Time deltaTime) {
+    if(currentDirection != MoveDirection::NONE) {
         state = STATE_MOVING;
         performRegularMove(deltaTime);
     }
 }
 
-void MovableEntity::handleMovingState(const MoveDirection& direction, sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
-    currentDirection = direction;
-
+void MovableEntity::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     //NOTE: using a moving goal limits me to making everything based on a set tile size (8 pixels for example). any collision bounds must be in multiples of 8 or entities won't collide correctly
     if(movementGoalReached(mapTileSize)) {
-        if(direction == MoveDirection::NONE) {
+        if(currentDirection == MoveDirection::NONE) {
             state = STATE_STANDING;
         } else {
             state = STATE_MOVING;
@@ -118,6 +113,10 @@ void MovableEntity::performGoalLimitedMove(sf::Time deltaTime, const sf::Vector2
 
 MoveDirection MovableEntity::getCurrentDirection() {
     return this->currentDirection;
+}
+
+void MovableEntity::setCurrentDirection(MoveDirection direction) {
+    this->currentDirection = direction;
 }
 
 int MovableEntity::getChangingPosition(const MoveDirection& direction, const sf::Vector2f& position) {

@@ -12,8 +12,7 @@ class AnimatedEntity : virtual public sf::Sprite {
 
 public:
     void initialize(sf::Texture *texture);
-    void update(sf::Time deltaTime);
-    void move(MoveDirection direction);
+    void update(sf::Time deltaTime, MoveDirection direction);
     void stop();
 
 protected:
@@ -27,6 +26,7 @@ protected:
     Animation walkingAnimationUp;
 
 private:
+    void move(MoveDirection direction);
     void moveUp();
     void moveLeft();
     void moveDown();

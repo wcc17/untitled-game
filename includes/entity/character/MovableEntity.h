@@ -10,15 +10,16 @@
 class MovableEntity : virtual public sf::Sprite {
 public:
     void initialize(float moveSpeed);
-    void move(sf::Time deltaTime, const MoveDirection& direction, const sf::Vector2u& mapTileSize);
+    void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     MoveDirection getCurrentDirection();
+    void setCurrentDirection(MoveDirection direction);
 
 protected:
     MoveDirection currentDirection;
 
 private:
-    void handleStandingState(const MoveDirection& direction, sf::Time deltaTime);
-    void handleMovingState(const MoveDirection& direction, sf::Time deltaTime, const sf::Vector2u& mapTileSize);
+    void handleStandingState(sf::Time deltaTime);
+    void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
 
     sf::Vector2f getRegularMovement(float speed);
     sf::Vector2f getGoalLimitedMovement(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
