@@ -17,16 +17,19 @@ void Player::initialize(sf::Texture* texture, const Collidable& collidable) {
     initializeAnimations();
 }
 
-void Player::move(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
+void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     MovableEntity::update(deltaTime, mapTileSize);
-}
-
-void Player::update(sf::Time deltaTime) {
     AnimatedEntity::update(deltaTime, currentDirection);
 }
 
 void Player::fixPositionAfterCollision(const Collidable& collidedWith) {
     CollidableEntity::fixPositionAfterCollision(collidedWith, currentDirection);
+}
+
+//TODO: this should be in a class shared by NpcEntity and Player. MovableEntity or the CharacterEntity I'm planning on?
+//TODO: roundPosition can be called in NpcEntity's update function. Player does not have that luxury
+void Player::roundPosition() {
+    setPosition(std::round(getPosition().x), std::round(getPosition().y));
 }
 
 //TODO: EVERYTHING needs to be multiples of  tile size, including the character textures (its frames). There should be a check to ensure this is happening so that I don't forget

@@ -7,7 +7,6 @@ void MovableEntity::initialize(float moveSpeed) {
 
 void MovableEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     //TODO: the state machine idea would be to call state->onMoveEvent(this, direction) for each state. wouldn't have to switch on state anymore
-    //TODO: is it worth it at this point to move to the state machine? what sort of states do i need to implement if thats the case?
 
     switch(state) {
         case STATE_STANDING:

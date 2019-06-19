@@ -15,11 +15,8 @@ void PlayerManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* 
 }
 
 void PlayerManager::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
-    //TODO: the move function should be moved into Player now? for now, player.update() has to be called after adjustPlayerAndViewPositions and thats dumb.
-    //TODO: to fix, player should keep a copy of its unrounded position so that it can be used to update the view position
-    player.move(deltaTime, mapTileSize);
+    player.update(deltaTime, mapTileSize);
     adjustPlayerAndViewPositions();
-    player.update(deltaTime);
 }
 
 void PlayerManager::draw(sf::RenderWindow* window) {
@@ -38,9 +35,7 @@ void PlayerManager::onCollisionEvent(PlayerCollisionEvent* event) {
 void PlayerManager::adjustPlayerAndViewPositions() {
     setViewCenterFromPlayerPosition();
     view.setCenter(std::round(view.getCenter().x), std::round(view.getCenter().y));
-
-    //TODO: should this be done in MovableEntity so NPCs can also share this rounding functionality? should MovableEntity override setPosition?
-    player.setPosition(std::round(player.getPosition().x), std::round(player.getPosition().y));
+    player.roundPosition();
 }
 
 void PlayerManager::setViewCenterFromPlayerPosition() {

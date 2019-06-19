@@ -17,6 +17,7 @@ void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable) {
 }
 
 void NpcEntity::update(sf::Time deltaTime) {
+//    MovableEntity::update(deltaTime);
     AnimatedEntity::update(deltaTime, currentDirection);
 }
 

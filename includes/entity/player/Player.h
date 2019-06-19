@@ -12,9 +12,9 @@ class Player : public AnimatedEntity, public MovableEntity, public CollidableEnt
 
 public:
     void initialize(sf::Texture* texture, const Collidable& collidable);
-    void update(sf::Time deltaTime);
-    void move(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
+    void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void fixPositionAfterCollision(const Collidable& collidedWith);
+    void roundPosition();
 protected:
     void initializeAnimations();
 };
