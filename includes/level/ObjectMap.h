@@ -8,8 +8,8 @@
 class ObjectMap {
 
 public:
-    void loadObjectLayer(tmx::ObjectGroup layer);
-    std::vector<Collidable> getMapCollidables();
+    void loadObjectLayer(const tmx::ObjectGroup& layer);
+    std::vector<Collidable>& getMapCollidables(); //NOTE: returning a reference since they are used so often. Take care not to modify
     std::vector<Collidable> getNpcCollidables();
     Collidable getPlayerCollidable();
 
@@ -17,11 +17,11 @@ protected:
     void release();
 
 private:
+    void loadRectangleObjects(const tmx::Object& object);
+    CollidableType determineCollidableType(std::string typeName);
     std::vector<Collidable> mapCollidables;
     std::vector<Collidable> npcCollidables;
     Collidable playerCollidable;
-    void loadRectangleObjects(tmx::Object object, std::string layerName);
-    CollidableType getCollidableType(std::string typeName);
 };
 
 

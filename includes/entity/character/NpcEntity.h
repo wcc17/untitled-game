@@ -4,11 +4,12 @@
 
 #include "AnimatedEntity.h"
 #include "MovableEntity.h"
+#include "CollidableEntity.h"
 
-class NpcEntity : public AnimatedEntity, public MovableEntity, public Collidable {
+class NpcEntity : public AnimatedEntity, public MovableEntity, public CollidableEntity {
 
 public:
-    void initialize(sf::Texture* texture, std::string npcName, CollidableType collidableType, sf::FloatRect bounds);
+    void initialize(sf::Texture* texture, const Collidable& collidable);
     void update(sf::Time deltaTime);
 protected:
     void initializeAnimations();

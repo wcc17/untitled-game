@@ -6,13 +6,14 @@
 #include "../../events/EventBus.h"
 #include "../../controller/ControllerMoveEvent.h"
 #include "../character/MovableEntity.h"
+#include "../character/CollidableEntity.h"
 
-class Player : public AnimatedEntity, public MovableEntity, public Collidable {
+class Player : public AnimatedEntity, public MovableEntity, public CollidableEntity {
 
 public:
-    void initialize(sf::Texture* texture, std::string collidableName, CollidableType collidableType, sf::FloatRect initialBoundingBox);
+    void initialize(sf::Texture* texture, const Collidable& collidable);
     void update(sf::Time deltaTime);
-    void move(sf::Time deltaTime, MoveDirection direction, sf::Vector2u mapTileSize);
+    void move(sf::Time deltaTime, const MoveDirection& direction, const sf::Vector2u& mapTileSize);
 protected:
     void initializeAnimations();
 };

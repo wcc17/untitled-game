@@ -1,31 +1,25 @@
 #include "../../../includes/entity/character/NpcEntity.h"
 
-//TODO: i don't think I want these here, NpcEntity will be able to be different sizes in multiples of 8
+//TODO: these will be moved out once there are different entities being loaded
 const float ENTITY_WIDTH = 16.f;
 const float ENTITY_HEIGHT = 24.f;
 
-void NpcEntity::initialize(sf::Texture* texture, std::string npcName, CollidableType collidableType, sf::FloatRect bounds) {
+void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable) {
     AnimatedEntity::initialize(texture);
-    name = npcName;
-    type = collidableType;
 
-    boundingBox.left = bounds.left;
-    boundingBox.top = bounds.top;
-    boundingBox.width = ENTITY_WIDTH; 
-    boundingBox.height = ENTITY_HEIGHT; 
-
-    setPosition(sf::Vector2f(boundingBox.left, boundingBox.top));
+    name = collidable.getName();
+    type = collidable.getType();
+    setPosition(collidable.getBoundingBox().left, collidable.getBoundingBox().top);
     setFrameTime(sf::seconds(0.16f)); //TODO: not sure where I want to load this from yet
 
     initializeAnimations();
 }
 
 void NpcEntity::update(sf::Time deltaTime) {
-    updateBoundingBox(this->getGlobalBounds());
     AnimatedEntity::update(deltaTime);
 }
 
-//TODO: this is the exact same as Player. I think this won't always be the same for specific types of Entities. Leaving for now
+//TODO: EVERYTHING needs to be multiples of  tile size, including the character textures (its frames). There should be a check to ensure this is happening so that I don't forget
 void NpcEntity::initializeAnimations() {
 
     //TODO: these constants are temporary until I figure out where I want to load this information from. Probably from a more specific derived NpcEntity class
@@ -55,5 +49,4 @@ void NpcEntity::initializeAnimations() {
 
     this->currentAnimation = &walkingAnimationDown;
     setTextureRectBasedOnCurrentFrame();
-    updateBoundingBox(this->getGlobalBounds());
 }

@@ -1,7 +1,7 @@
 #include "../../includes/level/LevelManager.h"
 
 void LevelManager::initialize(std::shared_ptr<EventBus> eventBus) {
-    scene.initialize(AssetPath::LEVEL_TILEMAP); //TODO: this should be decided else where when switching level logic is implemented. Probably in a GameManager one level up
+    scene.initialize(AssetPath::LEVEL_TILEMAP); //TODO: this should be decided else where when switching scene logic is implemented. Probably in a GameManager one level up
 
     textureManager.loadTexture(AssetPath::PLAYER_TEXTURE);
     playerManager.initialize(eventBus, textureManager.getTexture(AssetPath::PLAYER_TEXTURE), scene.getPlayerCollidable());
@@ -25,9 +25,8 @@ void LevelManager::draw(sf::RenderWindow* window) {
     playerManager.draw(window);
 }
 
-//TODO: should all of the "release" methods be in deconstructors instead? Some classes its not appropriate, but this one it is
 void LevelManager::release() {
     textureManager.releaseTextures();
-    scene.release(); //TODO: will eventually be called somewhere else when the level changes
+    scene.release(); //TODO: will eventually be called somewhere else when the scene changes
     npcManager.release();
 }

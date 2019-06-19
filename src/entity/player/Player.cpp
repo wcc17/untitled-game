@@ -5,27 +5,28 @@ const float PLAYER_HEIGHT = 24.f;
 const float PLAYER_FRAME_TIME = 0.16f;
 const float MOVEMENT_SPEED = 80.f;
 
-void Player::initialize(sf::Texture* texture, std::string collidableName, CollidableType collidableType, sf::FloatRect initialBoundingBox) {
+void Player::initialize(sf::Texture* texture, const Collidable& collidable) {
     AnimatedEntity::initialize(texture);
     MovableEntity::initialize(MOVEMENT_SPEED);
-    this->name = collidableName;
-    this->type = collidableType;
 
-    this->setPosition(sf::Vector2f(initialBoundingBox.left, initialBoundingBox.top));
+    this->name = collidable.getName();
+    this->type = collidable.getType();
+    this->setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
+
     this->setFrameTime(sf::seconds(PLAYER_FRAME_TIME));
     initializeAnimations();
 }
 
-void Player::move(sf::Time deltaTime, MoveDirection direction, sf::Vector2u mapTileSize) {
+void Player::move(sf::Time deltaTime, const MoveDirection& direction, const sf::Vector2u& mapTileSize) {
     MovableEntity::move(deltaTime, direction, mapTileSize);
     AnimatedEntity::move(currentDirection);
 }
 
 void Player::update(sf::Time deltaTime) {
-    updateBoundingBox(this->getGlobalBounds());
     AnimatedEntity::update(deltaTime);
 }
 
+//TODO: EVERYTHING needs to be multiples of  tile size, including the character textures (its frames). There should be a check to ensure this is happening so that I don't forget
 void Player::initializeAnimations() {
     walkingAnimationDown.setSpriteSheet(*this->getTexture());
     walkingAnimationDown.addFrame(sf::IntRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT));
@@ -53,5 +54,4 @@ void Player::initializeAnimations() {
 
     this->currentAnimation = &walkingAnimationDown;
     setTextureRectBasedOnCurrentFrame();
-    updateBoundingBox(this->getGlobalBounds());
 }

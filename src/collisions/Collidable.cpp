@@ -11,19 +11,15 @@ Collidable::Collidable(std::string name, CollidableType type, sf::Vector2f posit
     this->type = type;
 }
 
-void Collidable::updateBoundingBox(sf::FloatRect newBounds) {
-    this->boundingBox = newBounds;
-}
-
-std::string Collidable::getName() {
+std::string Collidable::getName() const {
     return this->name;
 }
 
-CollidableType Collidable::getType() {
+CollidableType Collidable::getType() const {
     return this->type;
 }
 
-sf::FloatRect Collidable::getBoundingBox() {
+sf::FloatRect Collidable::getBoundingBox() const {
     return this->boundingBox;
 }
 

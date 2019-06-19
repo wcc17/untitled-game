@@ -10,12 +10,13 @@
 class CollisionManager {
 public:
     void initialize(std::shared_ptr<EventBus> eventBus);
-    void handleCollisions(Player player, std::vector<std::shared_ptr<NpcEntity>> entities, std::vector<Collidable> mapCollidables);
+    void handleCollisions(const Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities,
+            const std::vector<Collidable>& mapCollidables);
 
 private:
-    bool publishCollisionsWithPlayerAndEntities(Player player, std::vector<std::shared_ptr<NpcEntity>> entities);
-    bool publishCollisionsWithPlayerAndMap(Player player, std::vector<Collidable> collidables);
-    bool collisionOccurred(Collidable collidable1, Collidable collidable2);
+    bool publishCollisionsWithPlayerAndMap(const Player& player, const std::vector<Collidable>& collidables);
+    bool publishCollisionsWithPlayerAndEntities(const Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities);
+    bool collisionOccurred(const Collidable& collidable1, const Collidable& collidable2);
 
     std::shared_ptr<EventBus> eventBus;
 };

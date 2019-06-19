@@ -1,6 +1,7 @@
 #include "TileMap.h"
 
-void TileMap::loadTileLayer(tmx::TileLayer layer, tmx::Tileset tileset, tmx::Vector2u mapSizeInTiles, tmx::Vector2u tileSize) {
+void TileMap::loadTileLayer(const tmx::TileLayer& layer, const tmx::Tileset& tileset, const tmx::Vector2u& mapSizeInTiles,
+                            const tmx::Vector2u& tileSize) {
     sf::VertexArray layerVertices;
     layerVertices.setPrimitiveType(sf::Quads);
     layerVertices.resize(mapSizeInTiles.x * mapSizeInTiles.y * 4);

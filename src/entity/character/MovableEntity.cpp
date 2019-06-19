@@ -6,7 +6,7 @@ void MovableEntity::initialize(float moveSpeed) {
 }
 
 //TODO: this should be called in an update function, ditch the seperate move function?
-void MovableEntity::move(sf::Time deltaTime, MoveDirection direction, sf::Vector2u mapTileSize) {
+void MovableEntity::move(sf::Time deltaTime, const MoveDirection& direction, const sf::Vector2u& mapTileSize) {
     //TODO: the state machine idea would be to call state->onMoveEvent(this, direction) for each state. wouldn't have to switch on state anymore
     //TODO: is it worth it at this point to move to the state machine? what sort of states do i need to implement if thats the case?
 
@@ -20,16 +20,16 @@ void MovableEntity::move(sf::Time deltaTime, MoveDirection direction, sf::Vector
     }
 }
 
-void MovableEntity::handleStandingState(MoveDirection direction, sf::Time deltaTime) {
+void MovableEntity::handleStandingState(const MoveDirection& direction, sf::Time deltaTime) {
     currentDirection = direction;
 
     if(direction != MoveDirection::NONE) {
-        state = STATE_MOVING; 
+        state = STATE_MOVING;
         performRegularMove(deltaTime);
     }
 }
 
-void MovableEntity::handleMovingState(MoveDirection direction, sf::Time deltaTime, sf::Vector2u mapTileSize) {
+void MovableEntity::handleMovingState(const MoveDirection& direction, sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     currentDirection = direction;
 
     //NOTE: using a moving goal limits me to making everything based on a set tile size (8 pixels for example). any collision bounds must be in multiples of 8 or entities won't collide correctly
@@ -37,7 +37,7 @@ void MovableEntity::handleMovingState(MoveDirection direction, sf::Time deltaTim
         if(direction == MoveDirection::NONE) {
             state = STATE_STANDING;
         } else {
-            state = STATE_MOVING; 
+            state = STATE_MOVING;
             performRegularMove(deltaTime);
         }
     } else {
@@ -46,7 +46,7 @@ void MovableEntity::handleMovingState(MoveDirection direction, sf::Time deltaTim
     }
 }
 
-bool MovableEntity::movementGoalReached(sf::Vector2u mapTileSize) {
+bool MovableEntity::movementGoalReached(const sf::Vector2u& mapTileSize) {
     if(previousDirection == MoveDirection::NONE) {
         printf("MovableEntity.movementGoalReached().this should not be happening\n");
         return true;
@@ -57,10 +57,10 @@ bool MovableEntity::movementGoalReached(sf::Vector2u mapTileSize) {
     return (position % tileSize == 0); //if tileSize is a multiple of position, then our goal is reached
 }
 
-sf::Vector2f MovableEntity::getGoalLimitedMovement(sf::Time deltaTime, sf::Vector2u mapTileSize) {
+sf::Vector2f MovableEntity::getGoalLimitedMovement(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
 
     if(currentDirection == MoveDirection::NONE) {
-        printf("this should not be happening. shouldn't be setting GoalLimitedMovement without a direction other than NONE. \n"); 
+        printf("this should not be happening. shouldn't be setting GoalLimitedMovement without a direction other than NONE. \n");
         return sf::Vector2f(0.f, 0.f);
     }
 
@@ -106,53 +106,21 @@ sf::Vector2f MovableEntity::getRegularMovement(float speed) {
 void MovableEntity::performRegularMove(sf::Time deltaTime) {
     sf::Vector2f moveVector = getRegularMovement(moveSpeed);
     Sprite::move(moveVector * deltaTime.asSeconds());
-    previousDirection = currentDirection; 
+    previousDirection = currentDirection;
 }
 
-void MovableEntity::performGoalLimitedMove(sf::Time deltaTime, sf::Vector2u mapTileSize) {
+void MovableEntity::performGoalLimitedMove(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     currentDirection = previousDirection;
     sf::Vector2f moveVector = getGoalLimitedMovement(deltaTime, mapTileSize);
     Sprite::move(moveVector * deltaTime.asSeconds());
-    previousDirection = currentDirection; 
-}
-
-//TODO: would it make more sense if this was in MovableEntity?
-//TODO: EVERYTHING needs to be multiples of  tile size, including the character textures (its frames). There should be a check to ensure this is happening so that I don't forget
-sf::Vector2f MovableEntity::getFixedPositionAfterCollision(sf::FloatRect entityRect, sf::FloatRect otherRect, MoveDirection direction) {
-    bool isColliding = true;
-    float left = entityRect.left;
-    float top = entityRect.top;
-    while(isColliding) {
-        if(direction == MoveDirection::NONE) {
-            printf("error with player collision - the player didn't move into this collision so theres no way to move him out\n");
-        }
-
-        if(direction == MoveDirection::RIGHT) {
-            left -= 1;
-        } else if(direction == MoveDirection::LEFT) {
-            left += 1;
-        }
-
-        if(direction == MoveDirection::DOWN) {
-            top -= 1;
-        } else if(direction == MoveDirection::UP) {
-            top += 1;
-        }
-
-        sf::FloatRect newBounds = sf::FloatRect(left, top, entityRect.width, entityRect.height);
-        if(!newBounds.intersects(otherRect)) {
-            isColliding = false;
-        }
-    }
-
-    setPosition(sf::Vector2f(left, top));
+    previousDirection = currentDirection;
 }
 
 MoveDirection MovableEntity::getCurrentDirection() {
     return this->currentDirection;
 }
 
-int MovableEntity::getChangingPosition(MoveDirection direction, sf::Vector2f position) {
+int MovableEntity::getChangingPosition(const MoveDirection& direction, const sf::Vector2f& position) {
     switch(direction) {
         case MoveDirection::UP:
         case MoveDirection::DOWN:
@@ -166,7 +134,7 @@ int MovableEntity::getChangingPosition(MoveDirection direction, sf::Vector2f pos
     }
 }
 
-int MovableEntity::getTileSizeForDirection(MoveDirection direction, sf::Vector2u mapTileSize) {
+int MovableEntity::getTileSizeForDirection(const MoveDirection& direction, const sf::Vector2u& mapTileSize) {
     switch(direction) {
         case MoveDirection::UP:
         case MoveDirection::DOWN:

@@ -64,7 +64,7 @@ public:
             }
         }
 
-        handlers = NULL; //TODO: dangling pointer if not set to NULL?
+        handlers = NULL;
     }
 
 private:

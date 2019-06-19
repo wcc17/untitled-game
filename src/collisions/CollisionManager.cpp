@@ -1,14 +1,12 @@
 #include "../../includes/collisions/CollisionManager.h"
 #include "../../includes/collisions/PlayerCollisionEvent.h"
 
-const bool CHECK_BETWEEN_TWO_ENTITIES = true;
-
 void CollisionManager::initialize(std::shared_ptr<EventBus> eventBus) {
     this->eventBus = eventBus;
 }
 
-void CollisionManager::handleCollisions(Player player, std::vector<std::shared_ptr<NpcEntity>> entities,
-        std::vector<Collidable> mapCollidables) {
+void CollisionManager::handleCollisions(const Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities,
+                                        const std::vector<Collidable>& mapCollidables) {
 
     bool collisionOccurred = publishCollisionsWithPlayerAndEntities(player, entities);
     if(!collisionOccurred) {
@@ -21,20 +19,20 @@ void CollisionManager::handleCollisions(Player player, std::vector<std::shared_p
 
 }
 
-bool CollisionManager::publishCollisionsWithPlayerAndMap(Player player, std::vector<Collidable> collidables) {
+bool CollisionManager::publishCollisionsWithPlayerAndMap(const Player& player, const std::vector<Collidable>& collidables) {
     for(Collidable collidable : collidables) {
         if(collisionOccurred(player, collidable)) {
-            eventBus->publish(new PlayerCollisionEvent(std::make_pair(player, collidable)));
+            eventBus->publish(new PlayerCollisionEvent(collidable));
             return true;
         }
     }
     return false;
 }
 
-bool CollisionManager::publishCollisionsWithPlayerAndEntities(Player player, std::vector<std::shared_ptr<NpcEntity>> entities) {
+bool CollisionManager::publishCollisionsWithPlayerAndEntities(const Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities) {
     for(std::shared_ptr<NpcEntity> npc : entities) {
         if(collisionOccurred(player, *npc)) {
-            eventBus->publish(new PlayerCollisionEvent(std::make_pair(player, *npc)));
+            eventBus->publish(new PlayerCollisionEvent(*npc));
             return true;
         }
     }
@@ -42,7 +40,7 @@ bool CollisionManager::publishCollisionsWithPlayerAndEntities(Player player, std
     return false;
 }
 
-bool CollisionManager::collisionOccurred(Collidable collidable1, Collidable collidable2) {
+bool CollisionManager::collisionOccurred(const Collidable& collidable1, const Collidable& collidable2) {
     return ( (collidable1.getName() != collidable2.getName())
         && ( (collidable1.getBoundingBox().intersects(collidable2.getBoundingBox()) )));
 }
