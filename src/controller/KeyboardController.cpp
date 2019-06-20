@@ -1,5 +1,4 @@
 #include "../../includes/controller/KeyboardController.h"
-#include "../../includes/controller/ControllerMoveEvent.h"
 
 void KeyboardController::initialize(std::shared_ptr<EventBus> eventBus) {
     BaseController::initialize(eventBus);
@@ -27,6 +26,10 @@ void KeyboardController::handleKeyPressedEvent(sf::Keyboard::Key key) {
         case sf::Keyboard::Enter:
             printf("enter pressed\n");
             break;
+        case sf::Keyboard::Space:
+            //TODO: do I want to limit how many times/how often the player can hit this key? Otherwise we will spam playerManager with events
+            printf("space pressed\n");
+            eventBus->publish(new ControllerActionEvent());
         default:
             break;
     }
@@ -37,6 +40,8 @@ void KeyboardController::handleKeyReleasedEvent(sf::Keyboard::Key key) {
         case sf::Keyboard::Enter:
             printf("enter released\n");
             break;
+        case sf::Keyboard::Space:
+            printf("space released\n");
         default:
             break;
     }

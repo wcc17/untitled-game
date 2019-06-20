@@ -36,7 +36,7 @@ void ObjectMap::loadRectangleObjects(const tmx::Object& object) {
     } else if(type == CollidableType::PLAYER) {
         playerCollidable = collidable;
     } else {
-        mapCollidables.push_back(collidable);
+        mapCollidables.push_back(std::make_shared<Collidable>(collidable));
     }
 }
 
@@ -58,7 +58,7 @@ CollidableType ObjectMap::determineCollidableType(std::string typeName) {
     return CollidableType::NO_TYPE;
 }
 
-std::vector<Collidable>& ObjectMap::getMapCollidables() {
+std::vector<std::shared_ptr<Collidable>>& ObjectMap::getMapCollidables() {
     return this->mapCollidables;
 }
 

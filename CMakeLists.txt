@@ -28,7 +28,8 @@ set(SOURCE_FILES src/main.cpp
         src/entity/character/NpcEntity.cpp
         src/scene/ObjectMap.cpp
         includes/scene/TileMap.cpp
-        src/entity/character/MovableEntity.cpp )
+        src/entity/character/MovableEntity.cpp
+        src/entity/character/CollidableEntity.cpp)
 
 set(INCLUDE_FILES includes/FramerateCounter.h
         includes/asset/FontManager.h
@@ -53,7 +54,8 @@ set(INCLUDE_FILES includes/FramerateCounter.h
         includes/entity/character/NpcEntity.h
         includes/scene/ObjectMap.h
         includes/scene/TileMap.h
-        includes/entity/character/MovableEntity.h)
+        includes/entity/character/MovableEntity.h
+        includes/entity/character/CollidableEntity.h)
 
 set(INCLUDE_ONLY_FILES includes/collisions/PlayerCollisionEvent.h
         includes/collisions/EntityCollisionEvent.h
@@ -63,7 +65,10 @@ set(INCLUDE_ONLY_FILES includes/collisions/PlayerCollisionEvent.h
         includes/events/EventBus.h
         includes/events/HandlerFunctionBase.h
         includes/events/MemberFunctionHandler.h
-        includes/controller/ControllerMoveEvent.h includes/entity/character/EntityState.h src/entity/character/CollidableEntity.cpp includes/entity/character/CollidableEntity.h includes/collisions/PlayerVicinityCollisionEvent.h)
+        includes/controller/ControllerMoveEvent.h
+        includes/entity/character/EntityState.h
+        includes/collisions/PlayerVicinityCollisionEvent.h
+        includes/controller/ControllerActionEvent.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 

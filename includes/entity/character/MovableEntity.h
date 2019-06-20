@@ -15,6 +15,7 @@ public:
     void setCurrentDirection(MoveDirection direction);
 
 protected:
+    MoveDirection getCurrentFacingDirection();
     MoveDirection currentDirection;
 
 private:
@@ -30,6 +31,7 @@ private:
     static int getTileSizeForDirection(const MoveDirection& direction, const sf::Vector2u& mapTileSize);
     static int getChangingPosition(const MoveDirection& direction, const sf::Vector2f& position);
 
+    MoveDirection currentlyFacingDirection;
     MoveDirection previousDirection;
     float moveSpeed;
     EntityState state;

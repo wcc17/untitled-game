@@ -10,7 +10,8 @@ void PlayerManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* 
     view.setSize(sf::Vector2f(VIEW_SIZE_X, VIEW_SIZE_Y));
     adjustPlayerAndViewPositions();
 
-    eventBus->subscribe(this, &PlayerManager::onMoveEvent);
+    eventBus->subscribe(this, &PlayerManager::onControllerMoveEvent);
+    eventBus->subscribe(this, &PlayerManager::onControllerActionEvent);
     eventBus->subscribe(this, &PlayerManager::onCollisionEvent);
     eventBus->subscribe(this, &PlayerManager::onVicinityCollisionEvent);
 }
@@ -24,8 +25,13 @@ void PlayerManager::draw(sf::RenderWindow* window) {
     window->draw(player);
 }
 
-void PlayerManager::onMoveEvent(ControllerMoveEvent* event) {
+void PlayerManager::onControllerMoveEvent(ControllerMoveEvent* event) {
     player.setCurrentDirection(event->direction);
+}
+
+void PlayerManager::onControllerActionEvent(ControllerActionEvent* event) {
+    printf("action button event received\n");
+    player.setActionButtonPressed();
 }
 
 void PlayerManager::onCollisionEvent(PlayerCollisionEvent* event) {
@@ -34,7 +40,7 @@ void PlayerManager::onCollisionEvent(PlayerCollisionEvent* event) {
 }
 
 void PlayerManager::onVicinityCollisionEvent(PlayerVicinityCollisionEvent* event) {
-    printf("vicinity collision happening\n");
+    player.addCollidableInVicinity(event->collidedWith);
 }
 
 void PlayerManager::adjustPlayerAndViewPositions() {

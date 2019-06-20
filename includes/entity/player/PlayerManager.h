@@ -11,6 +11,7 @@
 #include "../../collisions/PlayerCollisionEvent.h"
 #include "Player.h"
 #include "../../collisions/PlayerVicinityCollisionEvent.h"
+#include "../../controller/ControllerActionEvent.h"
 
 class PlayerManager {
 public:
@@ -21,7 +22,8 @@ public:
     sf::View getView();
 
 private:
-    void onMoveEvent(ControllerMoveEvent* event);
+    void onControllerMoveEvent(ControllerMoveEvent* event);
+    void onControllerActionEvent(ControllerActionEvent* event);
     void onCollisionEvent(PlayerCollisionEvent* event);
     void onVicinityCollisionEvent(PlayerVicinityCollisionEvent* event);
     void setViewCenterFromPlayerPosition();

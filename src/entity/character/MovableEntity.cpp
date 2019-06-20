@@ -94,6 +94,7 @@ sf::Vector2f MovableEntity::getRegularMovement(float speed) {
             break;
     }
 
+    currentlyFacingDirection = currentDirection; //setting this assuming that getRegularMovement would never be called if currentDirection == MoveDirection::NONE
     return movement;
 }
 
@@ -107,7 +108,11 @@ void MovableEntity::performGoalLimitedMove(sf::Time deltaTime, const sf::Vector2
     currentDirection = previousDirection;
     sf::Vector2f moveVector = getGoalLimitedMovement(deltaTime, mapTileSize);
     Sprite::move(moveVector * deltaTime.asSeconds());
-    previousDirection = currentDirection;
+    previousDirection = currentDirection; //TODO: verify this isn't needed
+}
+
+MoveDirection MovableEntity::getCurrentFacingDirection() {
+    return this->currentlyFacingDirection;
 }
 
 MoveDirection MovableEntity::getCurrentDirection() {

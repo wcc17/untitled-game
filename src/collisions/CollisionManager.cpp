@@ -5,8 +5,9 @@ void CollisionManager::initialize(std::shared_ptr<EventBus> eventBus) {
 }
 
 //TODO: consider referring to "collisions" as something else to differentiate it from vicinity collision
-void CollisionManager::handleCollisions(const Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities,
-                                        const std::vector<Collidable>& mapCollidables) {
+void CollisionManager::handleCollisions(const Player& player,
+                                        const std::vector<std::shared_ptr<NpcEntity>>& entities,
+                                        const std::vector<std::shared_ptr<Collidable>>& mapCollidables) {
 
     bool collisionOccurred = publishCollisionsWithPlayerAndEntities(player, entities);
     if(!collisionOccurred) {
@@ -19,17 +20,17 @@ void CollisionManager::handleCollisions(const Player& player, const std::vector<
 
 }
 
-bool CollisionManager::publishCollisionsWithPlayerAndMap(const Player& player, const std::vector<Collidable>& collidables) {
+bool CollisionManager::publishCollisionsWithPlayerAndMap(const Player& player, const std::vector<std::shared_ptr<Collidable>>& collidables) {
     //NOTE: only want to track a single hard collision since player can only move in one direction, can have many vicinity collisions
     bool collisionAlreadyOccurred = false;
 
-    for(Collidable collidable : collidables) {
-        if(!collisionAlreadyOccurred && collisionOccurred(player, collidable)) {
+    for(std::shared_ptr<Collidable> collidable : collidables) {
+        if(!collisionAlreadyOccurred && collisionOccurred(player, *collidable)) {
             collisionAlreadyOccurred = true;
-            eventBus->publish(new PlayerCollisionEvent(collidable));
+            eventBus->publish(new PlayerCollisionEvent(*collidable));
         }
 
-        if(playerVicinityCollisionOccurred(player, collidable)) {
+        if(playerVicinityCollisionOccurred(player, *collidable)) {
             eventBus->publish(new PlayerVicinityCollisionEvent(collidable));
         }
     }
@@ -47,7 +48,7 @@ bool CollisionManager::publishCollisionsWithPlayerAndEntities(const Player& play
         }
 
         if(playerVicinityCollisionOccurred(player, *npc)) {
-            eventBus->publish(new PlayerVicinityCollisionEvent(*npc));
+            eventBus->publish(new PlayerVicinityCollisionEvent(npc));
         }
     }
 

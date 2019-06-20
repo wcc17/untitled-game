@@ -6,8 +6,8 @@
 
 class PlayerVicinityCollisionEvent : public Event {
 public:
-    PlayerVicinityCollisionEvent(const Collidable& collision): collidedWith(collision) {}
-    const Collidable& collidedWith;
+    PlayerVicinityCollisionEvent(std::shared_ptr<Collidable> collision): collidedWith(collision) {}
+    const std::shared_ptr<Collidable> collidedWith;
 };
 
 #endif //NEWNEW_PLAYERVICINITYCOLLISIONEVENT_H
