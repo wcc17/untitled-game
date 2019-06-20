@@ -4,6 +4,7 @@ const float PLAYER_WIDTH = 16.f;
 const float PLAYER_HEIGHT = 24.f;
 const float PLAYER_FRAME_TIME = 0.16f;
 const float MOVEMENT_SPEED = 80.f;
+const float VICINITY_BOUNDS_OFFSET = 4.f;
 
 void Player::initialize(sf::Texture* texture, const Collidable& collidable) {
     AnimatedEntity::initialize(texture);
@@ -32,8 +33,17 @@ void Player::roundPosition() {
     setPosition(std::round(getPosition().x), std::round(getPosition().y));
 }
 
-//TODO: EVERYTHING needs to be multiples of  tile size, including the character textures (its frames). There should be a check to ensure this is happening so that I don't forget
+//TODO: this should be in CollidableEntity, not in Player
+sf::FloatRect Player::getVicinityBounds() const {
+    sf::FloatRect vicinityBounds = sf::FloatRect(getGlobalBounds().left - VICINITY_BOUNDS_OFFSET,
+                                                 getGlobalBounds().top - VICINITY_BOUNDS_OFFSET,
+                                                 getGlobalBounds().width + (VICINITY_BOUNDS_OFFSET*2),
+                                                 getGlobalBounds().height + (VICINITY_BOUNDS_OFFSET*2));
+    return vicinityBounds;
+}
+
 void Player::initializeAnimations() {
+//TODO: EVERYTHING needs to be multiples of  tile size, including the character textures (its frames). Should there be a check to ensure this is happening so that I don't forget? How can I get the tile size here? Also NpcEntity
     walkingAnimationDown.setSpriteSheet(*this->getTexture());
     walkingAnimationDown.addFrame(sf::IntRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT));
     walkingAnimationDown.addFrame(sf::IntRect(PLAYER_WIDTH, 0, PLAYER_WIDTH, PLAYER_HEIGHT));

@@ -12,6 +12,7 @@ void PlayerManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* 
 
     eventBus->subscribe(this, &PlayerManager::onMoveEvent);
     eventBus->subscribe(this, &PlayerManager::onCollisionEvent);
+    eventBus->subscribe(this, &PlayerManager::onVicinityCollisionEvent);
 }
 
 void PlayerManager::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
@@ -30,6 +31,10 @@ void PlayerManager::onMoveEvent(ControllerMoveEvent* event) {
 void PlayerManager::onCollisionEvent(PlayerCollisionEvent* event) {
     player.fixPositionAfterCollision(event->collidedWith);
     adjustPlayerAndViewPositions();
+}
+
+void PlayerManager::onVicinityCollisionEvent(PlayerVicinityCollisionEvent* event) {
+    printf("vicinity collision happening\n");
 }
 
 void PlayerManager::adjustPlayerAndViewPositions() {

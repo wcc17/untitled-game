@@ -15,6 +15,7 @@ public:
     void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void fixPositionAfterCollision(const Collidable& collidedWith);
     void roundPosition();
+    sf::FloatRect getVicinityBounds() const;
 protected:
     void initializeAnimations();
 };

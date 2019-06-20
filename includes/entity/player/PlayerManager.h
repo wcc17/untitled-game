@@ -10,6 +10,7 @@
 #include "../../controller/ControllerMoveEvent.h"
 #include "../../collisions/PlayerCollisionEvent.h"
 #include "Player.h"
+#include "../../collisions/PlayerVicinityCollisionEvent.h"
 
 class PlayerManager {
 public:
@@ -22,6 +23,7 @@ public:
 private:
     void onMoveEvent(ControllerMoveEvent* event);
     void onCollisionEvent(PlayerCollisionEvent* event);
+    void onVicinityCollisionEvent(PlayerVicinityCollisionEvent* event);
     void setViewCenterFromPlayerPosition();
     void adjustPlayerAndViewPositions();
 

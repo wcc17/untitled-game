@@ -63,7 +63,7 @@ set(INCLUDE_ONLY_FILES includes/collisions/PlayerCollisionEvent.h
         includes/events/EventBus.h
         includes/events/HandlerFunctionBase.h
         includes/events/MemberFunctionHandler.h
-        includes/controller/ControllerMoveEvent.h includes/entity/character/EntityState.h src/entity/character/CollidableEntity.cpp includes/entity/character/CollidableEntity.h)
+        includes/controller/ControllerMoveEvent.h includes/entity/character/EntityState.h src/entity/character/CollidableEntity.cpp includes/entity/character/CollidableEntity.h includes/collisions/PlayerVicinityCollisionEvent.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 
