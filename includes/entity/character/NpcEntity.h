@@ -2,17 +2,15 @@
 #define NEWNEW_NPCENTITY_H
 
 
-#include "AnimatedEntity.h"
-#include "MovableEntity.h"
-#include "CollidableEntity.h"
+#include "CharacterEntity.h"
 
-class NpcEntity : public AnimatedEntity, public MovableEntity, public CollidableEntity {
+class NpcEntity : public CharacterEntity {
 
 public:
     void initialize(sf::Texture* texture, const Collidable& collidable);
     void update(sf::Time deltaTime);
 protected:
-    void initializeAnimations();
+    void initializeAnimations() override;
 };
 
 

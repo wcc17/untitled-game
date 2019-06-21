@@ -3,22 +3,17 @@
 //TODO: these will be moved out once there are different entities being loaded
 const float ENTITY_WIDTH = 16.f;
 const float ENTITY_HEIGHT = 24.f;
+const float ENTITY_MOVEMENT_SPEED = 80.f;
+const float ENTITY_FRAME_TIME = 0.16f; //TODO: not sure where I want to load this from yet
 
 void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable) {
-    AnimatedEntity::initialize(texture);
-
-    name = collidable.getName();
-    type = collidable.getType();
-    setPosition(collidable.getBoundingBox().left, collidable.getBoundingBox().top);
-    setFrameTime(sf::seconds(0.16f)); //TODO: not sure where I want to load this from yet
-    currentDirection = MoveDirection::NONE; //TODO: this shouldn't be needed later
-
-    initializeAnimations();
+    CharacterEntity::initialize(texture, ENTITY_MOVEMENT_SPEED, collidable, ENTITY_FRAME_TIME);
 }
 
 void NpcEntity::update(sf::Time deltaTime) {
 //    MovableEntity::update(deltaTime);
     AnimatedEntity::update(deltaTime, currentDirection);
+    roundPosition();
 }
 
 //TODO: EVERYTHING needs to be multiples of  tile size, including the character textures (its frames). There should be a check to ensure this is happening so that I don't forget

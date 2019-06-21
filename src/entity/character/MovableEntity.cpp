@@ -3,6 +3,7 @@
 void MovableEntity::initialize(float moveSpeed) {
     this->moveSpeed = moveSpeed;
     this->state = STATE_STANDING;
+    currentDirection = MoveDirection::NONE;
 }
 
 void MovableEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {

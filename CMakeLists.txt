@@ -29,7 +29,8 @@ set(SOURCE_FILES src/main.cpp
         src/scene/ObjectMap.cpp
         includes/scene/TileMap.cpp
         src/entity/character/MovableEntity.cpp
-        src/entity/character/CollidableEntity.cpp)
+        src/entity/character/CollidableEntity.cpp
+        src/entity/character/CharacterEntity.cpp)
 
 set(INCLUDE_FILES includes/FramerateCounter.h
         includes/asset/FontManager.h
@@ -55,7 +56,8 @@ set(INCLUDE_FILES includes/FramerateCounter.h
         includes/scene/ObjectMap.h
         includes/scene/TileMap.h
         includes/entity/character/MovableEntity.h
-        includes/entity/character/CollidableEntity.h)
+        includes/entity/character/CollidableEntity.h
+        includes/entity/character/CharacterEntity.h)
 
 set(INCLUDE_ONLY_FILES includes/collisions/PlayerCollisionEvent.h
         includes/collisions/EntityCollisionEvent.h

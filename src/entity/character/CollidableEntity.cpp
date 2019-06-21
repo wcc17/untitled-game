@@ -101,5 +101,8 @@ bool CollidableEntity::isEntityRectAlignedWithCollidableRect(MoveDirection facin
                 return true;
             }
             return false;
+        default:
+            printf("CollidableEntity.isEntityRectAlignedWithCollidableRect should not be passed anything other than up, down, left, right\n");
+            return false;
     }
 }

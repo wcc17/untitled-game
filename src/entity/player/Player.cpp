@@ -2,23 +2,16 @@
 
 const float PLAYER_WIDTH = 16.f;
 const float PLAYER_HEIGHT = 24.f;
-const float PLAYER_FRAME_TIME = 0.16f;
+const float PLAYER_FRAME_TIME =  0.16f;
 const float MOVEMENT_SPEED = 80.f;
 const int VICINITY_BOUNDS_OFFSET = 4;
 
 void Player::initialize(sf::Texture* texture, const Collidable& collidable) {
-    AnimatedEntity::initialize(texture);
-    MovableEntity::initialize(MOVEMENT_SPEED);
-
-    this->name = collidable.getName();
-    this->type = collidable.getType();
-    this->setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
-
+    CharacterEntity::initialize(texture, MOVEMENT_SPEED, collidable, PLAYER_FRAME_TIME);
     this->setVicinityBoundsOffset(VICINITY_BOUNDS_OFFSET);
-    this->setFrameTime(sf::seconds(PLAYER_FRAME_TIME));
-    initializeAnimations();
 }
 
+//TODO: MovableEntity and AnimatedEntity code to CharacterEntity
 void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     handleActionButtonPressed();
     MovableEntity::update(deltaTime, mapTileSize);
@@ -26,14 +19,9 @@ void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     resetAfterFrame();
 }
 
+//TODO: MovableEntity and AnimatedEntity code to CharacterEntity
 void Player::fixPositionAfterCollision(const Collidable& collidedWith) {
     CollidableEntity::fixPositionAfterCollision(collidedWith, currentDirection);
-}
-
-//TODO: this should be in a class shared by NpcEntity and Player. MovableEntity or the CharacterEntity I'm planning on?
-//TODO: roundPosition can be called in NpcEntity's update function. Player does not have that luxury
-void Player::roundPosition() {
-    setPosition(std::round(getPosition().x), std::round(getPosition().y));
 }
 
 void Player::handleActionButtonPressed() {
@@ -82,7 +70,6 @@ void Player::initializeAnimations() {
     setTextureRectBasedOnCurrentFrame();
 }
 
-//TODO: this should be in a class shared by NpcEntity and Player. MovableEntity or the CharacterEntity I'm planning on?
 void Player::resetAfterFrame() {
     CollidableEntity::clearCollidablesInVicinity();
     actionButtonPressed = false;
