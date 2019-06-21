@@ -15,6 +15,7 @@ public:
     static const std::string PLAYER_TEXTURE;
     static const std::string NPC_TEXTURE;
     static const std::string SCENE_TILEMAP;
+    static const std::string DIALOGUE_BOX_TEXTURE;
 };
 
 #endif //NEWNEW_ASSETPATH_H

@@ -3,7 +3,8 @@
 
 enum EntityState {
     STATE_STANDING,
-    STATE_MOVING
+    STATE_MOVING,
+    STATE_INTERACTING
 };
 
 #endif //NEWNEW_ENTITYSTATE_H

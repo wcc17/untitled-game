@@ -7,11 +7,8 @@
 #include <SFML/System/Time.hpp>
 #include <cmath>
 #include "../../events/EventBus.h"
-#include "../../controller/ControllerMoveEvent.h"
 #include "../../collisions/PlayerCollisionEvent.h"
 #include "Player.h"
-#include "../../collisions/PlayerVicinityCollisionEvent.h"
-#include "../../controller/ControllerActionEvent.h"
 
 class PlayerManager {
 public:
@@ -19,18 +16,15 @@ public:
     void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void draw(sf::RenderWindow* window);
     Player getPlayer();
-    sf::View getView();
+    sf::View* getView(); //TODO: does this have to be a pointer? Should it be a shared_ptr? View being a pointer is evidence that View needs to be moved to ViewManager and handled in GameManager
 
 private:
-    void onControllerMoveEvent(ControllerMoveEvent* event);
-    void onControllerActionEvent(ControllerActionEvent* event);
     void onCollisionEvent(PlayerCollisionEvent* event);
-    void onVicinityCollisionEvent(PlayerVicinityCollisionEvent* event);
     void setViewCenterFromPlayerPosition();
     void adjustPlayerAndViewPositions();
 
     std::shared_ptr<EventBus> eventBus;
-    sf::View view;
+    std::unique_ptr<sf::View> view;
     Player player;
 };
 

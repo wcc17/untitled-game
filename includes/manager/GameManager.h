@@ -4,16 +4,21 @@
 #include "../scene/SceneManager.h"
 #include "../controller/KeyboardController.h"
 #include "../events/EventBus.h"
+#include "../asset/FontManager.h"
+#include "../FramerateCounter.h"
 
 class GameManager {
 public:
-    void initialize();
-    void update(sf::Time deltaTime, std::vector<sf::Event> sfEvents);
+    void initialize(sf::RenderWindow* window);
+    void update(std::vector<sf::Event> sfEvents);
     void draw(sf::RenderWindow* window);
     void release();
 private:
     SceneManager sceneManager;
     KeyboardController keyboardController;
+    FramerateCounter framerateCounter;
+    FontManager fontManager;
+
     std::shared_ptr<EventBus> eventBus;
 };
 

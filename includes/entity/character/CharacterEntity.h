@@ -10,8 +10,8 @@ class CharacterEntity : public AnimatedEntity, public MovableEntity, public Coll
 public:
     void initialize(sf::Texture* texture, float movementSpeed, const Collidable& collidable, float FrameTime);
     void roundPosition();
-private:
-
+protected:
+    EntityState state;
 };
 
 

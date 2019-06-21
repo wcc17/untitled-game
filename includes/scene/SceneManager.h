@@ -9,18 +9,22 @@
 #include "../controller/ControllerMoveEvent.h"
 #include "../collisions/CollisionManager.h"
 #include "../npc/NpcManager.h"
+#include "../text/TextManager.h"
 
 class SceneManager {
 public:
-    void initialize(std::shared_ptr<EventBus> eventBus);
+    void initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font, sf::RenderWindow* window);
     void update(sf::Time elapsedTime);
     void draw(sf::RenderWindow* window);
+    void drawForDefaultView(sf::RenderWindow* window);
     void release();
 private:
     TextureManager textureManager;
     PlayerManager playerManager;
     CollisionManager collisionManager;
     NpcManager npcManager;
+    TextManager textManager;
+
     Scene scene;
 };
 

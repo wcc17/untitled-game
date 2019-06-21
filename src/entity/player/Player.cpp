@@ -6,38 +6,84 @@ const float PLAYER_FRAME_TIME =  0.16f;
 const float MOVEMENT_SPEED = 80.f;
 const int VICINITY_BOUNDS_OFFSET = 4;
 
-void Player::initialize(sf::Texture* texture, const Collidable& collidable) {
+void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, const Collidable& collidable) {
     CharacterEntity::initialize(texture, MOVEMENT_SPEED, collidable, PLAYER_FRAME_TIME);
+    this->eventBus = eventBus;
     this->setVicinityBoundsOffset(VICINITY_BOUNDS_OFFSET);
+
+    eventBus->subscribe(this, &Player::onControllerMoveEvent);
+    eventBus->subscribe(this, &Player::onControllerActionEvent);
+    eventBus->subscribe(this, &Player::onVicinityCollisionEvent);
+    eventBus->subscribe(this, &Player::onCloseDialogueEvent);
 }
 
-//TODO: MovableEntity and AnimatedEntity code to CharacterEntity
 void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     handleActionButtonPressed();
-    MovableEntity::update(deltaTime, mapTileSize);
+
+    switch(state) {
+        case STATE_STANDING:
+            handleStandingState(deltaTime);
+            break;
+        case STATE_MOVING:
+            handleMovingState(deltaTime, mapTileSize);
+            break;
+        case STATE_INTERACTING:
+            handleInteractingState();
+            break;
+    }
+}
+
+void Player::handleStandingState(sf::Time deltaTime) {
+    MovableEntity::handleStandingState(deltaTime, state);
+    AnimatedEntity::update(deltaTime, currentDirection);
+}
+
+void Player::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
+    MovableEntity::handleMovingState(deltaTime, mapTileSize, state);
     AnimatedEntity::update(deltaTime, currentDirection);
     resetAfterFrame();
 }
 
-//TODO: MovableEntity and AnimatedEntity code to CharacterEntity
+void Player::handleInteractingState() {
+    resetAfterFrame();
+}
+
 void Player::fixPositionAfterCollision(const Collidable& collidedWith) {
+    //TODO: CollidableEntity code to CharacterEntity
     CollidableEntity::fixPositionAfterCollision(collidedWith, currentDirection);
 }
 
 void Player::handleActionButtonPressed() {
-    if(actionButtonPressed) {
+    if(actionButtonPressed && state != STATE_INTERACTING) {
         for(std::shared_ptr<Collidable> collidable : collidablesInVicinity) {
-
             MoveDirection currentlyFacingDirection = MovableEntity::getCurrentFacingDirection();
             if(CollidableEntity::isFacingCollidableInVicinity(currentlyFacingDirection, *collidable)) {
-                printf("Player is interacting with %s\n", collidable->getName().c_str());
+                state = STATE_INTERACTING;
+                AnimatedEntity::stop();
+                eventBus->publish(new OpenDialogueEvent(getGlobalBounds(), *collidable));
+//                eventBus->publish(new TurnEntityTowardCharacterEvent(MovableEntity::getCurrentFacingDirection()));
+                break;
             }
         }
     }
 }
 
-void Player::setActionButtonPressed() {
-    actionButtonPressed = true;
+void Player::onControllerMoveEvent(ControllerMoveEvent* event) {
+    MovableEntity::setCurrentDirection(event->direction);
+}
+
+void Player::onControllerActionEvent(ControllerActionEvent* event) {
+    if(state != STATE_INTERACTING) {
+        this->actionButtonPressed = true;
+    }
+}
+
+void Player::onVicinityCollisionEvent(PlayerVicinityCollisionEvent* event) {
+    CollidableEntity::addCollidableInVicinity(event->collidedWith);
+}
+
+void Player::onCloseDialogueEvent(CloseDialogueEvent* event) {
+    state = STATE_STANDING;
 }
 
 void Player::initializeAnimations() {

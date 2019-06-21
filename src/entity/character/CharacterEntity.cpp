@@ -4,6 +4,7 @@ void CharacterEntity::initialize(sf::Texture* texture, float movementSpeed, cons
     AnimatedEntity::initialize(texture);
     MovableEntity::initialize(movementSpeed);
 
+    this->state = STATE_STANDING;
     this->name = collidable.getName();
     this->type = collidable.getType();
     this->setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));

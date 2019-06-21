@@ -19,7 +19,7 @@ set(SOURCE_FILES src/main.cpp
         src/collisions/Collidable.cpp
         src/entity/player/PlayerManager.cpp
         src/scene/SceneManager.cpp
-        src/manager/TextManager.cpp
+        src/text/TextManager.cpp
         src/manager/GameManager.cpp
         src/events/HandlerFunctionBase.cpp
         src/events/Event.cpp
@@ -47,7 +47,7 @@ set(INCLUDE_FILES includes/FramerateCounter.h
         includes/collisions/Collidable.h
         includes/entity/player/PlayerManager.h
         includes/scene/SceneManager.h
-        includes/manager/TextManager.h
+        includes/text/TextManager.h
         includes/manager/GameManager.h
         includes/events/Event.h
         includes/collisions/CollisionManager.h
@@ -70,7 +70,7 @@ set(INCLUDE_ONLY_FILES includes/collisions/PlayerCollisionEvent.h
         includes/controller/ControllerMoveEvent.h
         includes/entity/character/EntityState.h
         includes/collisions/PlayerVicinityCollisionEvent.h
-        includes/controller/ControllerActionEvent.h)
+        includes/controller/ControllerActionEvent.h includes/text/OpenDialogueEvent.h includes/text/CloseDialogueEvent.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 

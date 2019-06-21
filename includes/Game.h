@@ -16,9 +16,6 @@ private:
     std::unique_ptr<sf::RenderWindow> window;
     bool shouldExitGame = false;
 
-    //NOTE: there is the possibility that memory issues might happen with all of these allocated this way. Could switch to pointers for certain classes if memory becomes an issue
-    FramerateCounter framerateCounter;
-    FontManager fontManager;
     GameManager gameManager;
 
     void initialize();
