@@ -5,7 +5,7 @@
 #include "BaseController.h"
 #include "../entity/player/Player.h"
 #include "../scene/SceneManager.h"
-#include "../../includes/controller/ControllerMoveEvent.h"
+#include "../events/event/ControllerMoveEvent.h"
 
 class KeyboardController : public BaseController {
 

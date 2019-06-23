@@ -1,8 +1,8 @@
 #ifndef NEWNEW_ENTITYCOLLISIONEVENT_H
 #define NEWNEW_ENTITYCOLLISIONEVENT_H
 
-#include "../events/Event.h"
-#include "Collidable.h"
+#include "../Event.h"
+#include "../../collisions/Collidable.h"
 
 class EntityCollisionEvent : public Event {
 public:

@@ -1,21 +1,26 @@
 #include "../includes/Game.h"
 
 Game::Game() {
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(960*2,540*2,32),"newnew", sf::Style::Titlebar | sf::Style::Close);
-//     window->setFramerateLimit(60);
-    window->setVerticalSyncEnabled(true);
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920,1080,32),"newnew", sf::Style::Titlebar | sf::Style::Close);
+     window->setFramerateLimit(60);
+//    window->setVerticalSyncEnabled(true);
 
     initialize();
 }
 
 void Game::initialize() {
-    gameManager.initialize(window.get());
+    eventBus = std::make_shared<EventBus>();
+    fontManager.loadFont(AssetPath::OPENSANS_REGULAR);
+    framerateCounter.initialize(fontManager.getFont(AssetPath::OPENSANS_REGULAR));
+    keyboardController.initialize(eventBus);
+    sceneManager.initialize(eventBus, fontManager.getFont(AssetPath::OPENSANS_REGULAR));
+
+    eventBus->subscribe(this, &Game::onExitGameEvent);
 }
 
 void Game::run() {
     while(!shouldExitGame && window->isOpen()) {
         std::vector<sf::Event> events = handleEvents();
-
         if(!shouldExitGame) {
             update(events);
             draw();
@@ -26,7 +31,31 @@ void Game::run() {
 }
 
 void Game::update(std::vector<sf::Event> events) {
-    gameManager.update(events);
+    sf::Time deltaTime = framerateCounter.update();
+    keyboardController.handleInput(events);
+    sceneManager.update(deltaTime, window.get());
+}
+
+void Game::draw() {
+    window->clear(sf::Color::Black);
+
+    //draw to player view
+    sceneManager.draw(window.get());
+
+    //draw to default view
+    window->setView(window->getDefaultView());
+    sceneManager.drawForDefaultView(window.get());
+    window->draw(framerateCounter.getFpsText());
+
+    window->display();
+}
+
+void Game::exit() {
+    window->close();
+    fontManager.releaseFonts();
+    sceneManager.release();
+    eventBus.reset();
+    window.reset();
 }
 
 std::vector<sf::Event> Game::handleEvents() {
@@ -43,14 +72,7 @@ std::vector<sf::Event> Game::handleEvents() {
     return events;
 }
 
-void Game::draw() {
-    window->clear(sf::Color::Black);
-    gameManager.draw(window.get());
-    window->display();
-}
-
-void Game::exit() {
-    window->close();
-    gameManager.release();
-    window.reset();
+void Game::onExitGameEvent(ExitGameEvent* event) {
+    printf("Exiting game. Reason given: %s\n", event->exitMessage.c_str());
+    shouldExitGame = true;
 }

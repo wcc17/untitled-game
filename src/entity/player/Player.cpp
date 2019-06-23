@@ -15,11 +15,12 @@ void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture
     eventBus->subscribe(this, &Player::onControllerActionEvent);
     eventBus->subscribe(this, &Player::onVicinityCollisionEvent);
     eventBus->subscribe(this, &Player::onCloseDialogueEvent);
+    eventBus->subscribe(this, &Player::onCollisionEvent);
+
+    adjustPlayerAndViewPositions();
 }
 
 void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
-    handleActionButtonPressed();
-
     switch(state) {
         case STATE_STANDING:
             handleStandingState(deltaTime);
@@ -36,27 +37,35 @@ void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
 void Player::handleStandingState(sf::Time deltaTime) {
     MovableEntity::handleStandingState(deltaTime, state);
     AnimatedEntity::update(deltaTime, currentDirection);
+
+    handleActionButtonPressed();
+    resetAfterFrame();
+    adjustPlayerAndViewPositions();
 }
 
 void Player::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     MovableEntity::handleMovingState(deltaTime, mapTileSize, state);
     AnimatedEntity::update(deltaTime, currentDirection);
+
+    handleActionButtonPressed();
     resetAfterFrame();
+    adjustPlayerAndViewPositions();
 }
 
 void Player::handleInteractingState() {
     resetAfterFrame();
+    adjustPlayerAndViewPositions();
 }
 
-void Player::fixPositionAfterCollision(const Collidable& collidedWith) {
-    //TODO: CollidableEntity code to CharacterEntity
-    CollidableEntity::fixPositionAfterCollision(collidedWith, currentDirection);
+void Player::adjustPlayerAndViewPositions() {
+    eventBus->publish(new PlayerPositionChangeEvent(getGlobalBounds()));
+    roundPosition();
 }
 
 void Player::handleActionButtonPressed() {
-    if(actionButtonPressed && state != STATE_INTERACTING) {
+    if(actionButtonPressed) {
+        MoveDirection currentlyFacingDirection = MovableEntity::getCurrentFacingDirection();
         for(std::shared_ptr<Collidable> collidable : collidablesInVicinity) {
-            MoveDirection currentlyFacingDirection = MovableEntity::getCurrentFacingDirection();
             if(CollidableEntity::isFacingCollidableInVicinity(currentlyFacingDirection, *collidable)) {
                 state = STATE_INTERACTING;
                 AnimatedEntity::stop();
@@ -73,9 +82,7 @@ void Player::onControllerMoveEvent(ControllerMoveEvent* event) {
 }
 
 void Player::onControllerActionEvent(ControllerActionEvent* event) {
-    if(state != STATE_INTERACTING) {
-        this->actionButtonPressed = true;
-    }
+    this->actionButtonPressed = (state != STATE_INTERACTING);
 }
 
 void Player::onVicinityCollisionEvent(PlayerVicinityCollisionEvent* event) {
@@ -84,6 +91,16 @@ void Player::onVicinityCollisionEvent(PlayerVicinityCollisionEvent* event) {
 
 void Player::onCloseDialogueEvent(CloseDialogueEvent* event) {
     state = STATE_STANDING;
+}
+
+void Player::onCollisionEvent(PlayerCollisionEvent* event) {
+    CollidableEntity::fixPositionAfterCollision(event->collidedWith, currentDirection);
+    adjustPlayerAndViewPositions();
+}
+
+void Player::resetAfterFrame() {
+    CollidableEntity::clearCollidablesInVicinity();
+    actionButtonPressed = false;
 }
 
 void Player::initializeAnimations() {
@@ -114,9 +131,4 @@ void Player::initializeAnimations() {
 
     this->currentAnimation = &walkingAnimationDown;
     setTextureRectBasedOnCurrentFrame();
-}
-
-void Player::resetAfterFrame() {
-    CollidableEntity::clearCollidablesInVicinity();
-    actionButtonPressed = false;
 }

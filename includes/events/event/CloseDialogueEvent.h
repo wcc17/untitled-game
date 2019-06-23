@@ -1,7 +1,7 @@
 #ifndef NEWNEW_CLOSEDIALOGUEEVENT_H
 #define NEWNEW_CLOSEDIALOGUEEVENT_H
 
-#include "../events/Event.h"
+#include "../Event.h"
 
 class CloseDialogueEvent : public Event {
 public:

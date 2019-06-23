@@ -1,8 +1,8 @@
 #ifndef NEWNEW_OPENDIALOGUEEVENT_H
 #define NEWNEW_OPENDIALOGUEEVENT_H
 
-#include "../events/Event.h"
-#include "../collisions/Collidable.h"
+#include "../Event.h"
+#include "../../collisions/Collidable.h"
 
 class OpenDialogueEvent : public Event {
 public:

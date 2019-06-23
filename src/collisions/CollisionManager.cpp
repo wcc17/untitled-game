@@ -31,7 +31,7 @@ bool CollisionManager::publishCollisionsWithPlayerAndMap(const Player& player, c
         }
 
         if(playerVicinityCollisionOccurred(player, *collidable)) {
-            eventBus->publish(new PlayerVicinityCollisionEvent(collidable));
+             eventBus->publish(new PlayerVicinityCollisionEvent(collidable));
         }
     }
 
