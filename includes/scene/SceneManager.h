@@ -14,7 +14,7 @@
 class SceneManager {
 public:
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font);
-    void update(sf::Time elapsedTime);
+    void update(sf::Time elapsedTime, sf::RenderWindow* window);
     void draw(sf::RenderWindow* window);
     void drawForDefaultView(sf::RenderWindow* window);
     void release();

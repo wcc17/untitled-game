@@ -14,17 +14,21 @@
 class TextManager {
 public:
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font);
-    void update();
+    void update(sf::RenderWindow* window, sf::View& view);
     void draw(sf::RenderWindow* window);
     void drawForDefaultView(sf::RenderWindow* window);
-    void onControllerActionEvent(ControllerActionEvent* event);
-    void onOpenDialogueEvent(OpenDialogueEvent* event);
 private:
     std::shared_ptr<EventBus> eventBus;
     sf::Sprite dialogueBoxSprite;
     sf::Text dialogueText;
 
-    bool showDialogueBox = false;
+    bool dialogueIsActive = false;
+    bool dialoguePositionSet = false;
+    void onControllerActionEvent(ControllerActionEvent* event);
+    void onOpenDialogueEvent(OpenDialogueEvent* event);
+    void closeDialogue();
+    void updateDialogueBoxPosition(sf::View& view);
+    void updateDialogueTextPosition(sf::RenderWindow* window, sf::View& view);
 };
 
 

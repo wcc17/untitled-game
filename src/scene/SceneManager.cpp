@@ -16,10 +16,11 @@ void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font
     collisionManager.initialize(eventBus);
 }
 
-void SceneManager::update(sf::Time elapsedTime) {
+void SceneManager::update(sf::Time elapsedTime, sf::RenderWindow* window) {
     player.update(elapsedTime, scene.getMapTileSize());
     npcManager.update(elapsedTime);
     collisionManager.handleCollisions(player, npcManager.getNpcEntities(), scene.getMapCollidables());
+    textManager.update(window, viewManager.getView());
 }
 
 void SceneManager::draw(sf::RenderWindow* window) {

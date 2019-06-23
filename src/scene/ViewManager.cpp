@@ -17,6 +17,6 @@ void ViewManager::setViewCenterFromPlayerPosition(sf::FloatRect playerBounds) {
     view.setCenter(playerBounds.left + (playerBounds.width / 2), playerBounds.top + (playerBounds.height / 2));
 }
 
-sf::View ViewManager::getView() {
+sf::View& ViewManager::getView() {
     return this->view;
 }

@@ -1,7 +1,7 @@
 #include "../includes/Game.h"
 
 Game::Game() {
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(960*2,540*2,32),"newnew", sf::Style::Titlebar | sf::Style::Close);
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920,1080,32),"newnew", sf::Style::Titlebar | sf::Style::Close);
      window->setFramerateLimit(60);
 //    window->setVerticalSyncEnabled(true);
 
@@ -33,7 +33,7 @@ void Game::run() {
 void Game::update(std::vector<sf::Event> events) {
     sf::Time deltaTime = framerateCounter.update();
     keyboardController.handleInput(events);
-    sceneManager.update(deltaTime);
+    sceneManager.update(deltaTime, window.get());
 }
 
 void Game::draw() {
