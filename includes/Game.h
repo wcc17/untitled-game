@@ -8,6 +8,7 @@
 #include "events/EventBus.h"
 #include "scene/SceneManager.h"
 #include "controller/KeyboardController.h"
+#include "events/event/ExitGameEvent.h"
 
 class Game {
 
@@ -24,10 +25,11 @@ private:
     bool shouldExitGame = false;
 
     void initialize();
-    std::vector<sf::Event> handleEvents();
     void update(std::vector<sf::Event> events);
     void draw();
     void exit();
+    std::vector<sf::Event> handleEvents();
+    void onExitGameEvent(ExitGameEvent* event);
 };
 
 

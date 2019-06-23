@@ -14,6 +14,8 @@ void Game::initialize() {
     framerateCounter.initialize(fontManager.getFont(AssetPath::OPENSANS_REGULAR));
     keyboardController.initialize(eventBus);
     sceneManager.initialize(eventBus, fontManager.getFont(AssetPath::OPENSANS_REGULAR));
+
+    eventBus->subscribe(this, &Game::onExitGameEvent);
 }
 
 void Game::run() {
@@ -68,4 +70,9 @@ std::vector<sf::Event> Game::handleEvents() {
     }
 
     return events;
+}
+
+void Game::onExitGameEvent(ExitGameEvent* event) {
+    printf("Exiting game. Reason given: %s\n", event->exitMessage.c_str());
+    shouldExitGame = true;
 }
