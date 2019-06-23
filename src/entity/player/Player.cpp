@@ -21,8 +21,6 @@ void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture
 }
 
 void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
-    handleActionButtonPressed();
-
     switch(state) {
         case STATE_STANDING:
             handleStandingState(deltaTime);
@@ -34,23 +32,29 @@ void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
             handleInteractingState();
             break;
     }
-
-    adjustPlayerAndViewPositions();
 }
 
 void Player::handleStandingState(sf::Time deltaTime) {
     MovableEntity::handleStandingState(deltaTime, state);
     AnimatedEntity::update(deltaTime, currentDirection);
+
+    handleActionButtonPressed();
+    resetAfterFrame();
+    adjustPlayerAndViewPositions();
 }
 
 void Player::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     MovableEntity::handleMovingState(deltaTime, mapTileSize, state);
     AnimatedEntity::update(deltaTime, currentDirection);
+
+    handleActionButtonPressed();
     resetAfterFrame();
+    adjustPlayerAndViewPositions();
 }
 
 void Player::handleInteractingState() {
     resetAfterFrame();
+    adjustPlayerAndViewPositions();
 }
 
 void Player::adjustPlayerAndViewPositions() {
@@ -59,7 +63,7 @@ void Player::adjustPlayerAndViewPositions() {
 }
 
 void Player::handleActionButtonPressed() {
-    if(actionButtonPressed && state != STATE_INTERACTING) {
+    if(actionButtonPressed) {
         MoveDirection currentlyFacingDirection = MovableEntity::getCurrentFacingDirection();
         for(std::shared_ptr<Collidable> collidable : collidablesInVicinity) {
             if(CollidableEntity::isFacingCollidableInVicinity(currentlyFacingDirection, *collidable)) {

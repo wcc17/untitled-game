@@ -21,8 +21,6 @@ protected:
     std::vector<std::shared_ptr<Collidable>> collidablesInVicinity;
 
 private:
-    static bool isEntityRectAlignedWithCollidableRect(MoveDirection facingDirection,
-            sf::FloatRect& entityRect, sf::FloatRect& collidableRect);
     int vicinityBoundsOffset;
 };
 

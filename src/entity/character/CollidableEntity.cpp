@@ -30,27 +30,36 @@ void CollidableEntity::fixPositionAfterCollision(const Collidable& collidedWith,
     setPosition(sf::Vector2f(left, top));
 }
 bool CollidableEntity::isFacingCollidableInVicinity(MoveDirection facingDirection, Collidable& collidableInVicinity) {
-    //TODO: unique_ptr instead of copies?
-    sf::FloatRect entityBounds = getGlobalBounds();
-    sf::FloatRect collidableBounds = collidableInVicinity.getBoundingBox();
+    //types not being covered here. I think they're unimportant right now, but could potentially improve this function later on:
+    //entity could have his left side in the middle of the collidable, but the right side on the outside of the collidable to the right
+    //entity could have his right side in the middle of the collidable, but the left side on the outside of the collidable to the left
+    //this works now because everything has a minimum width of 16. If there was something less wide than the player he could still interact with it, but it would look weird
+    //NOTE: Previous to 06/23/19, I was checking that the player wasn't on top of the collidable it was colliding with (its left + width didn't go over the collidables left value for example). Can see old commits if that ends up being needed
 
-    if(isEntityRectAlignedWithCollidableRect(facingDirection, entityBounds, collidableBounds)) {
-        switch(facingDirection) {
-            case MoveDirection::DOWN:
-                return ((entityBounds.top + entityBounds.height) <= (collidableBounds.top));
-            case MoveDirection ::UP:
-                return ((entityBounds.top) >= (collidableBounds.top + collidableBounds.height));
-            case MoveDirection::LEFT:
-                return ((entityBounds.left) >= (collidableBounds.left + collidableBounds.width));
-            case MoveDirection::RIGHT:
-                return ((entityBounds.left + entityBounds.width) <= (collidableBounds.left));
-            default:
-                printf("CollidableEntity::isFacingCollidableInVicinity -- player should not be facing in the NONE direction\n");
-                return false;
-        }
+    sf::FloatRect roundedEntityBounds = getGlobalBounds();
+    sf::FloatRect collidableRect = collidableInVicinity.getBoundingBox();
+    switch(facingDirection) {
+        case MoveDirection::DOWN:
+        case MoveDirection::UP:
+            if(roundedEntityBounds.left == collidableRect.left //entity's left side lines up with the left side of the collidable
+               || ((roundedEntityBounds.left > collidableRect.left) && ((roundedEntityBounds.left + roundedEntityBounds.width) <= (collidableRect.left + collidableRect.width))) //entity is somewhere completely in the middle of collidable
+               || ((roundedEntityBounds.left + roundedEntityBounds.width) == (collidableRect.left + collidableRect.width))) { //entity's right side lines up with the right side of the collidable
+                return true;
+            }
+            return false;
+
+        case MoveDirection::LEFT:
+        case MoveDirection::RIGHT:
+            if(roundedEntityBounds.top == collidableRect.top //entity's top side lines up with the top side of the collidable
+               || ((roundedEntityBounds.top > collidableRect.top) && ((roundedEntityBounds.top + roundedEntityBounds.height) <= (collidableRect.top + collidableRect.height))) //entity is somewhere completely in the middle of collidable
+               || ((roundedEntityBounds.top + roundedEntityBounds.height) == (collidableRect.top + collidableRect.height))) { //entity's bottom side lines up with the bottom side of the collidable
+                return true;
+            }
+            return false;
+        default:
+            printf("CollidableEntity.isEntityRectAlignedWithCollidableRect should not be passed anything other than up, down, left, right\n");
+            return false;
     }
-
-    return false;
 }
 
 sf::FloatRect CollidableEntity::getVicinityBounds() const {
@@ -75,34 +84,4 @@ sf::FloatRect CollidableEntity::getBoundingBox() const {
 
 void CollidableEntity::setVicinityBoundsOffset(int vicinityBoundsOffset) {
     this->vicinityBoundsOffset = vicinityBoundsOffset;
-}
-
-bool CollidableEntity::isEntityRectAlignedWithCollidableRect(MoveDirection facingDirection, sf::FloatRect& entityRect, sf::FloatRect& collidableRect) {
-    //types not being covered here. I think they're unimportant right now, but could potentially improve this function later on:
-    //entity could have his left side in the middle of the collidable, but the right side on the outside of the collidable to the right
-    //entity could have his right side in the middle of the collidable, but the left side on the outside of the collidable to the left
-    //this works now because everything has a minimum width of 16. If there was something less wide than the player he could still interact with it, but it would look weird
-
-    switch(facingDirection) {
-        case MoveDirection::DOWN:
-        case MoveDirection::UP:
-            if(entityRect.left == collidableRect.left //entity's left side lines up with the left side of the collidable
-               || ((entityRect.left > collidableRect.left) && ((entityRect.left + entityRect.width) <= (collidableRect.left + collidableRect.width))) //entity is somewhere completely in the middle of collidable
-               || ((entityRect.left + entityRect.width) == (collidableRect.left + collidableRect.width))) { //entity's right side lines up with the right side of the collidable
-                return true;
-            }
-            return false;
-
-        case MoveDirection::LEFT:
-        case MoveDirection::RIGHT:
-            if(entityRect.top == collidableRect.top //entity's top side lines up with the top side of the collidable
-               || ((entityRect.top > collidableRect.top) && ((entityRect.top + entityRect.height) <= (collidableRect.top + collidableRect.height))) //entity is somewhere completely in the middle of collidable
-               || ((entityRect.top + entityRect.height) == (collidableRect.top + collidableRect.height))) { //entity's bottom side lines up with the bottom side of the collidable
-                return true;
-            }
-            return false;
-        default:
-            printf("CollidableEntity.isEntityRectAlignedWithCollidableRect should not be passed anything other than up, down, left, right\n");
-            return false;
-    }
 }
