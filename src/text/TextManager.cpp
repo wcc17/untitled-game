@@ -7,7 +7,6 @@ void TextManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* te
     this->dialogueBoxSprite.scale(0.33f, 0.33f); //TODO: this shouldn't be done this way. Dialog box should just be drawn at the right size for the view
     this->dialogueText.setFillColor(sf::Color::Black);
     this->dialogueText.setLineSpacing(1.1f);
-    this->dialogueText.setString("Nothing to see here.");
     this->dialogueText.setFont(*font);
     this->dialogueText.setCharacterSize(60);
 
@@ -16,10 +15,12 @@ void TextManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* te
 }
 
 void TextManager::update(sf::RenderWindow* window, sf::View& view) {
-    if(dialogueIsActive && !dialoguePositionSet) {
-        updateDialogueBoxPosition(view);
-        updateDialogueTextPosition(window, view);
-        dialoguePositionSet = true;
+    if(dialogueIsActive) {
+        if(!dialoguePositionSet) {
+            setPositionsOnDialogueIsActive(window, view);
+        }
+
+        updateTextReadyToDraw();
     }
 }
 
@@ -33,6 +34,12 @@ void TextManager::drawForDefaultView(sf::RenderWindow* window) {
     if(dialogueIsActive) {
         window->draw(dialogueText);
     }
+}
+
+void TextManager::setPositionsOnDialogueIsActive(sf::RenderWindow* window, sf::View& view) {
+    updateDialogueBoxPosition(view);
+    updateDialogueTextPosition(window, view);
+    dialoguePositionSet = true;
 }
 
 void TextManager::updateDialogueBoxPosition(sf::View& view) {
@@ -65,5 +72,11 @@ void TextManager::onControllerActionEvent(ControllerActionEvent* event) {
 void TextManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
     printf("ready to handle the dialogue box in TextManager\n");
 //    const Collidable& collidable = event->interactedWith; //TODO: will be used to decide what dialogue to display
+
+//    this->stringToDraw = "Nothing to see here.";
+//    this->stringReadyToDraw = stringToDraw[0];
+//    this->stringToDraw = stringToDraw.erase(0, 1);
+//    this->dialogueText.setString(stringReadyToDraw);
+
     dialogueIsActive = true;
 }

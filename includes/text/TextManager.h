@@ -21,12 +21,15 @@ private:
     std::shared_ptr<EventBus> eventBus;
     sf::Sprite dialogueBoxSprite;
     sf::Text dialogueText;
+    std::string stringToDraw;
+    std::string stringReadyToDraw; //this will only be a part of stringToDraw, as the string is drawn one character at a time
 
     bool dialogueIsActive = false;
     bool dialoguePositionSet = false;
     void onControllerActionEvent(ControllerActionEvent* event);
     void onOpenDialogueEvent(OpenDialogueEvent* event);
     void closeDialogue();
+    void setPositionsOnDialogueIsActive(sf::RenderWindow* window, sf::View& view);
     void updateDialogueBoxPosition(sf::View& view);
     void updateDialogueTextPosition(sf::RenderWindow* window, sf::View& view);
 };
