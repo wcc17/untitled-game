@@ -5,6 +5,7 @@ void TextManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* te
 
     this->dialogueBoxSprite.setTexture(*texture);
     this->dialogueBoxSprite.scale(0.33f, 0.33f); //TODO: this shouldn't be done this way. Dialog box should just be drawn at the right size for the view
+    this->dialogueText.setString("Nothing to see here."); //TODO: delete this
     this->dialogueText.setFillColor(sf::Color::Black);
     this->dialogueText.setLineSpacing(1.1f);
     this->dialogueText.setFont(*font);
@@ -20,7 +21,7 @@ void TextManager::update(sf::RenderWindow* window, sf::View& view) {
             setPositionsOnDialogueIsActive(window, view);
         }
 
-        updateTextReadyToDraw();
+        // updateTextReadyToDraw();
     }
 }
 
