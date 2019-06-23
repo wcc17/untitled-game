@@ -11,7 +11,6 @@ void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font
     npcManager.initialize(scene.getNpcCollidables(), textureManager.getTexture(AssetPath::NPC_TEXTURE));
 
     textureManager.loadTexture(AssetPath::DIALOGUE_BOX_TEXTURE);
-
     textManager.initialize(eventBus, textureManager.getTexture(AssetPath::DIALOGUE_BOX_TEXTURE), font);
 
     collisionManager.initialize(eventBus);

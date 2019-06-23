@@ -57,20 +57,21 @@ set(INCLUDE_FILES includes/FramerateCounter.h
         includes/entity/character/CharacterEntity.h
         includes/scene/ViewManager.h)
 
-set(INCLUDE_ONLY_FILES includes/collisions/PlayerCollisionEvent.h
-        includes/collisions/EntityCollisionEvent.h
-        includes/controller/ControllerMoveEvent.h
+set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
+        includes/events/event/EntityCollisionEvent.h
+        includes/events/event/ControllerMoveEvent.h
         includes/collisions/CollidableType.h
         includes/controller/MoveDirection.h
         includes/events/EventBus.h
         includes/events/HandlerFunctionBase.h
         includes/events/MemberFunctionHandler.h
-        includes/controller/ControllerMoveEvent.h
+        includes/events/event/ControllerMoveEvent.h
         includes/entity/character/EntityState.h
-        includes/collisions/PlayerVicinityCollisionEvent.h
-        includes/controller/ControllerActionEvent.h
-        includes/text/OpenDialogueEvent.h
-        includes/text/CloseDialogueEvent.h includes/entity/player/PlayerPositionChangeEvent.h)
+        includes/events/event/PlayerVicinityCollisionEvent.h
+        includes/events/event/ControllerActionEvent.h
+        includes/events/event/OpenDialogueEvent.h
+        includes/events/event/CloseDialogueEvent.h
+        includes/events/event/PlayerPositionChangeEvent.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 

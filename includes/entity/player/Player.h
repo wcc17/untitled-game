@@ -3,14 +3,14 @@
 
 
 #include "../../events/EventBus.h"
-#include "../../controller/ControllerMoveEvent.h"
+#include "../../events/event/ControllerMoveEvent.h"
 #include "../character/CharacterEntity.h"
-#include "../../collisions/PlayerVicinityCollisionEvent.h"
-#include "../../text/CloseDialogueEvent.h"
-#include "../../controller/ControllerActionEvent.h"
-#include "../../../includes/text/OpenDialogueEvent.h"
-#include "../../collisions/PlayerCollisionEvent.h"
-#include "PlayerPositionChangeEvent.h"
+#include "../../events/event/PlayerVicinityCollisionEvent.h"
+#include "../../events/event/CloseDialogueEvent.h"
+#include "../../events/event/ControllerActionEvent.h"
+#include "../../events/event/OpenDialogueEvent.h"
+#include "../../events/event/PlayerCollisionEvent.h"
+#include "../../events/event/PlayerPositionChangeEvent.h"
 
 class Player : public CharacterEntity {
 

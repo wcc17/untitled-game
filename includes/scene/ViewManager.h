@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics/View.hpp>
 #include "../events/EventBus.h"
-#include "../entity/player/PlayerPositionChangeEvent.h"
+#include "../events/event/PlayerPositionChangeEvent.h"
 #include <cmath>
 
 class ViewManager {

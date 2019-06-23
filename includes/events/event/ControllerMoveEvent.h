@@ -2,8 +2,8 @@
 #define NEWNEW_CONTROLLERMOVEEVENT_H
 
 
-#include "../events/Event.h"
-#include "MoveDirection.h"
+#include "../Event.h"
+#include "../../controller/MoveDirection.h"
 
 class ControllerMoveEvent : public Event {
 public:

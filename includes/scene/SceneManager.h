@@ -5,7 +5,7 @@
 #include "../asset/AssetPath.h"
 #include "../asset/TextureManager.h"
 #include "../events/EventBus.h"
-#include "../controller/ControllerMoveEvent.h"
+#include "../events/event/ControllerMoveEvent.h"
 #include "../collisions/CollisionManager.h"
 #include "../npc/NpcManager.h"
 #include "../text/TextManager.h"

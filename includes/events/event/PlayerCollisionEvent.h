@@ -1,8 +1,8 @@
 #ifndef NEWNEW_PLAYERCOLLISIONEVENT_H
 #define NEWNEW_PLAYERCOLLISIONEVENT_H
 
-#include "../events/Event.h"
-#include "Collidable.h"
+#include "../Event.h"
+#include "../../collisions/Collidable.h"
 
 class PlayerCollisionEvent : public Event {
 public:

@@ -6,8 +6,8 @@
 #include "Collidable.h"
 #include "../entity/character/NpcEntity.h"
 #include "../entity/player/Player.h"
-#include "../../includes/collisions/PlayerCollisionEvent.h"
-#include "../../includes/collisions/PlayerVicinityCollisionEvent.h"
+#include "../events/event/PlayerCollisionEvent.h"
+#include "../events/event/PlayerVicinityCollisionEvent.h"
 
 class CollisionManager {
 public:

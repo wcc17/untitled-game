@@ -4,9 +4,9 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include "../controller/ControllerActionEvent.h"
-#include "CloseDialogueEvent.h"
-#include "OpenDialogueEvent.h"
+#include "../events/event/ControllerActionEvent.h"
+#include "../events/event/CloseDialogueEvent.h"
+#include "../events/event/OpenDialogueEvent.h"
 #include "../events/EventBus.h"
 #include <SFML/Graphics/Text.hpp>
 #include "../../includes/events/EventBus.h"
