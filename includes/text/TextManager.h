@@ -13,7 +13,8 @@
 
 class TextManager {
 public:
-    void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font, sf::View* view, sf::RenderWindow* window);
+    void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font);
+    void update();
     void draw(sf::RenderWindow* window);
     void drawForDefaultView(sf::RenderWindow* window);
     void onControllerActionEvent(ControllerActionEvent* event);
@@ -21,12 +22,7 @@ public:
 private:
     std::shared_ptr<EventBus> eventBus;
     sf::Sprite dialogueBoxSprite;
-    sf::Vector2f viewSize;
     sf::Text dialogueText;
-
-    //TODO: any alternatives to keeping pointers to the window and view? global util? thats not really any better
-    sf::RenderWindow* window;
-    sf::View* view;
 
     bool showDialogueBox = false;
 };

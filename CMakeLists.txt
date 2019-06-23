@@ -17,10 +17,8 @@ set(SOURCE_FILES src/main.cpp
         src/scene/Scene.cpp
         src/entity/character/AnimatedEntity.cpp
         src/collisions/Collidable.cpp
-        src/entity/player/PlayerManager.cpp
         src/scene/SceneManager.cpp
         src/text/TextManager.cpp
-        src/manager/GameManager.cpp
         src/events/HandlerFunctionBase.cpp
         src/events/Event.cpp
         src/collisions/CollisionManager.cpp
@@ -30,7 +28,8 @@ set(SOURCE_FILES src/main.cpp
         includes/scene/TileMap.cpp
         src/entity/character/MovableEntity.cpp
         src/entity/character/CollidableEntity.cpp
-        src/entity/character/CharacterEntity.cpp)
+        src/entity/character/CharacterEntity.cpp
+        src/scene/ViewManager.cpp)
 
 set(INCLUDE_FILES includes/FramerateCounter.h
         includes/asset/FontManager.h
@@ -45,10 +44,8 @@ set(INCLUDE_FILES includes/FramerateCounter.h
         includes/scene/Scene.h
         includes/entity/character/AnimatedEntity.h
         includes/collisions/Collidable.h
-        includes/entity/player/PlayerManager.h
         includes/scene/SceneManager.h
         includes/text/TextManager.h
-        includes/manager/GameManager.h
         includes/events/Event.h
         includes/collisions/CollisionManager.h
         includes/npc/NpcManager.h
@@ -57,7 +54,8 @@ set(INCLUDE_FILES includes/FramerateCounter.h
         includes/scene/TileMap.h
         includes/entity/character/MovableEntity.h
         includes/entity/character/CollidableEntity.h
-        includes/entity/character/CharacterEntity.h)
+        includes/entity/character/CharacterEntity.h
+        includes/scene/ViewManager.h)
 
 set(INCLUDE_ONLY_FILES includes/collisions/PlayerCollisionEvent.h
         includes/collisions/EntityCollisionEvent.h
@@ -70,7 +68,9 @@ set(INCLUDE_ONLY_FILES includes/collisions/PlayerCollisionEvent.h
         includes/controller/ControllerMoveEvent.h
         includes/entity/character/EntityState.h
         includes/collisions/PlayerVicinityCollisionEvent.h
-        includes/controller/ControllerActionEvent.h includes/text/OpenDialogueEvent.h includes/text/CloseDialogueEvent.h)
+        includes/controller/ControllerActionEvent.h
+        includes/text/OpenDialogueEvent.h
+        includes/text/CloseDialogueEvent.h includes/entity/player/PlayerPositionChangeEvent.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 
