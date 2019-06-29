@@ -18,7 +18,7 @@ void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font
 
 void SceneManager::update(sf::Time elapsedTime, sf::RenderWindow* window) {
     player.update(elapsedTime, scene.getMapTileSize());
-    npcManager.update(elapsedTime);
+    npcManager.update(elapsedTime, scene.getMapTileSize());
     collisionManager.handleCollisions(player, npcManager.getNpcEntities(), scene.getMapCollidables());
     textManager.update(window, viewManager.getView(), elapsedTime);
 }

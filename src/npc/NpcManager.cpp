@@ -13,9 +13,9 @@ void NpcManager::initialize(std::shared_ptr<EventBus> eventBus, std::vector<Coll
     eventBus->subscribe(this, &NpcManager::onStartEntityDialogueEvent);
 }
 
-void NpcManager::update(sf::Time deltaTime) {
+void NpcManager::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     for(std::shared_ptr<NpcEntity> npc : npcs) {
-        npc->update(deltaTime);
+        npc->update(deltaTime, mapTileSize);
     }
 }
 

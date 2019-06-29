@@ -21,40 +21,28 @@ void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture
 }
 
 void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
-    switch(state) {
-        case STATE_STANDING:
-            handleStandingState(deltaTime);
-            break;
-        case STATE_MOVING:
-            handleMovingState(deltaTime, mapTileSize);
-            break;
-        case STATE_INTERACTING:
-            handleInteractingState();
-            break;
-    }
+    CharacterEntity::update(deltaTime, mapTileSize);
 }
 
 void Player::handleStandingState(sf::Time deltaTime) {
-    MovableEntity::handleStandingState(deltaTime, state);
-    AnimatedEntity::update(deltaTime, currentDirection);
-
+    CharacterEntity::handleStandingState(deltaTime);
     handleActionButtonPressed();
     resetAfterFrame();
     adjustPlayerAndViewPositions();
+    //TODO: should use roundPosition here for NpcEntity
 }
 
 void Player::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
-    MovableEntity::handleMovingState(deltaTime, mapTileSize, state);
-    AnimatedEntity::update(deltaTime, currentDirection);
-
+    CharacterEntity::handleMovingState(deltaTime, mapTileSize);
     handleActionButtonPressed();
     resetAfterFrame();
     adjustPlayerAndViewPositions();
+    //TODO: should use roundPosition here for NpcEntity
 }
 
 void Player::handleInteractingState() {
+    CharacterEntity::handleInteractingState();
     resetAfterFrame();
-    adjustPlayerAndViewPositions();
 }
 
 void Player::adjustPlayerAndViewPositions() {

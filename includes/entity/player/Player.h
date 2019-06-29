@@ -17,16 +17,15 @@ class Player : public CharacterEntity {
 
 public:
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, const Collidable& collidable);
-    void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
-protected:
-    void initializeAnimations() override;
+    void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) override;
 private:
     std::shared_ptr<EventBus> eventBus;
     bool actionButtonPressed = false;
 
-    void handleStandingState(sf::Time deltaTime);
-    void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
-    void handleInteractingState();
+    void initializeAnimations() override;
+    void handleStandingState(sf::Time deltaTime) override;
+    void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) override;
+    void handleInteractingState() override;
     void resetAfterFrame();
 
     void handleActionButtonPressed();

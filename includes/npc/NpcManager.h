@@ -11,7 +11,7 @@ class NpcManager {
 
 public:
     void initialize(std::shared_ptr<EventBus> eventBus, std::vector<Collidable> collidables, sf::Texture* texture);
-    void update(sf::Time deltaTime);
+    void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void draw(sf::RenderWindow* window);
     std::vector<std::shared_ptr<NpcEntity>>& getNpcEntities();
     void release();

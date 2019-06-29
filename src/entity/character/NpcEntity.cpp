@@ -10,10 +10,22 @@ void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable) {
     CharacterEntity::initialize(texture, ENTITY_MOVEMENT_SPEED, collidable, ENTITY_FRAME_TIME);
 }
 
-void NpcEntity::update(sf::Time deltaTime) {
-//    MovableEntity::update(deltaTime);
-    AnimatedEntity::update(deltaTime, currentDirection);
+void NpcEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
+    CharacterEntity::update(deltaTime, mapTileSize);
+}
+
+void NpcEntity::handleStandingState(sf::Time deltaTime) {
+    CharacterEntity::handleStandingState(deltaTime);
     roundPosition();
+}
+
+void NpcEntity::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
+    CharacterEntity::handleMovingState(deltaTime, mapTileSize);
+    roundPosition();
+}
+
+void NpcEntity::handleInteractingState() {
+    CharacterEntity::handleInteractingState();
 }
 
 void NpcEntity::turnToFacePlayer(MoveDirection playerFacingDirection) {
