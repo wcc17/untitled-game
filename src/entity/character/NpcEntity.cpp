@@ -16,6 +16,25 @@ void NpcEntity::update(sf::Time deltaTime) {
     roundPosition();
 }
 
+void NpcEntity::turnToFacePlayer(MoveDirection playerFacingDirection) {
+    switch(playerFacingDirection) {
+        case MoveDirection::UP:
+            AnimatedEntity::faceDown();
+            break;
+        case MoveDirection::DOWN:
+            AnimatedEntity::faceUp();
+            break;
+        case MoveDirection::LEFT:
+            AnimatedEntity::faceRight();
+            break;
+        case MoveDirection::RIGHT:
+            AnimatedEntity::faceLeft();
+            break;
+        case MoveDirection::NONE:
+            break;
+    }
+}
+
 //TODO: EVERYTHING needs to be multiples of  tile size, including the character textures (its frames). There should be a check to ensure this is happening so that I don't forget
 void NpcEntity::initializeAnimations() {
 

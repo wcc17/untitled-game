@@ -9,6 +9,7 @@ class NpcEntity : public CharacterEntity {
 public:
     void initialize(sf::Texture* texture, const Collidable& collidable);
     void update(sf::Time deltaTime);
+    void turnToFacePlayer(MoveDirection playerFacingDirection);
 protected:
     void initializeAnimations() override;
 };

@@ -11,6 +11,7 @@
 #include "../../events/event/OpenDialogueEvent.h"
 #include "../../events/event/PlayerCollisionEvent.h"
 #include "../../events/event/PlayerPositionChangeEvent.h"
+#include "../../events/event/StartEntityDialogueEvent.h"
 
 class Player : public CharacterEntity {
 

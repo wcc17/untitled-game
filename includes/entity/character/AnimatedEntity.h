@@ -19,6 +19,10 @@ protected:
     virtual void initializeAnimations() {};
     void setFrameTime(sf::Time time);
     void setTextureRectBasedOnCurrentFrame();
+    void faceUp();
+    void faceLeft();
+    void faceDown();
+    void faceRight();
     Animation* currentAnimation;
     Animation walkingAnimationDown;
     Animation walkingAnimationLeft;

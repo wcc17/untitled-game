@@ -70,7 +70,10 @@ void Player::handleActionButtonPressed() {
                 state = STATE_INTERACTING;
                 AnimatedEntity::stop();
                 eventBus->publish(new OpenDialogueEvent(getGlobalBounds(), *collidable));
-//                eventBus->publish(new TurnEntityTowardCharacterEvent(MovableEntity::getCurrentFacingDirection()));
+
+                if(collidable->getType() == CollidableType::NPC) {
+                    eventBus->publish(new StartEntityDialogueEvent(collidable->getName(), MovableEntity::getCurrentFacingDirection()));
+                }
                 break;
             }
         }

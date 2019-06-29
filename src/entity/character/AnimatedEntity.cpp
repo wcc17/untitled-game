@@ -88,7 +88,22 @@ void AnimatedEntity::moveDown() {
 }
 
 void AnimatedEntity::moveRight() {
-    this->playAnimation();
+    this->currentAnimation = &walkingAnimationRight;
+}
+
+void AnimatedEntity::faceUp() {
+    this->currentAnimation = &walkingAnimationUp;
+}
+
+void AnimatedEntity::faceLeft() {
+    this->currentAnimation = &walkingAnimationLeft;
+}
+
+void AnimatedEntity::faceDown() {
+    this->currentAnimation = &walkingAnimationDown;
+}
+
+void AnimatedEntity::faceRight() {
     this->currentAnimation = &walkingAnimationRight;
 }
 

@@ -97,17 +97,6 @@ void TextManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
      *   </dialogue>
      * </dialogueEvent>
      * Opens up future where I can give certain dialoguePieces special effects, change their font size, etc.
-     *
-     * Process:
-     * 1. Load dialogue event object from an xml file
-     * 2. One dialogue event will have many dialogue objects
-     * 3. Each dialogue object will have two dialoguePiece objects associated. If there isn't a second, create a second with an empty string
-     * 4. TextManager will keep a list of dialoguePiece objects
-     * 5. stringToDraw is a single dialoguePiece object.
-     * 6. Add stringToDraw to stringBeingDrawn one character at a time
-     * 7. When stringToDraw is empty and player hits the action button, move on to the next dialoguePiece object
-     * 8. Do this until there are no more dialoguePiece objects
-     * 9. When player hits action button again, exit dialogue and return control to player
      */
 
     initializeText();
@@ -151,7 +140,7 @@ void TextManager::rushDrawText() {
     this->stringBeingDrawn += dialoguePiece;
     this->dialogueText.setString(stringBeingDrawn);
 
-    dialoguePiece = dialoguePiece.erase(0, dialoguePiece.length());
+    dialoguePiece = dialoguePiece.erase(0, dialoguePiece.length()); //changing the reference to currentDialoguePiece
     stringDrawTimer = stringDrawTimer.Zero;
 }
 
