@@ -20,7 +20,7 @@ void SceneManager::update(sf::Time elapsedTime, sf::RenderWindow* window) {
     player.update(elapsedTime, scene.getMapTileSize());
     npcManager.update(elapsedTime);
     collisionManager.handleCollisions(player, npcManager.getNpcEntities(), scene.getMapCollidables());
-    textManager.update(window, viewManager.getView());
+    textManager.update(window, viewManager.getView(), elapsedTime);
 }
 
 void SceneManager::draw(sf::RenderWindow* window) {

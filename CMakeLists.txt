@@ -29,7 +29,10 @@ set(SOURCE_FILES src/main.cpp
         src/entity/character/MovableEntity.cpp
         src/entity/character/CollidableEntity.cpp
         src/entity/character/CharacterEntity.cpp
-        src/scene/ViewManager.cpp)
+        src/scene/ViewManager.cpp
+        src/text/dialogue/DialogueEvent.cpp
+        src/text/dialogue/Dialogue.cpp
+        src/text/dialogue/DialoguePiece.cpp)
 
 set(INCLUDE_FILES includes/FramerateCounter.h
         includes/asset/FontManager.h
@@ -55,7 +58,10 @@ set(INCLUDE_FILES includes/FramerateCounter.h
         includes/entity/character/MovableEntity.h
         includes/entity/character/CollidableEntity.h
         includes/entity/character/CharacterEntity.h
-        includes/scene/ViewManager.h)
+        includes/scene/ViewManager.h
+        includes/text/dialogue/DialogueEvent.h
+        includes/text/dialogue/Dialogue.h
+        includes/text/dialogue/DialoguePiece.h)
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/EntityCollisionEvent.h
@@ -71,7 +77,8 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/ControllerActionEvent.h
         includes/events/event/OpenDialogueEvent.h
         includes/events/event/CloseDialogueEvent.h
-        includes/events/event/PlayerPositionChangeEvent.h includes/events/event/ExitGameEvent.h)
+        includes/events/event/PlayerPositionChangeEvent.h
+        includes/events/event/ExitGameEvent.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 

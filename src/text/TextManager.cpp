@@ -5,7 +5,6 @@ void TextManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* te
 
     this->dialogueBoxSprite.setTexture(*texture);
     this->dialogueBoxSprite.scale(0.33f, 0.33f); //TODO: this shouldn't be done this way. Dialog box should just be drawn at the right size for the view
-    this->dialogueText.setString("Nothing to see here."); //TODO: delete this
     this->dialogueText.setFillColor(sf::Color::Black);
     this->dialogueText.setLineSpacing(1.1f);
     this->dialogueText.setFont(*font);
@@ -15,13 +14,13 @@ void TextManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* te
     eventBus->subscribe(this, &TextManager::onOpenDialogueEvent);
 }
 
-void TextManager::update(sf::RenderWindow* window, sf::View& view) {
+void TextManager::update(sf::RenderWindow* window, sf::View& view, sf::Time deltaTime) {
     if(dialogueIsActive) {
         if(!dialoguePositionSet) {
             setPositionsOnDialogueIsActive(window, view);
         }
 
-        // updateTextReadyToDraw();
+        updateText(deltaTime);
     }
 }
 
@@ -61,12 +60,22 @@ void TextManager::updateDialogueTextPosition(sf::RenderWindow* window, sf::View&
 void TextManager::closeDialogue() {
     dialogueIsActive = false;
     dialoguePositionSet = false;
+    this->stringBeingDrawn = "";
+    this->dialogueText.setString("");
     eventBus->publish(new CloseDialogueEvent());
 }
 
 void TextManager::onControllerActionEvent(ControllerActionEvent* event) {
     if(dialogueIsActive) {
-        closeDialogue();
+
+        if(dialogueEvent->shouldStartNextDialogue()) {
+            startNextDialogue();
+        } else if(!dialogueEvent->currentDialogueDone()) {
+            //player wants to rush the dialogue by mashing action button
+            rushDrawText();
+        } else if(dialogueEvent->isDialogueEventDone()) {
+            closeDialogue();
+        }
     }
 }
 
@@ -74,10 +83,79 @@ void TextManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
     printf("ready to handle the dialogue box in TextManager\n");
 //    const Collidable& collidable = event->interactedWith; //TODO: will be used to decide what dialogue to display
 
-//    this->stringToDraw = "Nothing to see here.";
-//    this->stringReadyToDraw = stringToDraw[0];
-//    this->stringToDraw = stringToDraw.erase(0, 1);
-//    this->dialogueText.setString(stringReadyToDraw);
+    /**
+     * Just an example, not final
+     *
+     * <dialogueEvent>
+     *   <dialogue>
+     *    <dialoguePiece>Hello, this is some text!</dialoguePiece>
+     *    <dialoguePiece>This is just a test though... It can be as long as I want, but if its too long, it'll be split into seperate lines</dialoguePiece>
+     *   </dialogue>
+     *
+     *   <dialogue>
+     *    <dialoguePiece>I want this to be the only text to appear in the box!</dialoguePiece>
+     *   </dialogue>
+     * </dialogueEvent>
+     * Opens up future where I can give certain dialoguePieces special effects, change their font size, etc.
+     *
+     * Process:
+     * 1. Load dialogue event object from an xml file
+     * 2. One dialogue event will have many dialogue objects
+     * 3. Each dialogue object will have two dialoguePiece objects associated. If there isn't a second, create a second with an empty string
+     * 4. TextManager will keep a list of dialoguePiece objects
+     * 5. stringToDraw is a single dialoguePiece object.
+     * 6. Add stringToDraw to stringBeingDrawn one character at a time
+     * 7. When stringToDraw is empty and player hits the action button, move on to the next dialoguePiece object
+     * 8. Do this until there are no more dialoguePiece objects
+     * 9. When player hits action button again, exit dialogue and return control to player
+     */
 
+    initializeText();
     dialogueIsActive = true;
+}
+
+void TextManager::initializeText() {
+    //TODO: manually inserting new line character, but that should happen when loading the first line from file
+    //TODO: this should all happen elsewhere when loading dialogue info from a file
+    std::vector<Dialogue> dialogues;
+    dialogues.push_back(Dialogue("Nothing to see here.\n", "Actually there is SOMETHING to see here"));
+    dialogues.push_back(Dialogue("This is the second dialogue piece object.\n", "I'm done talking to you now"));
+    dialogueEvent = std::make_unique<DialogueEvent>(dialogues);
+
+    this->stringBeingDrawn = "";
+}
+
+void TextManager::updateText(sf::Time deltaTime) {
+    if(!dialogueEvent->currentDialogueDone()) {
+        stringDrawTimer += deltaTime;
+        if(stringDrawTimer.asMilliseconds() > 20) {
+            drawMoreText();
+        }
+    }
+
+}
+
+void TextManager::drawMoreText() {
+    std::string& dialoguePiece = dialogueEvent->getCurrentDialoguePiece();
+
+    this->stringBeingDrawn += dialoguePiece[0];
+    this->dialogueText.setString(stringBeingDrawn);
+
+    dialoguePiece = dialoguePiece.erase(0, 1); //changing the reference to currentDialoguePiece
+    stringDrawTimer = stringDrawTimer.Zero;
+}
+
+void TextManager::rushDrawText() {
+    std::string& dialoguePiece = dialogueEvent->getCurrentDialoguePiece();
+
+    this->stringBeingDrawn += dialoguePiece;
+    this->dialogueText.setString(stringBeingDrawn);
+
+    dialoguePiece = dialoguePiece.erase(0, dialoguePiece.length());
+    stringDrawTimer = stringDrawTimer.Zero;
+}
+
+void TextManager::startNextDialogue() {
+    this->stringBeingDrawn = "";
+    dialogueEvent->startNextDialogue();
 }
