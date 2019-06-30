@@ -66,7 +66,7 @@ set(INCLUDE_FILES includes/FramerateCounter.h
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/EntityCollisionEvent.h
         includes/events/event/ControllerMoveEvent.h
-        includes/collisions/CollidableType.h
+        includes/scene/ObjectType.h
         includes/controller/MoveDirection.h
         includes/events/EventBus.h
         includes/events/HandlerFunctionBase.h

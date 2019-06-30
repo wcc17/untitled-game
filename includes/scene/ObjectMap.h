@@ -3,6 +3,7 @@
 
 
 #include <tmxlite/ObjectGroup.hpp>
+#include <map>
 #include "../collisions/Collidable.h"
 
 class ObjectMap {
@@ -21,6 +22,7 @@ public:
      */
     std::vector<std::shared_ptr<Collidable>>& getMapCollidables();
     std::vector<Collidable> getNpcCollidables();
+    std::map<std::string, sf::IntRect> getNpcMoveBoundariesMap();
     Collidable getPlayerCollidable();
 
 protected:
@@ -28,7 +30,8 @@ protected:
 
 private:
     void loadRectangleObjects(const tmx::Object& object);
-    CollidableType determineCollidableType(std::string typeName);
+    ObjectType determineObjectType(std::string typeName);
+    std::map<std::string, sf::IntRect> npcMoveBoundaries;
     std::vector<std::shared_ptr<Collidable>> mapCollidables;
     std::vector<Collidable> npcCollidables;
     Collidable playerCollidable;

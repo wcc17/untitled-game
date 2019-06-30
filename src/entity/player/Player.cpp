@@ -59,7 +59,7 @@ void Player::handleActionButtonPressed() {
                 AnimatedEntity::stop();
                 eventBus->publish(new OpenDialogueEvent(getGlobalBounds(), *collidable));
 
-                if(collidable->getType() == CollidableType::NPC) {
+                if(collidable->getType() == ObjectType::NPC) {
                     eventBus->publish(new StartEntityDialogueEvent(collidable->getName(), MovableEntity::getCurrentFacingDirection()));
                 }
                 break;

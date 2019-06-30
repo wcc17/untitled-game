@@ -4,19 +4,19 @@
 
 #include <SFML/System.hpp>
 #include <SFML/Graphics/Rect.hpp>
-#include "CollidableType.h"
+#include "../scene/ObjectType.h"
 #include "../controller/MoveDirection.h"
 
 class Collidable {
 public:
     Collidable();
-    Collidable(std::string name, CollidableType type, sf::Vector2f position, sf::Vector2f size);
-    CollidableType getType() const;
+    Collidable(std::string name, ObjectType type, sf::Vector2f position, sf::Vector2f size);
+    ObjectType getType() const;
     std::string getName() const;
     virtual sf::FloatRect getBoundingBox() const;
 protected:
     std::string name;
-    CollidableType type;
+    ObjectType type;
 private:
     sf::FloatRect boundingBox;
 

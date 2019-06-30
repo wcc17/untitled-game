@@ -8,7 +8,7 @@ void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font
     player.initialize(eventBus, textureManager.getTexture(AssetPath::PLAYER_TEXTURE), scene.getPlayerCollidable());
 
     textureManager.loadTexture(AssetPath::NPC_TEXTURE);
-    npcManager.initialize(eventBus, scene.getNpcCollidables(), textureManager.getTexture(AssetPath::NPC_TEXTURE));
+    npcManager.initialize(eventBus, scene.getNpcCollidables(), textureManager.getTexture(AssetPath::NPC_TEXTURE), scene.getNpcMoveBoundariesMap());
 
     textureManager.loadTexture(AssetPath::DIALOGUE_BOX_TEXTURE);
     textManager.initialize(eventBus, textureManager.getTexture(AssetPath::DIALOGUE_BOX_TEXTURE), font);

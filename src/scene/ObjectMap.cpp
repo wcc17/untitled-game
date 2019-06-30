@@ -5,6 +5,7 @@ const static std::string DOOR_OBJECT_TYPE = "door";
 const static std::string SIGN_OBJECT_TYPE = "sign";
 const static std::string WALL_OBJECT_TYPE = "wall";
 const static std::string NPC_OBJECT_TYPE = "npc";
+const static std::string NPC_MOVE_BOUNDARY_OBJECT_TYPE = "npc_move_boundary";
 const static std::string PLAYER_OBJECT_TYPE = "player";
 
 void ObjectMap::loadObjectLayer(const tmx::ObjectGroup& layer) {
@@ -29,33 +30,38 @@ void ObjectMap::loadRectangleObjects(const tmx::Object& object) {
     sf::Vector2f position(boundingBox.left, boundingBox.top);
     sf::Vector2f size(boundingBox.width, boundingBox.height);
 
-    CollidableType type = determineCollidableType(object.getType());
+    ObjectType type = determineObjectType(object.getType());
     Collidable collidable = Collidable(objectName, type, position, size);
-    if(type == CollidableType::NPC) {
+    if(type == ObjectType::NPC) {
         npcCollidables.push_back(collidable);
-    } else if(type == CollidableType::PLAYER) {
+    } else if(type == ObjectType::PLAYER) {
         playerCollidable = collidable;
-    } else {
+    } else if(type == ObjectType::NPC_MOVE_BOUNDARY) {
+        sf::IntRect rect = sf::IntRect(position.x, position.y, size.x, size.y);
+        npcMoveBoundaries.insert(std::make_pair(objectName, rect));
+    } else if(type != ObjectType::NO_TYPE){
         mapCollidables.push_back(std::make_shared<Collidable>(collidable));
     }
 }
 
-CollidableType ObjectMap::determineCollidableType(std::string typeName) {
+ObjectType ObjectMap::determineObjectType(std::string typeName) {
 
     if(typeName == DOOR_OBJECT_TYPE) {
-        return CollidableType::DOOR;
+        return ObjectType::DOOR;
     } else if(typeName == SIGN_OBJECT_TYPE) {
-        return CollidableType::SIGN;
+        return ObjectType::SIGN;
     } else if(typeName == WALL_OBJECT_TYPE) {
-        return CollidableType::WALL;
+        return ObjectType::WALL;
     } else if(typeName == NPC_OBJECT_TYPE) {
-        return CollidableType::NPC;
+        return ObjectType::NPC;
     } else if(typeName == PLAYER_OBJECT_TYPE) {
-        return CollidableType::PLAYER;
+        return ObjectType::PLAYER;
+    } else if(typeName == NPC_MOVE_BOUNDARY_OBJECT_TYPE) {
+        return ObjectType::NPC_MOVE_BOUNDARY;
     }
 
     printf("this type not yet supported\n");
-    return CollidableType::NO_TYPE;
+    return ObjectType::NO_TYPE;
 }
 
 std::vector<std::shared_ptr<Collidable>>& ObjectMap::getMapCollidables() {
@@ -64,6 +70,10 @@ std::vector<std::shared_ptr<Collidable>>& ObjectMap::getMapCollidables() {
 
 std::vector<Collidable> ObjectMap::getNpcCollidables() {
     return this->npcCollidables;
+}
+
+std::map<std::string, sf::IntRect> ObjectMap::getNpcMoveBoundariesMap() {
+    return this->npcMoveBoundaries;
 }
 
 Collidable ObjectMap::getPlayerCollidable() {

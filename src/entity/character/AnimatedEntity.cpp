@@ -73,22 +73,23 @@ void AnimatedEntity::stopAnimation() {
 }
 
 void AnimatedEntity::moveUp() {
+    faceUp();
     this->playAnimation();
-    this->currentAnimation = &walkingAnimationUp;
 }
 
 void AnimatedEntity::moveLeft() {
+    faceLeft();
     this->playAnimation();
-    this->currentAnimation = &walkingAnimationLeft;
 }
 
 void AnimatedEntity::moveDown() {
+    faceDown();
     this->playAnimation();
-    this->currentAnimation = &walkingAnimationDown;
 }
 
 void AnimatedEntity::moveRight() {
-    this->currentAnimation = &walkingAnimationRight;
+    faceRight();
+    this->playAnimation();
 }
 
 void AnimatedEntity::faceUp() {

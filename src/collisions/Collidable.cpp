@@ -2,11 +2,11 @@
 
 Collidable::Collidable() {
     this->name = "";
-    this->type = CollidableType::NO_TYPE;
+    this->type = ObjectType::NO_TYPE;
     this->boundingBox = sf::FloatRect({0.f, 0.f, 0.f, 0.f});
 }
 
-Collidable::Collidable(std::string name, CollidableType type, sf::Vector2f position, sf::Vector2f size) : boundingBox(position, size) {
+Collidable::Collidable(std::string name, ObjectType type, sf::Vector2f position, sf::Vector2f size) : boundingBox(position, size) {
     this->name = name;
     this->type = type;
 }
@@ -15,7 +15,7 @@ std::string Collidable::getName() const {
     return this->name;
 }
 
-CollidableType Collidable::getType() const {
+ObjectType Collidable::getType() const {
     return this->type;
 }
 

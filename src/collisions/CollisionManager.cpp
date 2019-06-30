@@ -9,8 +9,8 @@ void CollisionManager::handleCollisions(const Player& player,
                                         const std::vector<std::shared_ptr<NpcEntity>>& entities,
                                         const std::vector<std::shared_ptr<Collidable>>& mapCollidables) {
 
-    bool collisionOccurred = publishCollisionsWithPlayerAndEntities(player, entities);
-    if(!collisionOccurred) {
+    bool playerCollisionOccurred = publishCollisionsWithPlayerAndEntities(player, entities);
+    if(!playerCollisionOccurred) {
         publishCollisionsWithPlayerAndMap(player, mapCollidables);
     }
 

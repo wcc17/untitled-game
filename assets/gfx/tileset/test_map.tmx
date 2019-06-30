@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="116" height="116" tilewidth="8" tileheight="8" infinite="0" nextlayerid="50" nextobjectid="176">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="116" height="116" tilewidth="8" tileheight="8" infinite="0" nextlayerid="51" nextobjectid="177">
  <tileset firstgid="1" name="Overworld" tilewidth="8" tileheight="8" tilecount="5760" columns="80">
   <image source="test_tileset.png" trans="ff00ff" width="640" height="576"/>
  </tileset>
@@ -523,7 +523,10 @@
   <object id="166" type="wall" x="712" y="200" width="8" height="32"/>
  </objectgroup>
  <objectgroup id="48" name="npcs">
-  <object id="173" name="npc1" type="npc" x="528" y="464" width="8" height="8"/>
+  <object id="173" name="npc1" type="npc" x="536" y="464" width="8" height="8"/>
+ </objectgroup>
+ <objectgroup id="50" name="npc_move_boundaries">
+  <object id="176" name="npc1" type="npc_move_boundary" x="504" y="440" width="80" height="72"/>
  </objectgroup>
  <objectgroup id="49" name="players">
   <object id="174" name="player1" type="player" x="432" y="472" width="8" height="8"/>
