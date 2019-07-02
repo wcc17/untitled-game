@@ -23,7 +23,7 @@ private:
     bool actionButtonPressed = false;
 
     void initializeAnimations() override;
-    void handleStandingState(sf::Time deltaTime) override;
+    void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) override;
     void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) override;
     void handleInteractingState() override;
     void resetAfterFrame();

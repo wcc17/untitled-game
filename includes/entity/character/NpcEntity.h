@@ -14,12 +14,20 @@ private:
     sf::IntRect moveBoundaries;
     sf::Time moveDelay;
     int distanceMoved = 0;
-    int distanceToMove = 0;
+    int movementGoal = 0;
 
     void initializeAnimations() override;
-    void handleStandingState(sf::Time deltaTime) override;
+    void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) override;
     void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) override;
     void handleInteractingState() override;
+
+    bool moveDelayTimerDone(sf::Time deltaTime);
+    void setupEntityMovement(const sf::Vector2u& mapTileSize);
+    int getMaxDistanceEntityCanTravel(MoveDirection moveDirection);
+    int determineRandomDistanceToMoveEntity(int maxDistanceEntityCanTravel, int tileSize);
+    int getTileSizeForDirection(MoveDirection moveDirection, const sf::Vector2u& mapTileSize);
+    bool flipCoin();
+    void moveEntityTowardMovementGoal(sf::Vector2f previousPosition);
 };
 
 

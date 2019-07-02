@@ -24,8 +24,8 @@ void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     CharacterEntity::update(deltaTime, mapTileSize);
 }
 
-void Player::handleStandingState(sf::Time deltaTime) {
-    CharacterEntity::handleStandingState(deltaTime);
+void Player::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
+    CharacterEntity::handleStandingState(deltaTime, mapTileSize);
     handleActionButtonPressed();
     resetAfterFrame();
     adjustPlayerAndViewPositions();

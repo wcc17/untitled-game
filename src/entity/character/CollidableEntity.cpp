@@ -7,6 +7,7 @@ void CollidableEntity::fixPositionAfterCollision(const Collidable& collidedWith,
     while(isColliding) {
         if(entityDirection == MoveDirection::NONE) {
             printf("error with entity collision - the entity didn't move into this collision so theres no way to move him out\n");
+//            isColliding = false?
         }
 
         if(entityDirection == MoveDirection::RIGHT) {

@@ -3,6 +3,7 @@
 void MovableEntity::initialize(float moveSpeed) {
     this->moveSpeed = moveSpeed;
     currentDirection = MoveDirection::NONE;
+    previousDirection = MoveDirection::UP;
 }
 
 void MovableEntity::handleStandingState(sf::Time deltaTime, EntityState& state) {

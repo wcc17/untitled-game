@@ -15,7 +15,7 @@ public:
     void roundPosition();
 protected:
     EntityState state;
-    virtual void handleStandingState(sf::Time deltaTime);
+    virtual void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     virtual void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     virtual void handleInteractingState() {};
 };

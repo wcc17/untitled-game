@@ -16,7 +16,7 @@ void CharacterEntity::initialize(sf::Texture* texture, float movementSpeed, cons
 void CharacterEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     switch(state) {
         case STATE_STANDING:
-            handleStandingState(deltaTime);
+            handleStandingState(deltaTime, mapTileSize);
             break;
         case STATE_MOVING:
             handleMovingState(deltaTime, mapTileSize);
@@ -27,7 +27,7 @@ void CharacterEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize
     }
 }
 
-void CharacterEntity::handleStandingState(sf::Time deltaTime) {
+void CharacterEntity::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     MovableEntity::handleStandingState(deltaTime, state);
     AnimatedEntity::update(deltaTime, currentDirection);
 }
