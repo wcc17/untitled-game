@@ -55,11 +55,7 @@ void Player::handleActionButtonPressed() {
             if(CollidableEntity::isFacingCollidableInVicinity(currentlyFacingDirection, *collidable)) {
                 state = STATE_INTERACTING;
                 AnimatedEntity::stop();
-                eventBus->publish(new OpenDialogueEvent(getGlobalBounds(), *collidable));
-
-                if(collidable->getType() == ObjectType::NPC) {
-                    eventBus->publish(new StartEntityDialogueEvent(collidable->getName(), MovableEntity::getCurrentFacingDirection()));
-                }
+                eventBus->publish(new OpenDialogueEvent(getGlobalBounds(), *collidable, MovableEntity::getCurrentFacingDirection()));
                 break;
             }
         }

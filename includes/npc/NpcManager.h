@@ -5,7 +5,9 @@
 #include "../../includes/asset/AssetPath.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "../events/EventBus.h"
-#include "../events/event/StartEntityDialogueEvent.h"
+#include "../../includes/events/event/CloseDialogueEvent.h"
+#include "../../includes/events/event/OpenDialogueEvent.h"
+#include "../../includes/events/event/ExitGameEvent.h"
 
 class NpcManager {
 
@@ -20,7 +22,8 @@ private:
     std::vector<std::shared_ptr<NpcEntity>> npcs;
     std::map<std::string, sf::IntRect> npcMoveBoundaries;
     void initializeNpc(Collidable& collidable, sf::Texture* texture);
-    void onStartEntityDialogueEvent(StartEntityDialogueEvent* event);
+    void onOpenDialogueEvent(OpenDialogueEvent* event);
+    void onCloseDialogueEvent(CloseDialogueEvent* event);
 };
 
 

@@ -6,9 +6,11 @@
 
 class OpenDialogueEvent : public Event {
 public:
-    OpenDialogueEvent(const sf::FloatRect& playerRect, const Collidable& interactedWith) : playerRect(playerRect), interactedWith(interactedWith) {};
+    OpenDialogueEvent(const sf::FloatRect& playerRect, const Collidable& interactedWith, MoveDirection playerFacingDirection)
+        : playerRect(playerRect), interactedWith(interactedWith), playerFacingDirection(playerFacingDirection) {};
     const sf::FloatRect& playerRect;
     const Collidable& interactedWith;
+    const MoveDirection playerFacingDirection;
 };
 
 #endif //NEWNEW_OPENDIALOGUEEVENT_H

@@ -1,6 +1,4 @@
 #include "../../includes/npc/NpcManager.h"
-#include "../../includes/events/event/ExitGameEvent.h"
-#include "../../includes/events/event/CloseDialogueEvent.h"
 
 void NpcManager::initialize(std::shared_ptr<EventBus> eventBus,
                             std::vector<Collidable> collidables,
@@ -13,12 +11,12 @@ void NpcManager::initialize(std::shared_ptr<EventBus> eventBus,
         initializeNpc(collidable, texture);
     }
 
-    eventBus->subscribe(this, &NpcManager::onStartEntityDialogueEvent);
+    eventBus->subscribe(this, &NpcManager::onOpenDialogueEvent);
+    eventBus->subscribe(this, &NpcManager::onCloseDialogueEvent);
 }
 
 void NpcManager::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     for(std::shared_ptr<NpcEntity> npc : npcs) {
-
         npc->update(deltaTime, mapTileSize);
     }
 }
@@ -29,26 +27,27 @@ void NpcManager::draw(sf::RenderWindow* window) {
     }
 }
 
-void NpcManager::onStartEntityDialogueEvent(StartEntityDialogueEvent* event) {
-    for(std::shared_ptr<NpcEntity> npc : npcs) {
-        if(event->npcName == npc->getName()) {
-            npc->onPlayerInteractionStart(event->playerFacingDirection);
-            break;
+//TODO: stop writing out this for loop for every single function that needs to look at all of the npcs
+void NpcManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
+    if(event->interactedWith.getType() == ObjectType::NPC) {
+        for(std::shared_ptr<NpcEntity> npc : npcs) {
+            if(event->interactedWith.getName() == npc->getName()) {
+                npc->onPlayerInteractionStart(event->playerFacingDirection);
+                break;
+            }
         }
     }
 }
 
-//void NpcManager::onEndEntityDialogueEvent(CloseDialogueEvent* event) {
-//    for(std::shared_ptr<NpcEntity> npc : npcs) {
-//        if(event->npcName == npc->getName()) {
-//            npc->onPlayerInteractionFinish();
-//            break;
-//        }
-//    }
-//}
-
-void NpcManager::release() {
-    npcs.clear();
+void NpcManager::onCloseDialogueEvent(CloseDialogueEvent* event) {
+    if(event->interactedWith.getType() == ObjectType::NPC) {
+        for(std::shared_ptr<NpcEntity> npc : npcs) {
+            if(event->interactedWith.getName() == npc->getName()) {
+                npc->onPlayerInteractionFinish();
+                break;
+            }
+        }
+    }
 }
 
 void NpcManager::initializeNpc(Collidable& collidable, sf::Texture* texture) {
@@ -67,4 +66,8 @@ void NpcManager::initializeNpc(Collidable& collidable, sf::Texture* texture) {
 
 std::vector<std::shared_ptr<NpcEntity>>& NpcManager::getNpcEntities() {
     return this->npcs;
+}
+
+void NpcManager::release() {
+    npcs.clear();
 }

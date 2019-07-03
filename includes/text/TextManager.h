@@ -27,6 +27,7 @@ private:
     sf::Time stringDrawTimer;
     bool dialogueIsActive = false;
     bool dialoguePositionSet = false;
+    Collidable entityPlayerInteractedWith;
 
     void onControllerActionEvent(ControllerActionEvent* event);
     void onOpenDialogueEvent(OpenDialogueEvent* event);

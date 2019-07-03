@@ -57,31 +57,10 @@ void TextManager::updateDialogueTextPosition(sf::RenderWindow* window, sf::View&
     dialogueText.setPosition(coordsToPixel.x, coordsToPixel.y);
 }
 
-void TextManager::closeDialogue() {
-    dialogueIsActive = false;
-    dialoguePositionSet = false;
-    this->stringBeingDrawn = "";
-    this->dialogueText.setString("");
-    eventBus->publish(new CloseDialogueEvent());
-}
-
-void TextManager::onControllerActionEvent(ControllerActionEvent* event) {
-    if(dialogueIsActive) {
-
-        if(dialogueEvent->shouldStartNextDialogue()) {
-            startNextDialogue();
-        } else if(!dialogueEvent->currentDialogueDone()) {
-            //player wants to rush the dialogue by mashing action button
-            rushDrawText();
-        } else if(dialogueEvent->isDialogueEventDone()) {
-            closeDialogue();
-        }
-    }
-}
-
+//TODO: I think the dialogue stuff should be in its own class. See C++ composition maybe?
 void TextManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
     printf("ready to handle the dialogue box in TextManager\n");
-//    const Collidable& collidable = event->interactedWith; //TODO: will be used to decide what dialogue to display
+    entityPlayerInteractedWith = event->interactedWith;
 
     /**
      * Just an example, not final
@@ -101,6 +80,28 @@ void TextManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
 
     initializeText();
     dialogueIsActive = true;
+}
+
+void TextManager::closeDialogue() {
+    dialogueIsActive = false;
+    dialoguePositionSet = false;
+    this->stringBeingDrawn = "";
+    this->dialogueText.setString("");
+    eventBus->publish(new CloseDialogueEvent(entityPlayerInteractedWith));
+}
+
+void TextManager::onControllerActionEvent(ControllerActionEvent* event) {
+    if(dialogueIsActive) {
+
+        if(dialogueEvent->shouldStartNextDialogue()) {
+            startNextDialogue();
+        } else if(!dialogueEvent->currentDialogueDone()) {
+            //player wants to rush the dialogue by mashing action button
+            rushDrawText();
+        } else if(dialogueEvent->isDialogueEventDone()) {
+            closeDialogue();
+        }
+    }
 }
 
 void TextManager::initializeText() {

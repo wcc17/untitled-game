@@ -68,6 +68,9 @@ void AnimatedEntity::turnToFaceEntityFacingDirection(MoveDirection facingDirecti
         case MoveDirection::NONE:
             break;
     }
+
+    currentFrame = 0;
+    setTextureRectBasedOnCurrentFrame();
 }
 
 void AnimatedEntity::setTextureRectBasedOnCurrentFrame() {
