@@ -1,5 +1,6 @@
 #include "../../includes/npc/NpcManager.h"
 #include "../../includes/events/event/ExitGameEvent.h"
+#include "../../includes/events/event/CloseDialogueEvent.h"
 
 void NpcManager::initialize(std::shared_ptr<EventBus> eventBus,
                             std::vector<Collidable> collidables,
@@ -31,11 +32,20 @@ void NpcManager::draw(sf::RenderWindow* window) {
 void NpcManager::onStartEntityDialogueEvent(StartEntityDialogueEvent* event) {
     for(std::shared_ptr<NpcEntity> npc : npcs) {
         if(event->npcName == npc->getName()) {
-            npc->turnToFacePlayer(event->playerFacingDirection);
+            npc->onPlayerInteractionStart(event->playerFacingDirection);
             break;
         }
     }
 }
+
+//void NpcManager::onEndEntityDialogueEvent(CloseDialogueEvent* event) {
+//    for(std::shared_ptr<NpcEntity> npc : npcs) {
+//        if(event->npcName == npc->getName()) {
+//            npc->onPlayerInteractionFinish();
+//            break;
+//        }
+//    }
+//}
 
 void NpcManager::release() {
     npcs.clear();

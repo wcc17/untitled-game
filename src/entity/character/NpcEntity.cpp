@@ -1,6 +1,5 @@
 #include "../../../includes/entity/character/NpcEntity.h"
 
-//TODO: these will be moved out once there are different entities being loaded
 const float ENTITY_WIDTH = 16.f;
 const float ENTITY_HEIGHT = 24.f;
 const float ENTITY_MOVEMENT_SPEED = 65.f;
@@ -9,15 +8,22 @@ const float ENTITY_FRAME_TIME = 0.16f; //TODO: not sure where I want to load thi
 const sf::Vector2f moveDelayRange = sf::Vector2f(1.5f, 5.5f);
 
 void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries) {
-    srand(time(NULL)); //TODO: should this be done somewhere else? will likely need rand() somewhere else
-
     CharacterEntity::initialize(texture, ENTITY_MOVEMENT_SPEED, collidable, ENTITY_FRAME_TIME);
     this->moveBoundaries = moveBoundaries;
-    this->moveDelay = sf::seconds(3.f); //TODO: should be chosen randomly
+    setMoveDelayTimer();
 }
 
 void NpcEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     CharacterEntity::update(deltaTime, mapTileSize);
+}
+
+void NpcEntity::onPlayerInteractionStart(MoveDirection playerFacingDirection) {
+    turnToFaceEntityFacingDirection(playerFacingDirection);
+    state = STATE_INTERACTING;
+}
+
+void NpcEntity::onPlayerInteractionFinish() {
+    setEntityStandingState();
 }
 
 void NpcEntity::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
@@ -41,46 +47,34 @@ void NpcEntity::handleInteractingState() {
     CharacterEntity::handleInteractingState();
 }
 
-//TODO: should this be an AnimatedEntity method? turnToFaceEntityFacingDirection that takes facingDirection as argument
-void NpcEntity::turnToFacePlayer(MoveDirection playerFacingDirection) {
-    switch(playerFacingDirection) {
-        case MoveDirection::UP:
-            AnimatedEntity::faceDown();
-            break;
-        case MoveDirection::DOWN:
-            AnimatedEntity::faceUp();
-            break;
-        case MoveDirection::LEFT:
-            AnimatedEntity::faceRight();
-            break;
-        case MoveDirection::RIGHT:
-            AnimatedEntity::faceLeft();
-            break;
-        case MoveDirection::NONE:
-            break;
-    }
-}
-
 bool NpcEntity::moveDelayTimerDone(sf::Time deltaTime) {
     this->moveDelay -= deltaTime;
     if (this->moveDelay <= sf::Time::Zero) {
-        this->moveDelay = sf::seconds(3.f);
+        setMoveDelayTimer();
         return true;
     }
 
     return false;
 }
 
+void NpcEntity::setMoveDelayTimer() {
+    float min = moveDelayRange.x;
+    float max = moveDelayRange.y;
+    float delay = getRandomFloatInRange(min, max);
+
+    printf("\n");
+    if(delay > max || delay < min) {
+        printf("invalid value in NpcEntity::setMoveDelayTimer\n");
+    }
+    printf("move delay timer set to %f\n", delay);
+
+    this->moveDelay = sf::seconds(delay);
+}
+
+//TODO: should all of this npc movement setup be in its own class? I don't think it should be a parent class, look into c++ composition.
 void NpcEntity::setupEntityMovement(const sf::Vector2u& mapTileSize) {
-    if (flipCoin()) {
-
-        //TODO: this should be decided in its own function with weighted odds for directions that haven't been travelled recently. The next 3-4 lines should be in the function
-        int randomDirection = (rand() * 1.0 / RAND_MAX * 4) + 1;
-        if(randomDirection > 4 || randomDirection < 1) {
-            randomDirection = 0;
-        }
-
-        MoveDirection moveDirection = static_cast<MoveDirection>(randomDirection);
+    if (decideIfNpcShouldMove()) {
+        MoveDirection moveDirection = chooseRandomDirection();
         int maxDistanceEntityCanTravel = getMaxDistanceEntityCanTravel(moveDirection);
         if(maxDistanceEntityCanTravel > 0) {
             int tileSize = getTileSizeForDirection(moveDirection, mapTileSize);
@@ -93,83 +87,37 @@ void NpcEntity::setupEntityMovement(const sf::Vector2u& mapTileSize) {
     }
 }
 
-//TODO: I think the random related functions would be better in a util class or something like that. There will be more once move delay timer and direction are weighted differently based on previous
-bool NpcEntity::flipCoin() {
-    return rand() % 2 == 1;
-}
-
 int NpcEntity::getMaxDistanceEntityCanTravel(MoveDirection moveDirection) {
     int maxDistanceEntityCanTravel;
     switch (moveDirection) {
         case 1:
             maxDistanceEntityCanTravel = moveBoundaries.top;
             maxDistanceEntityCanTravel = getPosition().y - maxDistanceEntityCanTravel;
-
             printf("npc wants to move up\n");
             break;
         case 2:
             maxDistanceEntityCanTravel = moveBoundaries.top + moveBoundaries.height;
             maxDistanceEntityCanTravel -= getPosition().y;
-
             printf("npc wants to move down\n");
             break;
         case 3:
             maxDistanceEntityCanTravel = moveBoundaries.left;
             maxDistanceEntityCanTravel = getPosition().x - maxDistanceEntityCanTravel;
-
             printf("npc wants to move left\n");
             break;
         case 4:
             maxDistanceEntityCanTravel = moveBoundaries.left + moveBoundaries.width;
             maxDistanceEntityCanTravel -= getPosition().x;
-
             printf("npc wants to move right\n");
             break;
         default:
-            printf("Assigning an invalid direction in NpcEntity\n");
+            printf("Assigned an invalid direction in NpcEntity::getMaxDistanceEntityCanTravel\n");
             maxDistanceEntityCanTravel = 0;
             break;
     }
 
     printf("max distance: %i\n", maxDistanceEntityCanTravel);
     return maxDistanceEntityCanTravel;
-}
-
-//TODO: can be static?
-int NpcEntity::determineRandomDistanceToMoveEntity(int maxDistanceEntityCanTravel, int tileSize) {
-    int distanceToMoveEntity = rand() % maxDistanceEntityCanTravel + (tileSize * 2);
-    int remainder = distanceToMoveEntity % tileSize;
-
-    //make the distance the highest multiple of tileSize possible
-    if ((distanceToMoveEntity + (tileSize - remainder) < maxDistanceEntityCanTravel)) {
-        distanceToMoveEntity += (tileSize - remainder);
-    } else {
-        distanceToMoveEntity -= remainder;
-    }
-
-    if (distanceToMoveEntity % tileSize != 0) {
-        //TODO: should I exit from the caller method when this happens?
-        printf("NpcEntity is trying to move in a distance that isn't a multiple of the tile size\n");
-    }
-
-    printf("is going to move with distance: %i\n", distanceToMoveEntity);
-    return distanceToMoveEntity;
-}
-
-//TODO: can be static
-int NpcEntity::getTileSizeForDirection(MoveDirection moveDirection, const sf::Vector2u& mapTileSize) {
-    switch (moveDirection) {
-        case MoveDirection::UP:
-        case MoveDirection::DOWN:
-            return mapTileSize.y;
-        case MoveDirection::LEFT:
-        case MoveDirection::RIGHT:
-            return mapTileSize.x;
-        default:
-            //TODO: should I exit from the caller method when this happens?
-            printf("NpcEntity.getTileSizeForDirection was given an invalid direction\n");
-            return 0;
-    }
 }
 
 void NpcEntity::moveEntityTowardMovementGoal(sf::Vector2f previousPosition) {
@@ -184,16 +132,109 @@ void NpcEntity::moveEntityTowardMovementGoal(sf::Vector2f previousPosition) {
         case MoveDirection::RIGHT:
             distanceMoved += abs(distanceTravelledThisFrame.x);
             break;
+        default:
+            printf("NpcEntity.moveEntityTowardMovementGoal -- Invalid currentDirection value\n");
+            break;
     }
 
     if(distanceMoved >= movementGoal) {
-        state = STATE_STANDING;
-        currentDirection = MoveDirection::NONE;
-        distanceMoved = 0;
+        if(getPosition().x > (moveBoundaries.left + moveBoundaries.width)) {
+            printf("moved too far to the right of boundary in NpcEntity::moveEntityTowardGoal\n");
+        }
+        if(getPosition().x < moveBoundaries.left) {
+            printf("moved too far to the left\n");
+        }
+        if(getPosition().y > (moveBoundaries.top + moveBoundaries.height)) {
+            printf("moved too far down\n");
+        }
+        if(getPosition().y < moveBoundaries.top) {
+            printf("moved too far up\n");
+        }
+
+        setEntityStandingState();
     }
 }
 
+bool NpcEntity::decideIfNpcShouldMove() {
+    int shouldMove = getRandomIntInRange(1, 5);
+    if(shouldMove > 5 || shouldMove < 1) {
+        printf("wrong shouldMove value in NpcEntity::decideIfNpcShouldMove\n");
+    }
+    return (shouldMove <= 3);
+}
 
+MoveDirection NpcEntity::chooseRandomDirection() {
+    int randomDirection = getRandomIntInRange(1, 4);
+    if(randomDirection > 4 || randomDirection < 1) {
+        randomDirection = 0;
+        printf("wrong direction chosen in NpcEntity::chooseRandomDirection\n");
+    }
+
+    return static_cast<MoveDirection>(randomDirection);
+}
+
+int NpcEntity::determineRandomDistanceToMoveEntity(int maxDistanceEntityCanTravel, int tileSize) {
+    int distanceToMoveEntity = 0;
+    int minDistanceEntityCanTravel = tileSize * 2; //normally want to move at least tileSize*2 units
+    if(minDistanceEntityCanTravel > maxDistanceEntityCanTravel) { //but if minimum distance is less, just set the minimum to the smallest unit possible (tileSize)
+        minDistanceEntityCanTravel = tileSize;
+    }
+
+    if(tileSize > 0 && maxDistanceEntityCanTravel > 0) {
+        distanceToMoveEntity = getRandomIntInRange(minDistanceEntityCanTravel, maxDistanceEntityCanTravel);
+        printf("random distance chosen: %i\n", distanceToMoveEntity);
+
+        //make the distance the highest multiple of tileSize possible
+        int remainder = distanceToMoveEntity % tileSize;
+        if ( (distanceToMoveEntity + (tileSize - remainder)) < maxDistanceEntityCanTravel) {
+            distanceToMoveEntity += (tileSize - remainder);
+        } else {
+            distanceToMoveEntity -= remainder;
+        }
+
+        if (distanceToMoveEntity % tileSize != 0) {
+            printf("NpcEntity is trying to move in a distance that isn't a multiple of the tile size\n");
+            distanceToMoveEntity = 0;
+        }
+    }
+
+    printf("is going to move with distance: %i\n", distanceToMoveEntity);
+    return distanceToMoveEntity;
+}
+
+//TODO: this already exists in MovableEntity
+int NpcEntity::getTileSizeForDirection(MoveDirection moveDirection, const sf::Vector2u& mapTileSize) {
+    switch (moveDirection) {
+        case MoveDirection::UP:
+        case MoveDirection::DOWN:
+            return mapTileSize.y;
+        case MoveDirection::LEFT:
+        case MoveDirection::RIGHT:
+            return mapTileSize.x;
+        default:
+            printf("NpcEntity.getTileSizeForDirection was given an invalid direction\n");
+            return 0;
+    }
+}
+
+void NpcEntity::setEntityStandingState() {
+    state = STATE_STANDING;
+    currentDirection = MoveDirection::NONE;
+    distanceMoved = 0;
+}
+
+//TODO: these probably belong in a utility class somewhere
+int NpcEntity::getRandomIntInRange(int min, int max) {
+    std::mt19937 eng(randomDevice());
+    std::uniform_int_distribution<> distr(min, max); // define the range
+    return distr(eng);
+}
+
+float NpcEntity::getRandomFloatInRange(float min, float max) {
+    std::mt19937 eng(randomDevice());
+    std::uniform_real_distribution<float> distr(min, max); // define the range
+    return distr(eng);
+}
 
 //TODO: EVERYTHING needs to be multiples of  tile size, including the character textures (its frames). There should be a check to ensure this is happening so that I don't forget
 void NpcEntity::initializeAnimations() {

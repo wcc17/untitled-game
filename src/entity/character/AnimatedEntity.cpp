@@ -51,6 +51,25 @@ void AnimatedEntity::move(MoveDirection direction) {
     }
 }
 
+void AnimatedEntity::turnToFaceEntityFacingDirection(MoveDirection facingDirection) {
+    switch(facingDirection) {
+        case MoveDirection::UP:
+            AnimatedEntity::faceDown();
+            break;
+        case MoveDirection::DOWN:
+            AnimatedEntity::faceUp();
+            break;
+        case MoveDirection::LEFT:
+            AnimatedEntity::faceRight();
+            break;
+        case MoveDirection::RIGHT:
+            AnimatedEntity::faceLeft();
+            break;
+        case MoveDirection::NONE:
+            break;
+    }
+}
+
 void AnimatedEntity::setTextureRectBasedOnCurrentFrame() {
     if(currentAnimation) {
         sf::IntRect rect = currentAnimation->getFrame(currentFrame);

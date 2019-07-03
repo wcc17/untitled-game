@@ -29,7 +29,6 @@ void Player::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTile
     handleActionButtonPressed();
     resetAfterFrame();
     adjustPlayerAndViewPositions();
-    //TODO: should use roundPosition here for NpcEntity
 }
 
 void Player::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
@@ -37,7 +36,6 @@ void Player::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSi
     handleActionButtonPressed();
     resetAfterFrame();
     adjustPlayerAndViewPositions();
-    //TODO: should use roundPosition here for NpcEntity
 }
 
 void Player::handleInteractingState() {

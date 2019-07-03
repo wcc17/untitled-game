@@ -32,7 +32,8 @@ set(SOURCE_FILES src/main.cpp
         src/scene/ViewManager.cpp
         src/text/dialogue/DialogueEvent.cpp
         src/text/dialogue/Dialogue.cpp
-        src/text/dialogue/DialoguePiece.cpp)
+        src/text/dialogue/DialoguePiece.cpp
+        )
 
 set(INCLUDE_FILES includes/FramerateCounter.h
         includes/asset/FontManager.h
@@ -61,7 +62,8 @@ set(INCLUDE_FILES includes/FramerateCounter.h
         includes/scene/ViewManager.h
         includes/text/dialogue/DialogueEvent.h
         includes/text/dialogue/Dialogue.h
-        includes/text/dialogue/DialoguePiece.h)
+        includes/text/dialogue/DialoguePiece.h
+        )
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/EntityCollisionEvent.h

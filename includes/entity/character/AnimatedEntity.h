@@ -19,10 +19,7 @@ protected:
     virtual void initializeAnimations() {};
     void setFrameTime(sf::Time time);
     void setTextureRectBasedOnCurrentFrame();
-    void faceUp();
-    void faceLeft();
-    void faceDown();
-    void faceRight();
+    void turnToFaceEntityFacingDirection(MoveDirection facingDirection);
     Animation* currentAnimation;
     Animation walkingAnimationDown;
     Animation walkingAnimationLeft;
@@ -35,6 +32,10 @@ private:
     void moveLeft();
     void moveDown();
     void moveRight();
+    void faceUp();
+    void faceLeft();
+    void faceDown();
+    void faceRight();
     void playAnimation();
     void pauseAnimation();
     void stopAnimation();
