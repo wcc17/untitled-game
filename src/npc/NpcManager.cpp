@@ -70,7 +70,6 @@ void NpcManager::initializeNpc(Collidable& collidable, sf::Texture* texture) {
         eventBus->publish(new ExitGameEvent(exitMessage));
     }
 
-    npcEntity->stop();
     npcs.push_back(npcEntity);
 }
 

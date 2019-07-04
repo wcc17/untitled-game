@@ -1,10 +1,6 @@
-#include "../../../includes/entity/character/AnimatedEntity.h"
+#include "../../../includes/entity/character/EntityAnimation.h"
 
-void AnimatedEntity::initialize(sf::Texture* texture) {
-    this->setTexture(*texture);
-}
-
-void AnimatedEntity::update(sf::Time deltaTime, MoveDirection direction) {
+void EntityAnimation::update(sf::Time deltaTime, MoveDirection direction) {
     move(direction);
 
     if(!animationPaused && currentAnimation) {
@@ -29,7 +25,7 @@ void AnimatedEntity::update(sf::Time deltaTime, MoveDirection direction) {
     }
 }
 
-void AnimatedEntity::move(MoveDirection direction) {
+void EntityAnimation::move(MoveDirection direction) {
     switch(direction) {
         case MoveDirection::UP:
             moveUp();
@@ -51,19 +47,19 @@ void AnimatedEntity::move(MoveDirection direction) {
     }
 }
 
-void AnimatedEntity::turnToFaceEntityFacingDirection(MoveDirection facingDirection) {
+void EntityAnimation::turnToFaceEntityFacingDirection(MoveDirection facingDirection) {
     switch(facingDirection) {
         case MoveDirection::UP:
-            AnimatedEntity::faceDown();
+            EntityAnimation::faceDown();
             break;
         case MoveDirection::DOWN:
-            AnimatedEntity::faceUp();
+            EntityAnimation::faceUp();
             break;
         case MoveDirection::LEFT:
-            AnimatedEntity::faceRight();
+            EntityAnimation::faceRight();
             break;
         case MoveDirection::RIGHT:
-            AnimatedEntity::faceLeft();
+            EntityAnimation::faceLeft();
             break;
         case MoveDirection::NONE:
             break;
@@ -73,67 +69,92 @@ void AnimatedEntity::turnToFaceEntityFacingDirection(MoveDirection facingDirecti
     setTextureRectBasedOnCurrentFrame();
 }
 
-void AnimatedEntity::setTextureRectBasedOnCurrentFrame() {
+void EntityAnimation::turnToFaceDirection(MoveDirection faceDirection) {
+    switch(faceDirection) {
+        case MoveDirection::UP:
+            EntityAnimation::faceUp();
+            break;
+        case MoveDirection::DOWN:
+            EntityAnimation::faceDown();
+            break;
+        case MoveDirection::LEFT:
+            EntityAnimation::faceLeft();
+            break;
+        case MoveDirection::RIGHT:
+            EntityAnimation::faceRight();
+            break;
+        case MoveDirection::NONE:
+            break;
+    }
+
+    currentFrame = 0;
+    setTextureRectBasedOnCurrentFrame();
+}
+
+void EntityAnimation::setTextureRectBasedOnCurrentFrame() {
     if(currentAnimation) {
-        sf::IntRect rect = currentAnimation->getFrame(currentFrame);
-        setTextureRect(rect);
+        textureRect = currentAnimation->getFrame(currentFrame);
     }
 }
 
-void AnimatedEntity::playAnimation() {
+sf::IntRect EntityAnimation::getTextureRect() {
+    return textureRect;
+}
+
+void EntityAnimation::playAnimation() {
     this->animationPaused = false;
 }
 
-void AnimatedEntity::pauseAnimation() {
+void EntityAnimation::pauseAnimation() {
     this->animationPaused = true;
 }
 
-void AnimatedEntity::stopAnimation() {
+void EntityAnimation::stopAnimation() {
     this->pauseAnimation();
     this->currentFrame = 0;
     setTextureRectBasedOnCurrentFrame();
 }
 
-void AnimatedEntity::moveUp() {
+void EntityAnimation::moveUp() {
     faceUp();
     this->playAnimation();
 }
 
-void AnimatedEntity::moveLeft() {
+void EntityAnimation::moveLeft() {
     faceLeft();
     this->playAnimation();
 }
 
-void AnimatedEntity::moveDown() {
+void EntityAnimation::moveDown() {
     faceDown();
     this->playAnimation();
 }
 
-void AnimatedEntity::moveRight() {
+void EntityAnimation::moveRight() {
     faceRight();
     this->playAnimation();
 }
 
-void AnimatedEntity::faceUp() {
+void EntityAnimation::faceUp() {
     this->currentAnimation = &walkingAnimationUp;
 }
 
-void AnimatedEntity::faceLeft() {
+void EntityAnimation::faceLeft() {
     this->currentAnimation = &walkingAnimationLeft;
 }
 
-void AnimatedEntity::faceDown() {
+void EntityAnimation::faceDown() {
     this->currentAnimation = &walkingAnimationDown;
 }
 
-void AnimatedEntity::faceRight() {
+void EntityAnimation::faceRight() {
     this->currentAnimation = &walkingAnimationRight;
 }
 
-void AnimatedEntity::stop() {
+void EntityAnimation::stop() {
     this->stopAnimation();
 }
 
-void AnimatedEntity::setFrameTime(sf::Time time) {
+void EntityAnimation::setFrameTime(sf::Time time) {
     this->frameTime = time;
 }

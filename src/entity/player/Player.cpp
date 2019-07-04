@@ -7,15 +7,15 @@ const float MOVEMENT_SPEED = 80.f;
 const int VICINITY_BOUNDS_OFFSET = 4;
 
 void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, const Collidable& collidable) {
-    AnimatedEntity::initialize(texture);
+    MovableEntity::setTexture(*texture); //TODO: should not be MovableEntity
     MovableEntity::initialize(MOVEMENT_SPEED);
 
     this->state = STATE_STANDING;
     this->name = collidable.getName();
     this->type = collidable.getType();
-    this->setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
+    MovableEntity::setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
 
-    setFrameTime(sf::seconds(PLAYER_FRAME_TIME));
+    entityAnimation.setFrameTime(sf::seconds(PLAYER_FRAME_TIME));
     initializeAnimations();
 
     this->eventBus = eventBus;
@@ -42,11 +42,16 @@ void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
             handleInteractingState();
             break;
     }
+
+    //TODO: this should be in the handleState functions
+    MovableEntity::setTextureRect(entityAnimation.getTextureRect());
 }
 
 void Player::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     MovableEntity::handleStandingState(deltaTime, state);
-    AnimatedEntity::update(deltaTime, currentDirection);
+
+    //TODO: DRY
+    entityAnimation.update(deltaTime, currentDirection);
     handleActionButtonPressed();
     resetAfterFrame();
     adjustPlayerAndViewPositions();
@@ -54,7 +59,9 @@ void Player::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTile
 
 void Player::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     MovableEntity::handleMovingState(deltaTime, mapTileSize, state);
-    AnimatedEntity::update(deltaTime, currentDirection);
+
+    //TODO: DRY
+    entityAnimation.update(deltaTime, currentDirection);
     handleActionButtonPressed();
     resetAfterFrame();
     adjustPlayerAndViewPositions();
@@ -65,7 +72,7 @@ void Player::handleInteractingState() {
 }
 
 void Player::adjustPlayerAndViewPositions() {
-    eventBus->publish(new PlayerPositionChangeEvent(getGlobalBounds()));
+    eventBus->publish(new PlayerPositionChangeEvent(MovableEntity::getGlobalBounds()));
     roundPosition();
 }
 
@@ -75,7 +82,7 @@ void Player::handleActionButtonPressed() {
         for(std::shared_ptr<Collidable> collidable : collidablesInVicinity) {
             if(CollidableEntity::isFacingCollidableInVicinity(currentlyFacingDirection, *collidable)) {
                 state = STATE_INTERACTING;
-                AnimatedEntity::stop();
+                entityAnimation.stop();
                 eventBus->publish(new OpenDialogueEvent(getGlobalBounds(), *collidable, MovableEntity::getCurrentFacingDirection()));
                 break;
             }
@@ -115,30 +122,31 @@ void Player::roundPosition() {
 
 void Player::initializeAnimations() {
     //TODO: EVERYTHING needs to be multiples of tile size, including the character textures (its frames). Should there be a check to ensure this is happening so that I don't forget? How can I get the tile size here? Also NpcEntity
-    walkingAnimationDown.setSpriteSheet(*this->getTexture());
-    walkingAnimationDown.addFrame(sf::IntRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT));
-    walkingAnimationDown.addFrame(sf::IntRect(PLAYER_WIDTH, 0, PLAYER_WIDTH, PLAYER_HEIGHT));
-    walkingAnimationDown.addFrame(sf::IntRect(PLAYER_WIDTH*2, 0, PLAYER_WIDTH, PLAYER_HEIGHT));
-    walkingAnimationDown.addFrame(sf::IntRect(PLAYER_WIDTH*3, 0, PLAYER_WIDTH, PLAYER_HEIGHT));
 
-    walkingAnimationRight.setSpriteSheet(*this->getTexture());
-    walkingAnimationRight.addFrame(sf::IntRect(0, PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT));
-    walkingAnimationRight.addFrame(sf::IntRect(PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT));
-    walkingAnimationRight.addFrame(sf::IntRect(PLAYER_WIDTH*2, PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT));
-    walkingAnimationRight.addFrame(sf::IntRect(PLAYER_WIDTH*3, PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT));
+    //TODO: I don't like that the animations are public members of EntityAnimation. The way animations are handled needs to be refactored
+    entityAnimation.walkingAnimationDown.setSpriteSheet(*this->getTexture());
+    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT));
+    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(PLAYER_WIDTH, 0, PLAYER_WIDTH, PLAYER_HEIGHT));
+    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(PLAYER_WIDTH*2, 0, PLAYER_WIDTH, PLAYER_HEIGHT));
+    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(PLAYER_WIDTH*3, 0, PLAYER_WIDTH, PLAYER_HEIGHT));
 
-    walkingAnimationUp.setSpriteSheet(*this->getTexture());
-    walkingAnimationUp.addFrame(sf::IntRect(0, PLAYER_HEIGHT*2, PLAYER_WIDTH, PLAYER_HEIGHT));
-    walkingAnimationUp.addFrame(sf::IntRect(PLAYER_WIDTH, PLAYER_HEIGHT*2, PLAYER_WIDTH, PLAYER_HEIGHT));
-    walkingAnimationUp.addFrame(sf::IntRect(PLAYER_WIDTH*2, PLAYER_HEIGHT*2, PLAYER_WIDTH, PLAYER_HEIGHT));
-    walkingAnimationUp.addFrame(sf::IntRect(PLAYER_WIDTH*3, PLAYER_HEIGHT*2, PLAYER_WIDTH, PLAYER_HEIGHT));
+    entityAnimation.walkingAnimationRight.setSpriteSheet(*this->getTexture());
+    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(0, PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT));
+    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT));
+    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(PLAYER_WIDTH*2, PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT));
+    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(PLAYER_WIDTH*3, PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT));
 
-    walkingAnimationLeft.setSpriteSheet(*this->getTexture());
-    walkingAnimationLeft.addFrame(sf::IntRect(0, PLAYER_HEIGHT*3, PLAYER_WIDTH, PLAYER_HEIGHT));
-    walkingAnimationLeft.addFrame(sf::IntRect(PLAYER_WIDTH, PLAYER_HEIGHT*3, PLAYER_WIDTH, PLAYER_HEIGHT));
-    walkingAnimationLeft.addFrame(sf::IntRect(PLAYER_WIDTH*2, PLAYER_HEIGHT*3, PLAYER_WIDTH, PLAYER_HEIGHT));
-    walkingAnimationLeft.addFrame(sf::IntRect(PLAYER_WIDTH*3, PLAYER_HEIGHT*3, PLAYER_WIDTH, PLAYER_HEIGHT));
+    entityAnimation.walkingAnimationUp.setSpriteSheet(*this->getTexture());
+    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(0, PLAYER_HEIGHT*2, PLAYER_WIDTH, PLAYER_HEIGHT));
+    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(PLAYER_WIDTH, PLAYER_HEIGHT*2, PLAYER_WIDTH, PLAYER_HEIGHT));
+    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(PLAYER_WIDTH*2, PLAYER_HEIGHT*2, PLAYER_WIDTH, PLAYER_HEIGHT));
+    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(PLAYER_WIDTH*3, PLAYER_HEIGHT*2, PLAYER_WIDTH, PLAYER_HEIGHT));
 
-    this->currentAnimation = &walkingAnimationDown;
-    setTextureRectBasedOnCurrentFrame();
+    entityAnimation.walkingAnimationLeft.setSpriteSheet(*this->getTexture());
+    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(0, PLAYER_HEIGHT*3, PLAYER_WIDTH, PLAYER_HEIGHT));
+    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(PLAYER_WIDTH, PLAYER_HEIGHT*3, PLAYER_WIDTH, PLAYER_HEIGHT));
+    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(PLAYER_WIDTH*2, PLAYER_HEIGHT*3, PLAYER_WIDTH, PLAYER_HEIGHT));
+    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(PLAYER_WIDTH*3, PLAYER_HEIGHT*3, PLAYER_WIDTH, PLAYER_HEIGHT));
+
+    entityAnimation.turnToFaceDirection(MoveDirection::DOWN);
 }

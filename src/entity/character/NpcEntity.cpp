@@ -8,7 +8,7 @@ const float ENTITY_FRAME_TIME = 0.16f; //TODO: not sure where I want to load thi
 const sf::Vector2f moveDelayRange = sf::Vector2f(1.5f, 5.5f);
 
 void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries) {
-    AnimatedEntity::initialize(texture);
+    MovableEntity::setTexture(*texture);
     MovableEntity::initialize(ENTITY_MOVEMENT_SPEED);
 
     this->state = STATE_STANDING;
@@ -16,7 +16,7 @@ void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, s
     this->type = collidable.getType();
     this->setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
 
-    setFrameTime(sf::seconds(ENTITY_FRAME_TIME));
+    entityAnimation.setFrameTime(sf::seconds(ENTITY_FRAME_TIME));
     initializeAnimations();
 
     this->moveBoundaries = moveBoundaries;
@@ -61,10 +61,13 @@ void NpcEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
             printf("moved too far up of boundary, fixing in NpcEntity::ensureEntityInsideBounds\n");
         }
     }
+
+    //TODO: this should be in the handleState functions
+    MovableEntity::setTextureRect(entityAnimation.getTextureRect());
 }
 
 void NpcEntity::onPlayerInteractionStart(MoveDirection playerFacingDirection) {
-    turnToFaceEntityFacingDirection(playerFacingDirection);
+    entityAnimation.turnToFaceEntityFacingDirection(playerFacingDirection);
     state = STATE_INTERACTING;
     //TODO: can this put the entity in a weird position? Will it be fixed?
 }
@@ -82,7 +85,7 @@ void NpcEntity::onCollisionEvent(const Collidable& collidedWith) {
 
 void NpcEntity::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     MovableEntity::handleStandingState(deltaTime, state);
-    AnimatedEntity::update(deltaTime, currentDirection);
+    entityAnimation.update(deltaTime, currentDirection);
 
     roundPosition();
 
@@ -92,12 +95,7 @@ void NpcEntity::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapT
 }
 
 void NpcEntity::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
-    AnimatedEntity::update(deltaTime, currentDirection);
-
-    //TODO: so I think NpcEntity does not need hardly anything that MovableEntity does. So MovableEntity favors composition over inheritiance, which will have to work for Player.
-    //TODO: next project should be moving getting rid of the inheritance and replacing it with Composition
-    //TODO: Player and NpcEntity will still inherit from Sprite though
-    //TODO: this also means getting rid of CharacterEntity
+    entityAnimation.update(deltaTime, currentDirection);
     handleEntityMovementTowardGoal(deltaTime, mapTileSize);
 }
 
@@ -330,30 +328,29 @@ float NpcEntity::getRandomFloatInRange(float min, float max) {
 void NpcEntity::initializeAnimations() {
 
     //TODO: these constants are temporary until I figure out where I want to load this information from. Probably from a more specific derived NpcEntity class
-    walkingAnimationDown.setSpriteSheet(*this->getTexture());
-    walkingAnimationDown.addFrame(sf::IntRect(0, 0, ENTITY_WIDTH, ENTITY_HEIGHT));
-    walkingAnimationDown.addFrame(sf::IntRect(ENTITY_WIDTH, 0, ENTITY_WIDTH, ENTITY_HEIGHT));
-    walkingAnimationDown.addFrame(sf::IntRect(ENTITY_WIDTH*2, 0, ENTITY_WIDTH, ENTITY_HEIGHT));
-    walkingAnimationDown.addFrame(sf::IntRect(ENTITY_WIDTH*3, 0, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationDown.setSpriteSheet(*this->getTexture());
+    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(0, 0, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(ENTITY_WIDTH, 0, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(ENTITY_WIDTH*2, 0, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(ENTITY_WIDTH*3, 0, ENTITY_WIDTH, ENTITY_HEIGHT));
 
-    walkingAnimationRight.setSpriteSheet(*this->getTexture());
-    walkingAnimationRight.addFrame(sf::IntRect(0, ENTITY_HEIGHT, ENTITY_WIDTH, ENTITY_HEIGHT));
-    walkingAnimationRight.addFrame(sf::IntRect(ENTITY_WIDTH, ENTITY_HEIGHT, ENTITY_WIDTH, ENTITY_HEIGHT));
-    walkingAnimationRight.addFrame(sf::IntRect(ENTITY_WIDTH*2, ENTITY_HEIGHT, ENTITY_WIDTH, ENTITY_HEIGHT));
-    walkingAnimationRight.addFrame(sf::IntRect(ENTITY_WIDTH*3, ENTITY_HEIGHT, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationRight.setSpriteSheet(*this->getTexture());
+    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(0, ENTITY_HEIGHT, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(ENTITY_WIDTH, ENTITY_HEIGHT, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(ENTITY_WIDTH*2, ENTITY_HEIGHT, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(ENTITY_WIDTH*3, ENTITY_HEIGHT, ENTITY_WIDTH, ENTITY_HEIGHT));
 
-    walkingAnimationUp.setSpriteSheet(*this->getTexture());
-    walkingAnimationUp.addFrame(sf::IntRect(0, ENTITY_HEIGHT*2, ENTITY_WIDTH, ENTITY_HEIGHT));
-    walkingAnimationUp.addFrame(sf::IntRect(ENTITY_WIDTH, ENTITY_HEIGHT*2, ENTITY_WIDTH, ENTITY_HEIGHT));
-    walkingAnimationUp.addFrame(sf::IntRect(ENTITY_WIDTH*2, ENTITY_HEIGHT*2, ENTITY_WIDTH, ENTITY_HEIGHT));
-    walkingAnimationUp.addFrame(sf::IntRect(ENTITY_WIDTH*3, ENTITY_HEIGHT*2, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationUp.setSpriteSheet(*this->getTexture());
+    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(0, ENTITY_HEIGHT*2, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(ENTITY_WIDTH, ENTITY_HEIGHT*2, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(ENTITY_WIDTH*2, ENTITY_HEIGHT*2, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(ENTITY_WIDTH*3, ENTITY_HEIGHT*2, ENTITY_WIDTH, ENTITY_HEIGHT));
 
-    walkingAnimationLeft.setSpriteSheet(*this->getTexture());
-    walkingAnimationLeft.addFrame(sf::IntRect(0, ENTITY_HEIGHT*3, ENTITY_WIDTH, ENTITY_HEIGHT));
-    walkingAnimationLeft.addFrame(sf::IntRect(ENTITY_WIDTH, ENTITY_HEIGHT*3, ENTITY_WIDTH, ENTITY_HEIGHT));
-    walkingAnimationLeft.addFrame(sf::IntRect(ENTITY_WIDTH*2, ENTITY_HEIGHT*3, ENTITY_WIDTH, ENTITY_HEIGHT));
-    walkingAnimationLeft.addFrame(sf::IntRect(ENTITY_WIDTH*3, ENTITY_HEIGHT*3, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationLeft.setSpriteSheet(*this->getTexture());
+    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(0, ENTITY_HEIGHT*3, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(ENTITY_WIDTH, ENTITY_HEIGHT*3, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(ENTITY_WIDTH*2, ENTITY_HEIGHT*3, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(ENTITY_WIDTH*3, ENTITY_HEIGHT*3, ENTITY_WIDTH, ENTITY_HEIGHT));
 
-    this->currentAnimation = &walkingAnimationDown;
-    setTextureRectBasedOnCurrentFrame();
+    entityAnimation.turnToFaceDirection(MoveDirection::DOWN);
 }

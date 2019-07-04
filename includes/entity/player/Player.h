@@ -10,11 +10,11 @@
 #include "../../events/event/OpenDialogueEvent.h"
 #include "../../events/event/PlayerCollisionEvent.h"
 #include "../../events/event/PlayerPositionChangeEvent.h"
-#include "../character/AnimatedEntity.h"
+#include "../character/EntityAnimation.h"
 #include "../character/MovableEntity.h"
 #include "../character/CollidableEntity.h"
 
-class Player : public AnimatedEntity, public MovableEntity, public CollidableEntity {
+class Player : public MovableEntity, public CollidableEntity {
 
 public:
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, const Collidable& collidable);
@@ -24,7 +24,9 @@ private:
     std::shared_ptr<EventBus> eventBus;
     bool actionButtonPressed = false;
 
-    void initializeAnimations() override;
+    EntityAnimation entityAnimation;
+    void initializeAnimations();
+
     void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void handleInteractingState();

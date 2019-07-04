@@ -1,5 +1,5 @@
-#ifndef NEWNEW_ANIMATEDENTITY_H
-#define NEWNEW_ANIMATEDENTITY_H
+#ifndef NEWNEW_ENTITYANIMATION_H
+#define NEWNEW_ENTITYANIMATION_H
 
 #include <SFML/System/Time.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -8,23 +8,25 @@
 #include "../../controller/MoveDirection.h"
 #include <cmath>
 
-class AnimatedEntity : virtual public sf::Sprite {
+class EntityAnimation {
 
 public:
     void initialize(sf::Texture *texture);
     void update(sf::Time deltaTime, MoveDirection direction);
     void stop();
-
-protected:
-    virtual void initializeAnimations() {};
     void setFrameTime(sf::Time time);
-    void setTextureRectBasedOnCurrentFrame();
     void turnToFaceEntityFacingDirection(MoveDirection facingDirection);
-    Animation* currentAnimation;
+    void turnToFaceDirection(MoveDirection faceDirection);
+    sf::IntRect getTextureRect();
     Animation walkingAnimationDown;
     Animation walkingAnimationLeft;
     Animation walkingAnimationRight;
     Animation walkingAnimationUp;
+
+protected:
+    virtual void initializeAnimations() {};
+    void setTextureRectBasedOnCurrentFrame();
+    Animation* currentAnimation;
 
 private:
     void move(MoveDirection direction);
@@ -39,6 +41,7 @@ private:
     void playAnimation();
     void pauseAnimation();
     void stopAnimation();
+    sf::IntRect textureRect;
     sf::Time frameTime;
     sf::Time currentTime;
     bool animationPaused = false;
@@ -47,4 +50,4 @@ private:
 };
 
 
-#endif //NEWNEW_ANIMATEDENTITY_H
+#endif //NEWNEW_ENTITYANIMATION_H

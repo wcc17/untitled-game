@@ -15,7 +15,7 @@ set(SOURCE_FILES src/main.cpp
         src/entity/player/Player.cpp
         src/entity/character/Animation.cpp
         src/scene/Scene.cpp
-        src/entity/character/AnimatedEntity.cpp
+        src/entity/character/EntityAnimation.cpp
         src/collisions/Collidable.cpp
         src/scene/SceneManager.cpp
         src/text/TextManager.cpp
@@ -45,7 +45,7 @@ set(INCLUDE_FILES includes/FramerateCounter.h
         includes/entity/player/Player.h
         includes/entity/character/Animation.h
         includes/scene/Scene.h
-        includes/entity/character/AnimatedEntity.h
+        includes/entity/character/EntityAnimation.h
         includes/collisions/Collidable.h
         includes/scene/SceneManager.h
         includes/text/TextManager.h

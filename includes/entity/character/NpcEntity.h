@@ -3,11 +3,11 @@
 
 
 #include <random>
-#include "AnimatedEntity.h"
+#include "EntityAnimation.h"
 #include "MovableEntity.h"
 #include "CollidableEntity.h"
 
-class NpcEntity : public AnimatedEntity, public MovableEntity, public CollidableEntity {
+class NpcEntity : public MovableEntity, public CollidableEntity {
 
 public:
     void initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries);
@@ -17,13 +17,14 @@ public:
     void onCollisionEvent(const Collidable& collidedWith);
 private:
     EntityState state;
+    EntityAnimation entityAnimation;
     sf::IntRect moveBoundaries;
     sf::Time moveDelay;
     int distanceMoved = 0;
     int movementGoal = 0;
     std::random_device randomDevice; // obtain a random number from hardware
 
-    void initializeAnimations() override;
+    void initializeAnimations();
     void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void handleInteractingState();
