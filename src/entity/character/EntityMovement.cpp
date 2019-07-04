@@ -1,54 +1,55 @@
-#include "../../../includes/entity/character/MovableEntity.h"
+#include "../../../includes/entity/character/EntityMovement.h"
 
-void MovableEntity::initialize(float moveSpeed) {
+void EntityMovement::initialize(float moveSpeed) {
     this->moveSpeed = moveSpeed;
-    currentDirection = MoveDirection::NONE;
     previousDirection = MoveDirection::UP;
 }
 
-void MovableEntity::handleStandingState(sf::Time deltaTime, EntityState& state) {
+void EntityMovement::handleStandingState(sf::Time deltaTime, EntityState& state, MoveDirection& currentDirection, sf::Vector2f& currentPosition) {
     if(currentDirection != MoveDirection::NONE) {
         state = STATE_MOVING;
-        performRegularMove(deltaTime);
+        performRegularMove(deltaTime, currentDirection, currentPosition);
     }
 }
 
-void MovableEntity::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize, EntityState& state) {
-    if(movementGoalReached(mapTileSize)) {
+void EntityMovement::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize, EntityState& state,
+        MoveDirection& currentDirection, sf::Vector2f& currentPosition) {
+    if(movementGoalReached(mapTileSize, currentPosition)) {
         if(currentDirection == MoveDirection::NONE) {
             state = STATE_STANDING;
         } else {
             state = STATE_MOVING;
-            performRegularMove(deltaTime);
+            performRegularMove(deltaTime, currentDirection, currentPosition);
         }
     } else {
         //if we haven't reached the goal, don't change the state and keep moving
-        performGoalLimitedMove(deltaTime, mapTileSize);
+        performGoalLimitedMove(deltaTime, mapTileSize, currentDirection, currentPosition);
     }
 }
 
-bool MovableEntity::movementGoalReached(const sf::Vector2u& mapTileSize) {
+bool EntityMovement::movementGoalReached(const sf::Vector2u& mapTileSize, sf::Vector2f currentPosition) {
     if(previousDirection == MoveDirection::NONE) {
         printf("MovableEntity.movementGoalReached().this should not be happening\n");
         return true;
     }
 
-    int position = getChangingPosition(previousDirection, getPosition());
+    int position = getChangingPosition(previousDirection, currentPosition);
     int tileSize = getTileSizeForDirection(previousDirection, mapTileSize);
     return (position % tileSize == 0); //if tileSize is a multiple of position, then our goal is reached
 }
 
-sf::Vector2f MovableEntity::getGoalLimitedMovement(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
+sf::Vector2f EntityMovement::getGoalLimitedMovement(sf::Time deltaTime, const sf::Vector2u& mapTileSize,
+        MoveDirection& currentDirection, sf::Vector2f currentPosition) {
 
     if(currentDirection == MoveDirection::NONE) {
         printf("this should not be happening. shouldn't be setting GoalLimitedMovement without a direction other than NONE. \n");
         return sf::Vector2f(0.f, 0.f);
     }
 
-    int position = getChangingPosition(currentDirection, getPosition());
+    int position = getChangingPosition(currentDirection, currentPosition);
     int tileSize = getTileSizeForDirection(currentDirection, mapTileSize);
     int moveGoal = position + (tileSize - position % tileSize);
-    sf::Vector2f move = getRegularMovement(moveSpeed) * deltaTime.asSeconds();
+    sf::Vector2f move = getRegularMovement(moveSpeed, currentDirection) * deltaTime.asSeconds();
 
     float distanceToTravel = (currentDirection == MoveDirection::UP || currentDirection == MoveDirection::DOWN) ? move.y : move.x;
     float newMoveSpeed = moveSpeed;
@@ -57,10 +58,10 @@ sf::Vector2f MovableEntity::getGoalLimitedMovement(sf::Time deltaTime, const sf:
         newMoveSpeed = newDistanceToTravel / deltaTime.asSeconds();
     }
 
-    return getRegularMovement(newMoveSpeed);
+    return getRegularMovement(newMoveSpeed, currentDirection);
 }
 
-sf::Vector2f MovableEntity::getRegularMovement(float speed) {
+sf::Vector2f EntityMovement::getRegularMovement(float speed, MoveDirection& currentDirection) {
     sf::Vector2f movement;
 
     switch(currentDirection) {
@@ -81,36 +82,31 @@ sf::Vector2f MovableEntity::getRegularMovement(float speed) {
             break;
     }
 
-    currentlyFacingDirection = currentDirection; //setting this assuming that getRegularMovement would never be called if currentDirection == MoveDirection::NONE
+    lastFacingDirection = currentDirection; //setting this assuming that getRegularMovement would never be called if currentDirection == MoveDirection::NONE
     return movement;
 }
 
-void MovableEntity::performRegularMove(sf::Time deltaTime) {
-    sf::Vector2f moveVector = getRegularMovement(moveSpeed);
-    Sprite::move(moveVector * deltaTime.asSeconds());
+void EntityMovement::performRegularMove(sf::Time deltaTime, MoveDirection& currentDirection, sf::Vector2f& currentPosition) {
+    sf::Vector2f moveVector = getRegularMovement(moveSpeed, currentDirection);
+    sf::Vector2f moveVectorWithSpeed = moveVector * deltaTime.asSeconds();
+    currentPosition = sf::Vector2f(currentPosition.x + moveVectorWithSpeed.x, currentPosition.y + moveVectorWithSpeed.y);
     previousDirection = currentDirection;
 }
 
-void MovableEntity::performGoalLimitedMove(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
+void EntityMovement::performGoalLimitedMove(sf::Time deltaTime, const sf::Vector2u& mapTileSize,
+        MoveDirection& currentDirection, sf::Vector2f& currentPosition) {
     currentDirection = previousDirection;
-    sf::Vector2f moveVector = getGoalLimitedMovement(deltaTime, mapTileSize);
-    Sprite::move(moveVector * deltaTime.asSeconds());
-    previousDirection = currentDirection; //TODO: verify this isn't needed
+    sf::Vector2f moveVector = getGoalLimitedMovement(deltaTime, mapTileSize, currentDirection, currentPosition);
+    sf::Vector2f moveVectorWithSpeed = moveVector * deltaTime.asSeconds();
+    currentPosition = sf::Vector2f(currentPosition.x + moveVectorWithSpeed.x, currentPosition.y + moveVectorWithSpeed.y);
+    previousDirection = currentDirection;
 }
 
-MoveDirection MovableEntity::getCurrentFacingDirection() {
-    return this->currentlyFacingDirection;
+MoveDirection EntityMovement::getLastFacingDirection() {
+    return this->lastFacingDirection;
 }
 
-MoveDirection MovableEntity::getCurrentDirection() {
-    return this->currentDirection;
-}
-
-void MovableEntity::setCurrentDirection(MoveDirection direction) {
-    this->currentDirection = direction;
-}
-
-int MovableEntity::getChangingPosition(const MoveDirection& direction, const sf::Vector2f& position) {
+int EntityMovement::getChangingPosition(const MoveDirection& direction, const sf::Vector2f& position) {
     switch(direction) {
         case MoveDirection::UP:
         case MoveDirection::DOWN:
@@ -124,7 +120,7 @@ int MovableEntity::getChangingPosition(const MoveDirection& direction, const sf:
     }
 }
 
-int MovableEntity::getTileSizeForDirection(const MoveDirection& direction, const sf::Vector2u& mapTileSize) {
+int EntityMovement::getTileSizeForDirection(const MoveDirection& direction, const sf::Vector2u& mapTileSize) {
     switch(direction) {
         case MoveDirection::UP:
         case MoveDirection::DOWN:

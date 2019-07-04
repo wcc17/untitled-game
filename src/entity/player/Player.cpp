@@ -7,15 +7,18 @@ const float MOVEMENT_SPEED = 80.f;
 const int VICINITY_BOUNDS_OFFSET = 4;
 
 void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, const Collidable& collidable) {
-    MovableEntity::setTexture(*texture); //TODO: should not be MovableEntity
-    MovableEntity::initialize(MOVEMENT_SPEED);
+    sf::Sprite::setTexture(*texture);
+
+    entityMovement.initialize(MOVEMENT_SPEED);
+    currentDirection = MoveDirection::NONE;
 
     this->state = STATE_STANDING;
+    //TODO: could be in entityCollidable.initialize
     this->entityCollidable.setName(collidable.getName());
     this->entityCollidable.setType(collidable.getType());
     this->entityCollidable.setBoundingBox(collidable.getBoundingBox());
     this->entityCollidable.setVicinityBoundsOffset(VICINITY_BOUNDS_OFFSET);
-    MovableEntity::setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
+    sf::Sprite::setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
 
     entityAnimation.setFrameTime(sf::seconds(PLAYER_FRAME_TIME));
     initializeAnimations();
@@ -45,12 +48,14 @@ void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     }
 
     //TODO: this should be in the handleState functions
-    MovableEntity::setTextureRect(entityAnimation.getTextureRect());
+    sf::Sprite::setTextureRect(entityAnimation.getTextureRect());
     this->entityCollidable.setBoundingBox(sf::FloatRect(getPosition().x, getPosition().y, PLAYER_WIDTH, PLAYER_HEIGHT));
 }
 
 void Player::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
-    MovableEntity::handleStandingState(deltaTime, state);
+    sf::Vector2f newPosition = getPosition();
+    entityMovement.handleStandingState(deltaTime, state, currentDirection, newPosition);
+    setPosition(newPosition);
 
     //TODO: DRY
     entityAnimation.update(deltaTime, currentDirection);
@@ -60,7 +65,9 @@ void Player::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTile
 }
 
 void Player::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
-    MovableEntity::handleMovingState(deltaTime, mapTileSize, state);
+    sf::Vector2f newPosition = getPosition();
+    entityMovement.handleMovingState(deltaTime, mapTileSize, state, currentDirection, newPosition);
+    setPosition(newPosition);
 
     //TODO: DRY
     entityAnimation.update(deltaTime, currentDirection);
@@ -74,18 +81,19 @@ void Player::handleInteractingState() {
 }
 
 void Player::adjustPlayerAndViewPositions() {
-    eventBus->publish(new PlayerPositionChangeEvent(MovableEntity::getGlobalBounds()));
+    eventBus->publish(new PlayerPositionChangeEvent(sf::Sprite::getGlobalBounds()));
     roundPosition();
 }
 
 void Player::handleActionButtonPressed() {
     if(actionButtonPressed) {
-        MoveDirection currentlyFacingDirection = MovableEntity::getCurrentFacingDirection();
+        MoveDirection currentlyFacingDirection = entityMovement.getLastFacingDirection();
+
         for(std::shared_ptr<Collidable> collidable : entityCollidable.getCollidablesInVicinity()) {
             if(entityCollidable.isFacingCollidableInVicinity(currentlyFacingDirection, *collidable)) {
                 state = STATE_INTERACTING;
                 entityAnimation.stop();
-                eventBus->publish(new OpenDialogueEvent(getGlobalBounds(), *collidable, MovableEntity::getCurrentFacingDirection()));
+                eventBus->publish(new OpenDialogueEvent(getGlobalBounds(), *collidable, currentlyFacingDirection));
                 break;
             }
         }
@@ -93,7 +101,7 @@ void Player::handleActionButtonPressed() {
 }
 
 void Player::onControllerMoveEvent(ControllerMoveEvent* event) {
-    MovableEntity::setCurrentDirection(event->direction);
+    currentDirection = event->direction;
 }
 
 void Player::onControllerActionEvent(ControllerActionEvent* event) {

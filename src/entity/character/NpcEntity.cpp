@@ -8,8 +8,7 @@ const float ENTITY_FRAME_TIME = 0.16f; //TODO: not sure where I want to load thi
 const sf::Vector2f moveDelayRange = sf::Vector2f(1.5f, 5.5f);
 
 void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries) {
-    MovableEntity::setTexture(*texture);
-    MovableEntity::initialize(ENTITY_MOVEMENT_SPEED);
+    sf::Sprite::setTexture(*texture);
 
     this->state = STATE_STANDING;
     this->entityCollidable.setName(collidable.getName());
@@ -64,7 +63,7 @@ void NpcEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     }
 
     //TODO: this should be in the handleState functions
-    MovableEntity::setTextureRect(entityAnimation.getTextureRect());
+    sf::Sprite::setTextureRect(entityAnimation.getTextureRect());
     this->entityCollidable.setBoundingBox(sf::FloatRect(getPosition().x, getPosition().y, ENTITY_WIDTH, ENTITY_HEIGHT));
 }
 
@@ -86,7 +85,6 @@ void NpcEntity::onCollisionEvent(const Collidable& collidedWith) {
 }
 
 void NpcEntity::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
-    MovableEntity::handleStandingState(deltaTime, state);
     entityAnimation.update(deltaTime, currentDirection);
 
     roundPosition();
@@ -180,7 +178,7 @@ int NpcEntity::getMaxDistanceEntityCanTravel(MoveDirection moveDirection) {
 
 void NpcEntity::handleEntityMovementTowardGoal(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     sf::Vector2f previousPosition = getPosition();
-    sf::Vector2f moveVector = getRegularMovement(80.f);
+    sf::Vector2f moveVector = entityMovement.getRegularMovement(ENTITY_MOVEMENT_SPEED, currentDirection);
     Sprite::move(moveVector * deltaTime.asSeconds());
     roundPosition();
 

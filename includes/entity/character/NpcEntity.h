@@ -4,10 +4,11 @@
 
 #include <random>
 #include "EntityAnimation.h"
-#include "MovableEntity.h"
 #include "EntityCollidable.h"
+#include "EntityState.h"
+#include "EntityMovement.h"
 
-class NpcEntity : public MovableEntity {
+class NpcEntity : public sf::Sprite {
 
 public:
     void initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries);
@@ -20,11 +21,13 @@ private:
     EntityState state;
     EntityAnimation entityAnimation;
     EntityCollidable entityCollidable;
+    EntityMovement entityMovement;
     sf::IntRect moveBoundaries;
     sf::Time moveDelay;
     int distanceMoved = 0;
     int movementGoal = 0;
     std::random_device randomDevice; // obtain a random number from hardware
+    MoveDirection currentDirection;
 
     void initializeAnimations();
     void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);

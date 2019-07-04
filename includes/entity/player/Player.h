@@ -11,10 +11,11 @@
 #include "../../events/event/PlayerCollisionEvent.h"
 #include "../../events/event/PlayerPositionChangeEvent.h"
 #include "../character/EntityAnimation.h"
-#include "../character/MovableEntity.h"
 #include "../character/EntityCollidable.h"
+#include "../character/EntityState.h"
+#include "../character/EntityMovement.h"
 
-class Player : public MovableEntity {
+class Player : public sf::Sprite {
 
 public:
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, const Collidable& collidable);
@@ -24,8 +25,10 @@ private:
     EntityState state;
     EntityAnimation entityAnimation;
     EntityCollidable entityCollidable;
+    EntityMovement entityMovement;
     std::shared_ptr<EventBus> eventBus;
     bool actionButtonPressed = false;
+    MoveDirection currentDirection;
 
     void initializeAnimations();
     void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);

@@ -60,7 +60,7 @@ bool EntityCollidable::isFacingCollidableInVicinity(MoveDirection facingDirectio
             }
             return false;
         default:
-            printf("CollidableEntity.isEntityRectAlignedWithCollidableRect should not be passed anything other than up, down, left, right\n");
+            printf("EntityCollidable.isEntityRectAlignedWithCollidableRect should not be passed anything other than up, down, left, right\n");
             return false;
     }
 }
