@@ -5,25 +5,25 @@ void EntityMovement::initialize(float moveSpeed) {
     previousDirection = MoveDirection::UP;
 }
 
-void EntityMovement::handleStandingState(sf::Time deltaTime, EntityState& state, MoveDirection& currentDirection, sf::Vector2f& currentPosition) {
+void EntityMovement::handleStanding(sf::Time deltaTime, EntityState& state, MoveDirection& currentDirection, sf::Vector2f& currentPosition) {
     if(currentDirection != MoveDirection::NONE) {
         state = STATE_MOVING;
-        performRegularMove(deltaTime, currentDirection, currentPosition);
+        performRegularMoveOnCurrentPosition(deltaTime, currentDirection, currentPosition);
     }
 }
 
-void EntityMovement::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize, EntityState& state,
+void EntityMovement::handleMoving(sf::Time deltaTime, const sf::Vector2u& mapTileSize, EntityState& state,
         MoveDirection& currentDirection, sf::Vector2f& currentPosition) {
     if(movementGoalReached(mapTileSize, currentPosition)) {
         if(currentDirection == MoveDirection::NONE) {
             state = STATE_STANDING;
         } else {
             state = STATE_MOVING;
-            performRegularMove(deltaTime, currentDirection, currentPosition);
+            performRegularMoveOnCurrentPosition(deltaTime, currentDirection, currentPosition);
         }
     } else {
         //if we haven't reached the goal, don't change the state and keep moving
-        performGoalLimitedMove(deltaTime, mapTileSize, currentDirection, currentPosition);
+        performGoalLimitedMoveOnCurrentPosition(deltaTime, mapTileSize, currentDirection, currentPosition);
     }
 }
 
@@ -86,20 +86,23 @@ sf::Vector2f EntityMovement::getRegularMovement(float speed, MoveDirection& curr
     return movement;
 }
 
-void EntityMovement::performRegularMove(sf::Time deltaTime, MoveDirection& currentDirection, sf::Vector2f& currentPosition) {
+void EntityMovement::performRegularMoveOnCurrentPosition(sf::Time deltaTime, MoveDirection& currentDirection, sf::Vector2f& currentPosition) {
     sf::Vector2f moveVector = getRegularMovement(moveSpeed, currentDirection);
-    sf::Vector2f moveVectorWithSpeed = moveVector * deltaTime.asSeconds();
-    currentPosition = sf::Vector2f(currentPosition.x + moveVectorWithSpeed.x, currentPosition.y + moveVectorWithSpeed.y);
+    performMoveOnCurrentPosition(deltaTime, moveVector, currentPosition);
     previousDirection = currentDirection;
 }
 
-void EntityMovement::performGoalLimitedMove(sf::Time deltaTime, const sf::Vector2u& mapTileSize,
+void EntityMovement::performGoalLimitedMoveOnCurrentPosition(sf::Time deltaTime, const sf::Vector2u& mapTileSize,
         MoveDirection& currentDirection, sf::Vector2f& currentPosition) {
     currentDirection = previousDirection;
     sf::Vector2f moveVector = getGoalLimitedMovement(deltaTime, mapTileSize, currentDirection, currentPosition);
+    performMoveOnCurrentPosition(deltaTime, moveVector, currentPosition);
+    previousDirection = currentDirection;
+}
+
+void EntityMovement::performMoveOnCurrentPosition(sf::Time deltaTime, sf::Vector2f moveVector, sf::Vector2f& currentPosition) {
     sf::Vector2f moveVectorWithSpeed = moveVector * deltaTime.asSeconds();
     currentPosition = sf::Vector2f(currentPosition.x + moveVectorWithSpeed.x, currentPosition.y + moveVectorWithSpeed.y);
-    previousDirection = currentDirection;
 }
 
 MoveDirection EntityMovement::getLastFacingDirection() {

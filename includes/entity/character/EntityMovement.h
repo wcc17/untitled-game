@@ -10,16 +10,17 @@
 class EntityMovement {
 public:
     void initialize(float moveSpeed);
-    void handleStandingState(sf::Time deltaTime, EntityState& state, MoveDirection& currentDirection, sf::Vector2f& currentPosition);
-    void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize, EntityState& state, MoveDirection& currentDirection, sf::Vector2f& currentPosition);
+    void handleStanding(sf::Time deltaTime, EntityState& state, MoveDirection& currentDirection, sf::Vector2f& currentPosition);
+    void handleMoving(sf::Time deltaTime, const sf::Vector2u& mapTileSize, EntityState& state, MoveDirection& currentDirection, sf::Vector2f& currentPosition);
     MoveDirection getLastFacingDirection();
-    sf::Vector2f getRegularMovement(float speed, MoveDirection& currentDirection);
-    sf::Vector2f getGoalLimitedMovement(sf::Time deltaTime, const sf::Vector2u& mapTileSize, MoveDirection& currentDirection, sf::Vector2f currentPosition);
+    void performRegularMoveOnCurrentPosition(sf::Time deltaTime, MoveDirection& currentDirection, sf::Vector2f& currentPosition);
+    void performGoalLimitedMoveOnCurrentPosition(sf::Time deltaTime, const sf::Vector2u& mapTileSize, MoveDirection& currentDirection, sf::Vector2f& currentPosition);
 
 private:
+    sf::Vector2f getRegularMovement(float speed, MoveDirection& currentDirection);
+    sf::Vector2f getGoalLimitedMovement(sf::Time deltaTime, const sf::Vector2u& mapTileSize, MoveDirection& currentDirection, sf::Vector2f currentPosition);
     bool movementGoalReached(const sf::Vector2u& mapTileSize, sf::Vector2f currentPosition);
-    void performRegularMove(sf::Time deltaTime, MoveDirection& currentDirection, sf::Vector2f& currentPosition);
-    void performGoalLimitedMove(sf::Time deltaTime, const sf::Vector2u& mapTileSize, MoveDirection& currentDirection, sf::Vector2f& currentPosition);
+    void performMoveOnCurrentPosition(sf::Time deltaTime, sf::Vector2f moveVector, sf::Vector2f& currentPosition);
 
     static int getTileSizeForDirection(const MoveDirection& direction, const sf::Vector2u& mapTileSize);
     static int getChangingPosition(const MoveDirection& direction, const sf::Vector2f& position);

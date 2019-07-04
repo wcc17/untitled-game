@@ -3,7 +3,7 @@
 
 #include "../Event.h"
 #include "../../collisions/Collidable.h"
-#include "../../entity/character/NpcEntity.h"
+#include "../../entity/npc/NpcEntity.h"
 
 class NpcCollisionEvent : public Event {
 public:

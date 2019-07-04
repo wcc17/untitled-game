@@ -23,7 +23,7 @@ set(SOURCE_FILES src/main.cpp
         src/events/Event.cpp
         src/collisions/CollisionManager.cpp
         src/npc/NpcManager.cpp
-        src/entity/character/NpcEntity.cpp
+        src/entity/npc/NpcEntity.cpp
         src/scene/ObjectMap.cpp
         includes/scene/TileMap.cpp
         src/entity/character/EntityMovement.cpp
@@ -32,7 +32,7 @@ set(SOURCE_FILES src/main.cpp
         src/text/dialogue/DialogueEvent.cpp
         src/text/dialogue/Dialogue.cpp
         src/text/dialogue/DialoguePiece.cpp
-        )
+        src/entity/npc/EntityAutonomousMovement.cpp)
 
 set(INCLUDE_FILES includes/FramerateCounter.h
         includes/asset/FontManager.h
@@ -52,7 +52,7 @@ set(INCLUDE_FILES includes/FramerateCounter.h
         includes/events/Event.h
         includes/collisions/CollisionManager.h
         includes/npc/NpcManager.h
-        includes/entity/character/NpcEntity.h
+        includes/entity/npc/NpcEntity.h
         includes/scene/ObjectMap.h
         includes/scene/TileMap.h
         includes/entity/character/EntityMovement.h
@@ -61,7 +61,7 @@ set(INCLUDE_FILES includes/FramerateCounter.h
         includes/text/dialogue/DialogueEvent.h
         includes/text/dialogue/Dialogue.h
         includes/text/dialogue/DialoguePiece.h
-        )
+        includes/entity/npc/EntityAutonomousMovement.h)
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/EntityCollisionEvent.h

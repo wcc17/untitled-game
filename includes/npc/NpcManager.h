@@ -1,7 +1,7 @@
 #ifndef NEWNEW_NPCMANAGER_H
 #define NEWNEW_NPCMANAGER_H
 
-#include "../entity/character/NpcEntity.h"
+#include "../entity/npc/NpcEntity.h"
 #include "../../includes/asset/AssetPath.h"
 #include "SFML/Graphics/RenderWindow.hpp"
 #include "../events/EventBus.h"

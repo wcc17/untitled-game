@@ -4,7 +4,7 @@
 #include <vector>
 #include "../events/EventBus.h"
 #include "Collidable.h"
-#include "../entity/character/NpcEntity.h"
+#include "../entity/npc/NpcEntity.h"
 #include "../entity/player/Player.h"
 #include "../events/event/PlayerCollisionEvent.h"
 #include "../events/event/PlayerVicinityCollisionEvent.h"

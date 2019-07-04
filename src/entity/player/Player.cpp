@@ -54,7 +54,7 @@ void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
 
 void Player::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     sf::Vector2f newPosition = getPosition();
-    entityMovement.handleStandingState(deltaTime, state, currentDirection, newPosition);
+    entityMovement.handleStanding(deltaTime, state, currentDirection, newPosition);
     setPosition(newPosition);
 
     //TODO: DRY
@@ -66,7 +66,7 @@ void Player::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTile
 
 void Player::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     sf::Vector2f newPosition = getPosition();
-    entityMovement.handleMovingState(deltaTime, mapTileSize, state, currentDirection, newPosition);
+    entityMovement.handleMoving(deltaTime, mapTileSize, state, currentDirection, newPosition);
     setPosition(newPosition);
 
     //TODO: DRY
