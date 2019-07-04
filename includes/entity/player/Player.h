@@ -12,21 +12,22 @@
 #include "../../events/event/PlayerPositionChangeEvent.h"
 #include "../character/EntityAnimation.h"
 #include "../character/MovableEntity.h"
-#include "../character/CollidableEntity.h"
+#include "../character/EntityCollidable.h"
 
-class Player : public MovableEntity, public CollidableEntity {
+class Player : public MovableEntity {
 
 public:
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, const Collidable& collidable);
     void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
+    EntityCollidable getEntityCollidable();
 private:
     EntityState state;
+    EntityAnimation entityAnimation;
+    EntityCollidable entityCollidable;
     std::shared_ptr<EventBus> eventBus;
     bool actionButtonPressed = false;
 
-    EntityAnimation entityAnimation;
     void initializeAnimations();
-
     void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void handleInteractingState();

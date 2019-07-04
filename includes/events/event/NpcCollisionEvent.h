@@ -7,9 +7,9 @@
 
 class NpcCollisionEvent : public Event {
 public:
-    NpcCollisionEvent(const NpcEntity& npc, const Collidable& collidedWith): npc(npc), collidedWith(collidedWith) {}
+    NpcCollisionEvent(NpcEntity& npc, const Collidable& collidedWith): npc(npc), collidedWith(collidedWith) {}
     const Collidable& collidedWith;
-    const NpcEntity& npc;
+    NpcEntity& npc;
 };
 
 

@@ -32,7 +32,7 @@ void NpcManager::draw(sf::RenderWindow* window) {
 void NpcManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
     if(event->interactedWith.getType() == ObjectType::NPC) {
         for(std::shared_ptr<NpcEntity> npc : npcs) {
-            if(event->interactedWith.getName() == npc->getName()) {
+            if(event->interactedWith.getName() == npc->getEntityCollidable().getName()) {
                 npc->onPlayerInteractionStart(event->playerFacingDirection);
                 break;
             }
@@ -43,7 +43,7 @@ void NpcManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
 void NpcManager::onCloseDialogueEvent(CloseDialogueEvent* event) {
     if(event->interactedWith.getType() == ObjectType::NPC) {
         for(std::shared_ptr<NpcEntity> npc : npcs) {
-            if(event->interactedWith.getName() == npc->getName()) {
+            if(event->interactedWith.getName() == npc->getEntityCollidable().getName()) {
                 npc->onPlayerInteractionFinish();
                 break;
             }
@@ -53,7 +53,7 @@ void NpcManager::onCloseDialogueEvent(CloseDialogueEvent* event) {
 
 void NpcManager::onNpcCollisionEvent(NpcCollisionEvent* event) {
     for(std::shared_ptr<NpcEntity> npc : npcs) {
-        if(event->npc.getName() == npc->getName()) {
+        if(event->npc.getEntityCollidable().getName() == npc->getEntityCollidable().getName()) {
             npc->onCollisionEvent(event->collidedWith);
             break;
         }

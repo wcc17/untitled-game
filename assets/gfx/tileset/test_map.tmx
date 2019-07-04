@@ -488,7 +488,7 @@
   <object id="69" type="wall" x="648" y="184" width="64" height="64"/>
   <object id="105" type="wall" x="320" y="184" width="72" height="64"/>
   <object id="109" type="wall" x="216" y="184" width="72" height="64"/>
-  <object id="113" type="wall" x="408" y="392" width="64" height="56"/>
+  <object id="113" name="house4" type="wall" x="408" y="392" width="64" height="56"/>
   <object id="117" type="wall" x="576" y="608" width="64" height="56"/>
   <object id="121" type="wall" x="0" y="192" width="200" height="456"/>
   <object id="122" type="wall" x="728" y="192" width="200" height="456"/>

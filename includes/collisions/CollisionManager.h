@@ -13,24 +13,24 @@
 class CollisionManager {
 public:
     void initialize(std::shared_ptr<EventBus> eventBus);
-    void handleCollisions(const Player& player,
+    void handleCollisions(Player& player,
             const std::vector<std::shared_ptr<NpcEntity>>& entities,
             const std::vector<std::shared_ptr<Collidable>>& mapCollidables);
 
 private:
     std::shared_ptr<EventBus> eventBus;
 
-    void handlePlayerCollisions(const Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities, const std::vector<std::shared_ptr<Collidable>>& mapCollidables);
-    bool publishCollisionsWithPlayerAndMap(const Player& player, const std::vector<std::shared_ptr<Collidable>>& collidables);
-    bool publishCollisionsWithPlayerAndEntities(const Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities);
+    void handlePlayerCollisions(Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities, const std::vector<std::shared_ptr<Collidable>>& mapCollidables);
+    bool publishCollisionsWithPlayerAndMap(Player& player, const std::vector<std::shared_ptr<Collidable>>& collidables);
+    bool publishCollisionsWithPlayerAndEntities(Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities);
 
-    void handleEntityCollisions(const Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities, const std::vector<std::shared_ptr<Collidable>>& mapCollidables);
+    void handleEntityCollisions(Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities, const std::vector<std::shared_ptr<Collidable>>& mapCollidables);
     void initializeEntityCollidedMap(const std::vector<std::shared_ptr<NpcEntity>>& entities, std::map<std::string, bool>& hasEntityCollidedMap);
-    void publishCollisionBetweenEntitiesAndPlayer(const Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities, std::map<std::string, bool>& hasEntityCollidedMap);
+    void publishCollisionBetweenEntitiesAndPlayer(Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities, std::map<std::string, bool>& hasEntityCollidedMap);
     void publishCollisionsBetweenEntitiesAndMap(const std::vector<std::shared_ptr<NpcEntity>>& entities, const std::vector<std::shared_ptr<Collidable>>& collidables, std::map<std::string, bool>& hasEntityCollidedMap);
 
     static bool collisionOccurred(const Collidable& collidable1, const Collidable& collidable2);
-    static bool playerVicinityCollisionOccurred(const Player& player, const Collidable& collidable);
+    static bool playerVicinityCollisionOccurred(Player& player, const Collidable& collidable);
 };
 
 

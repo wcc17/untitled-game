@@ -12,8 +12,9 @@ void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, s
     MovableEntity::initialize(ENTITY_MOVEMENT_SPEED);
 
     this->state = STATE_STANDING;
-    this->name = collidable.getName();
-    this->type = collidable.getType();
+    this->entityCollidable.setName(collidable.getName());
+    this->entityCollidable.setType(collidable.getType());
+    this->entityCollidable.setBoundingBox(collidable.getBoundingBox());
     this->setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
 
     entityAnimation.setFrameTime(sf::seconds(ENTITY_FRAME_TIME));
@@ -64,6 +65,7 @@ void NpcEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
 
     //TODO: this should be in the handleState functions
     MovableEntity::setTextureRect(entityAnimation.getTextureRect());
+    this->entityCollidable.setBoundingBox(sf::FloatRect(getPosition().x, getPosition().y, ENTITY_WIDTH, ENTITY_HEIGHT));
 }
 
 void NpcEntity::onPlayerInteractionStart(MoveDirection playerFacingDirection) {
@@ -308,6 +310,10 @@ int NpcEntity::getTileSizeForDirection(MoveDirection moveDirection, const sf::Ve
 
 void NpcEntity::roundPosition() {
     setPosition(std::round(getPosition().x), std::round(getPosition().y));
+}
+
+EntityCollidable NpcEntity::getEntityCollidable() {
+    return this->entityCollidable;
 }
 
 //TODO: these probably belong in a utility class somewhere

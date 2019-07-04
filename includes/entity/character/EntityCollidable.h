@@ -1,5 +1,5 @@
-#ifndef NEWNEW_COLLIDABLEENTITY_H
-#define NEWNEW_COLLIDABLEENTITY_H
+#ifndef NEWNEW_ENTITYCOLLIDABLE_H
+#define NEWNEW_ENTITYCOLLIDABLE_H
 
 
 #include <SFML/Graphics/Rect.hpp>
@@ -7,17 +7,17 @@
 #include <vector>
 #include "../../collisions/Collidable.h"
 
-class CollidableEntity : public Collidable, public virtual sf::Sprite {
+class EntityCollidable : public Collidable {
 public:
-    void fixPositionAfterCollision(const Collidable& collidedWith, MoveDirection entityDirection);
-    sf::FloatRect getBoundingBox() const override;
+    sf::Vector2f getFixedPositionAfterCollision(const Collidable& collidedWith, MoveDirection entityDirection);
     sf::FloatRect getVicinityBounds() const;
+    std::vector<std::shared_ptr<Collidable>> getCollidablesInVicinity();
+    void setVicinityBoundsOffset(int vicinityBoundsOffset);
     void addCollidableInVicinity(std::shared_ptr<Collidable> collidable);
     void clearCollidablesInVicinity();
     bool isFacingCollidableInVicinity(MoveDirection facingDirection, Collidable& collidableInVicinity);
 
 protected:
-    void setVicinityBoundsOffset(int vicinityBoundsOffset);
     std::vector<std::shared_ptr<Collidable>> collidablesInVicinity;
 
 private:
@@ -25,4 +25,4 @@ private:
 };
 
 
-#endif //NEWNEW_COLLIDABLEENTITY_H
+#endif //NEWNEW_ENTITYCOLLIDABLE_H

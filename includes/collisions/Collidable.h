@@ -12,12 +12,15 @@ public:
     Collidable();
     Collidable(std::string name, ObjectType type, sf::Vector2f position, sf::Vector2f size);
     ObjectType getType() const;
+    void setType(ObjectType type);
     std::string getName() const;
-    virtual sf::FloatRect getBoundingBox() const;
-protected:
+    void setName(std::string name);
+    sf::FloatRect getBoundingBox() const;
+    void setBoundingBox(sf::FloatRect boundingBox);
+
+private:
     std::string name;
     ObjectType type;
-private:
     sf::FloatRect boundingBox;
 
 };

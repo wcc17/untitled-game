@@ -5,9 +5,9 @@
 #include <random>
 #include "EntityAnimation.h"
 #include "MovableEntity.h"
-#include "CollidableEntity.h"
+#include "EntityCollidable.h"
 
-class NpcEntity : public MovableEntity, public CollidableEntity {
+class NpcEntity : public MovableEntity {
 
 public:
     void initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries);
@@ -15,9 +15,11 @@ public:
     void onPlayerInteractionStart(MoveDirection playerFacingDirection);
     void onPlayerInteractionFinish();
     void onCollisionEvent(const Collidable& collidedWith);
+    EntityCollidable getEntityCollidable();
 private:
     EntityState state;
     EntityAnimation entityAnimation;
+    EntityCollidable entityCollidable;
     sf::IntRect moveBoundaries;
     sf::Time moveDelay;
     int distanceMoved = 0;

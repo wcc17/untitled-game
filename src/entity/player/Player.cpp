@@ -11,15 +11,16 @@ void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture
     MovableEntity::initialize(MOVEMENT_SPEED);
 
     this->state = STATE_STANDING;
-    this->name = collidable.getName();
-    this->type = collidable.getType();
+    this->entityCollidable.setName(collidable.getName());
+    this->entityCollidable.setType(collidable.getType());
+    this->entityCollidable.setBoundingBox(collidable.getBoundingBox());
+    this->entityCollidable.setVicinityBoundsOffset(VICINITY_BOUNDS_OFFSET);
     MovableEntity::setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
 
     entityAnimation.setFrameTime(sf::seconds(PLAYER_FRAME_TIME));
     initializeAnimations();
 
     this->eventBus = eventBus;
-    this->setVicinityBoundsOffset(VICINITY_BOUNDS_OFFSET);
 
     eventBus->subscribe(this, &Player::onControllerMoveEvent);
     eventBus->subscribe(this, &Player::onControllerActionEvent);
@@ -45,6 +46,7 @@ void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
 
     //TODO: this should be in the handleState functions
     MovableEntity::setTextureRect(entityAnimation.getTextureRect());
+    this->entityCollidable.setBoundingBox(sf::FloatRect(getPosition().x, getPosition().y, PLAYER_WIDTH, PLAYER_HEIGHT));
 }
 
 void Player::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
@@ -79,8 +81,8 @@ void Player::adjustPlayerAndViewPositions() {
 void Player::handleActionButtonPressed() {
     if(actionButtonPressed) {
         MoveDirection currentlyFacingDirection = MovableEntity::getCurrentFacingDirection();
-        for(std::shared_ptr<Collidable> collidable : collidablesInVicinity) {
-            if(CollidableEntity::isFacingCollidableInVicinity(currentlyFacingDirection, *collidable)) {
+        for(std::shared_ptr<Collidable> collidable : entityCollidable.getCollidablesInVicinity()) {
+            if(entityCollidable.isFacingCollidableInVicinity(currentlyFacingDirection, *collidable)) {
                 state = STATE_INTERACTING;
                 entityAnimation.stop();
                 eventBus->publish(new OpenDialogueEvent(getGlobalBounds(), *collidable, MovableEntity::getCurrentFacingDirection()));
@@ -99,7 +101,7 @@ void Player::onControllerActionEvent(ControllerActionEvent* event) {
 }
 
 void Player::onVicinityCollisionEvent(PlayerVicinityCollisionEvent* event) {
-    CollidableEntity::addCollidableInVicinity(event->collidedWith);
+    entityCollidable.addCollidableInVicinity(event->collidedWith);
 }
 
 void Player::onCloseDialogueEvent(CloseDialogueEvent* event) {
@@ -107,17 +109,22 @@ void Player::onCloseDialogueEvent(CloseDialogueEvent* event) {
 }
 
 void Player::onCollisionEvent(PlayerCollisionEvent* event) {
-    CollidableEntity::fixPositionAfterCollision(event->collidedWith, currentDirection);
+    setPosition(entityCollidable.getFixedPositionAfterCollision(event->collidedWith, currentDirection));
     adjustPlayerAndViewPositions();
 }
 
 void Player::resetAfterFrame() {
-    CollidableEntity::clearCollidablesInVicinity();
+    entityCollidable.clearCollidablesInVicinity();
     actionButtonPressed = false;
 }
 
 void Player::roundPosition() {
     setPosition(std::round(getPosition().x), std::round(getPosition().y));
+}
+
+EntityCollidable Player::getEntityCollidable() {
+    entityCollidable.setBoundingBox(sf::FloatRect(getPosition().x, getPosition().y, PLAYER_WIDTH, PLAYER_HEIGHT)); //TODO: is this needed. debug and check if boundingBox is already correct here
+    return entityCollidable;
 }
 
 void Player::initializeAnimations() {

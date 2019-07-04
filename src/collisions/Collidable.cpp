@@ -15,11 +15,22 @@ std::string Collidable::getName() const {
     return this->name;
 }
 
+void Collidable::setName(std::string name) {
+    this->name = name;
+}
+
 ObjectType Collidable::getType() const {
     return this->type;
+}
+
+void Collidable::setType(ObjectType type) {
+    this->type = type;
 }
 
 sf::FloatRect Collidable::getBoundingBox() const {
     return this->boundingBox;
 }
 
+void Collidable::setBoundingBox(sf::FloatRect boundingBox) {
+    this->boundingBox = boundingBox;
+}
