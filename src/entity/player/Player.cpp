@@ -7,7 +7,17 @@ const float MOVEMENT_SPEED = 80.f;
 const int VICINITY_BOUNDS_OFFSET = 4;
 
 void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, const Collidable& collidable) {
-    CharacterEntity::initialize(texture, MOVEMENT_SPEED, collidable, PLAYER_FRAME_TIME);
+    AnimatedEntity::initialize(texture);
+    MovableEntity::initialize(MOVEMENT_SPEED);
+
+    this->state = STATE_STANDING;
+    this->name = collidable.getName();
+    this->type = collidable.getType();
+    this->setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
+
+    setFrameTime(sf::seconds(PLAYER_FRAME_TIME));
+    initializeAnimations();
+
     this->eventBus = eventBus;
     this->setVicinityBoundsOffset(VICINITY_BOUNDS_OFFSET);
 
@@ -21,25 +31,36 @@ void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture
 }
 
 void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
-    CharacterEntity::update(deltaTime, mapTileSize);
+    switch(state) {
+        case STATE_STANDING:
+            handleStandingState(deltaTime, mapTileSize);
+            break;
+        case STATE_MOVING:
+            handleMovingState(deltaTime, mapTileSize);
+            break;
+        case STATE_INTERACTING:
+            handleInteractingState();
+            break;
+    }
 }
 
 void Player::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
-    CharacterEntity::handleStandingState(deltaTime, mapTileSize);
+    MovableEntity::handleStandingState(deltaTime, state);
+    AnimatedEntity::update(deltaTime, currentDirection);
     handleActionButtonPressed();
     resetAfterFrame();
     adjustPlayerAndViewPositions();
 }
 
 void Player::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
-    CharacterEntity::handleMovingState(deltaTime, mapTileSize);
+    MovableEntity::handleMovingState(deltaTime, mapTileSize, state);
+    AnimatedEntity::update(deltaTime, currentDirection);
     handleActionButtonPressed();
     resetAfterFrame();
     adjustPlayerAndViewPositions();
 }
 
 void Player::handleInteractingState() {
-    CharacterEntity::handleInteractingState();
     resetAfterFrame();
 }
 
@@ -86,6 +107,10 @@ void Player::onCollisionEvent(PlayerCollisionEvent* event) {
 void Player::resetAfterFrame() {
     CollidableEntity::clearCollidablesInVicinity();
     actionButtonPressed = false;
+}
+
+void Player::roundPosition() {
+    setPosition(std::round(getPosition().x), std::round(getPosition().y));
 }
 
 void Player::initializeAnimations() {

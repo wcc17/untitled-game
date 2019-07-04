@@ -28,7 +28,6 @@ set(SOURCE_FILES src/main.cpp
         includes/scene/TileMap.cpp
         src/entity/character/MovableEntity.cpp
         src/entity/character/CollidableEntity.cpp
-        src/entity/character/CharacterEntity.cpp
         src/scene/ViewManager.cpp
         src/text/dialogue/DialogueEvent.cpp
         src/text/dialogue/Dialogue.cpp
@@ -58,7 +57,6 @@ set(INCLUDE_FILES includes/FramerateCounter.h
         includes/scene/TileMap.h
         includes/entity/character/MovableEntity.h
         includes/entity/character/CollidableEntity.h
-        includes/entity/character/CharacterEntity.h
         includes/scene/ViewManager.h
         includes/text/dialogue/DialogueEvent.h
         includes/text/dialogue/Dialogue.h

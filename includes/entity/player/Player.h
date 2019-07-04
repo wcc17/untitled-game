@@ -4,28 +4,32 @@
 
 #include "../../events/EventBus.h"
 #include "../../events/event/ControllerMoveEvent.h"
-#include "../character/CharacterEntity.h"
 #include "../../events/event/PlayerVicinityCollisionEvent.h"
 #include "../../events/event/CloseDialogueEvent.h"
 #include "../../events/event/ControllerActionEvent.h"
 #include "../../events/event/OpenDialogueEvent.h"
 #include "../../events/event/PlayerCollisionEvent.h"
 #include "../../events/event/PlayerPositionChangeEvent.h"
+#include "../character/AnimatedEntity.h"
+#include "../character/MovableEntity.h"
+#include "../character/CollidableEntity.h"
 
-class Player : public CharacterEntity {
+class Player : public AnimatedEntity, public MovableEntity, public CollidableEntity {
 
 public:
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, const Collidable& collidable);
-    void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) override;
+    void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
 private:
+    EntityState state;
     std::shared_ptr<EventBus> eventBus;
     bool actionButtonPressed = false;
 
     void initializeAnimations() override;
-    void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) override;
-    void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) override;
-    void handleInteractingState() override;
+    void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
+    void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
+    void handleInteractingState();
     void resetAfterFrame();
+    void roundPosition();
 
     void handleActionButtonPressed();
     void adjustPlayerAndViewPositions();

@@ -2,18 +2,21 @@
 #define NEWNEW_NPCENTITY_H
 
 
-#include "CharacterEntity.h"
 #include <random>
+#include "AnimatedEntity.h"
+#include "MovableEntity.h"
+#include "CollidableEntity.h"
 
-class NpcEntity : public CharacterEntity {
+class NpcEntity : public AnimatedEntity, public MovableEntity, public CollidableEntity {
 
 public:
     void initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries);
-    void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) override;
+    void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void onPlayerInteractionStart(MoveDirection playerFacingDirection);
     void onPlayerInteractionFinish();
     void onCollisionEvent(const Collidable& collidedWith);
 private:
+    EntityState state;
     sf::IntRect moveBoundaries;
     sf::Time moveDelay;
     int distanceMoved = 0;
@@ -21,9 +24,10 @@ private:
     std::random_device randomDevice; // obtain a random number from hardware
 
     void initializeAnimations() override;
-    void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) override;
-    void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) override;
-    void handleInteractingState() override;
+    void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
+    void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
+    void handleInteractingState();
+    void roundPosition();
 
     void setMoveDelayTimer();
     bool moveDelayTimerDone(sf::Time deltaTime);

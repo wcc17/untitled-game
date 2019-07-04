@@ -8,13 +8,33 @@ const float ENTITY_FRAME_TIME = 0.16f; //TODO: not sure where I want to load thi
 const sf::Vector2f moveDelayRange = sf::Vector2f(1.5f, 5.5f);
 
 void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries) {
-    CharacterEntity::initialize(texture, ENTITY_MOVEMENT_SPEED, collidable, ENTITY_FRAME_TIME);
+    AnimatedEntity::initialize(texture);
+    MovableEntity::initialize(ENTITY_MOVEMENT_SPEED);
+
+    this->state = STATE_STANDING;
+    this->name = collidable.getName();
+    this->type = collidable.getType();
+    this->setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
+
+    setFrameTime(sf::seconds(ENTITY_FRAME_TIME));
+    initializeAnimations();
+
     this->moveBoundaries = moveBoundaries;
     setMoveDelayTimer();
 }
 
 void NpcEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
-    CharacterEntity::update(deltaTime, mapTileSize);
+    switch(state) {
+        case STATE_STANDING:
+            handleStandingState(deltaTime, mapTileSize);
+            break;
+        case STATE_MOVING:
+            handleMovingState(deltaTime, mapTileSize);
+            break;
+        case STATE_INTERACTING:
+            handleInteractingState();
+            break;
+    }
 
     //TODO: remove all of this soon
     if(state == STATE_STANDING) {
@@ -61,7 +81,9 @@ void NpcEntity::onCollisionEvent(const Collidable& collidedWith) {
 }
 
 void NpcEntity::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
-    CharacterEntity::handleStandingState(deltaTime, mapTileSize);
+    MovableEntity::handleStandingState(deltaTime, state);
+    AnimatedEntity::update(deltaTime, currentDirection);
+
     roundPosition();
 
     if(moveDelayTimerDone(deltaTime)) {
@@ -79,9 +101,7 @@ void NpcEntity::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTil
     handleEntityMovementTowardGoal(deltaTime, mapTileSize);
 }
 
-void NpcEntity::handleInteractingState() {
-    CharacterEntity::handleInteractingState();
-}
+void NpcEntity::handleInteractingState() { }
 
 bool NpcEntity::moveDelayTimerDone(sf::Time deltaTime) {
     this->moveDelay -= deltaTime;
@@ -286,6 +306,10 @@ int NpcEntity::getTileSizeForDirection(MoveDirection moveDirection, const sf::Ve
             printf("NpcEntity.getTileSizeForDirection was given an invalid direction\n");
             return 0;
     }
+}
+
+void NpcEntity::roundPosition() {
+    setPosition(std::round(getPosition().x), std::round(getPosition().y));
 }
 
 //TODO: these probably belong in a utility class somewhere
