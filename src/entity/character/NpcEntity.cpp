@@ -15,15 +15,49 @@ void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, s
 
 void NpcEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     CharacterEntity::update(deltaTime, mapTileSize);
+
+    //TODO: remove all of this soon
+    if(state == STATE_STANDING) {
+        int x = getPosition().x;
+        int y = getPosition().y;
+        int xRemainder = x % mapTileSize.x;
+        int yRemainder = y % mapTileSize.y;
+        if(xRemainder != 0) {
+            printf("position is bad and its being adjusted in NpcEntity::ensureEntityPositionAlignedWithTileSize\n");
+        }
+        if(yRemainder != 0) {
+            printf("position is bad and its being adjusted in NpcEntity::ensureEntityPositionAlignedWithTileSize\n");
+        }
+        if(getPosition().x > (moveBoundaries.left + moveBoundaries.width)) {
+            printf("moved too far to the right of boundary, fixing in NpcEntity::ensureEntityInsideBounds\n");
+        }
+        if(getPosition().x < moveBoundaries.left) {
+            printf("moved too far to the left of boundary, fixing in NpcEntity::ensureEntityInsideBounds\n");
+        }
+        if(getPosition().y > (moveBoundaries.top + moveBoundaries.height)) {
+            printf("moved too far down of boundary, fixing in NpcEntity::ensureEntityInsideBounds\n");
+        }
+        if(getPosition().y < moveBoundaries.top) {
+            printf("moved too far up of boundary, fixing in NpcEntity::ensureEntityInsideBounds\n");
+        }
+    }
 }
 
 void NpcEntity::onPlayerInteractionStart(MoveDirection playerFacingDirection) {
     turnToFaceEntityFacingDirection(playerFacingDirection);
     state = STATE_INTERACTING;
+    //TODO: can this put the entity in a weird position? Will it be fixed?
 }
 
 void NpcEntity::onPlayerInteractionFinish() {
-    setEntityStandingState();
+    state = STATE_STANDING;
+    currentDirection = MoveDirection::NONE;
+    distanceMoved = 0;
+}
+
+void NpcEntity::onCollisionEvent(const Collidable& collidedWith) {
+//    CollidableEntity::fixPositionAfterCollision(collidedWith, currentDirection);
+//    roundPosition();
 }
 
 void NpcEntity::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
@@ -36,11 +70,13 @@ void NpcEntity::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapT
 }
 
 void NpcEntity::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
-    sf::Vector2f previousPosition = getPosition();
-    CharacterEntity::handleMovingState(deltaTime, mapTileSize);
-    roundPosition();
+    AnimatedEntity::update(deltaTime, currentDirection);
 
-    moveEntityTowardMovementGoal(previousPosition);
+    //TODO: so I think NpcEntity does not need hardly anything that MovableEntity does. So MovableEntity favors composition over inheritiance, which will have to work for Player.
+    //TODO: next project should be moving getting rid of the inheritance and replacing it with Composition
+    //TODO: Player and NpcEntity will still inherit from Sprite though
+    //TODO: this also means getting rid of CharacterEntity
+    handleEntityMovementTowardGoal(deltaTime, mapTileSize);
 }
 
 void NpcEntity::handleInteractingState() {
@@ -116,11 +152,18 @@ int NpcEntity::getMaxDistanceEntityCanTravel(MoveDirection moveDirection) {
             break;
     }
 
+    printf("current position: %f, %f\n", getPosition().x, getPosition().y);
+    printf("bounds: left: %i, top: %i, width: %i, height: %i\n", moveBoundaries.left, moveBoundaries.top, moveBoundaries.width, moveBoundaries.height);
     printf("max distance: %i\n", maxDistanceEntityCanTravel);
     return maxDistanceEntityCanTravel;
 }
 
-void NpcEntity::moveEntityTowardMovementGoal(sf::Vector2f previousPosition) {
+void NpcEntity::handleEntityMovementTowardGoal(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
+    sf::Vector2f previousPosition = getPosition();
+    sf::Vector2f moveVector = getRegularMovement(80.f);
+    Sprite::move(moveVector * deltaTime.asSeconds());
+    roundPosition();
+
     sf::Vector2f distanceTravelledThisFrame = getPosition();
     distanceTravelledThisFrame -= previousPosition;
     switch(currentDirection) {
@@ -133,25 +176,52 @@ void NpcEntity::moveEntityTowardMovementGoal(sf::Vector2f previousPosition) {
             distanceMoved += abs(distanceTravelledThisFrame.x);
             break;
         default:
-            printf("NpcEntity.moveEntityTowardMovementGoal -- Invalid currentDirection value\n");
+            printf("NpcEntity::moveEntityTowardMovementGoal -- Invalid currentDirection value\n");
             break;
     }
 
     if(distanceMoved >= movementGoal) {
-        if(getPosition().x > (moveBoundaries.left + moveBoundaries.width)) {
-            printf("moved too far to the right of boundary in NpcEntity::moveEntityTowardGoal\n");
-        }
-        if(getPosition().x < moveBoundaries.left) {
-            printf("moved too far to the left\n");
-        }
-        if(getPosition().y > (moveBoundaries.top + moveBoundaries.height)) {
-            printf("moved too far down\n");
-        }
-        if(getPosition().y < moveBoundaries.top) {
-            printf("moved too far up\n");
-        }
+        ensureEntityPositionAlignedWithTileSize(mapTileSize);
+        ensureEntityInsideBounds();
 
-        setEntityStandingState();
+        state = STATE_STANDING;
+        currentDirection = MoveDirection::NONE;
+        distanceMoved = 0;
+    }
+}
+
+void NpcEntity::ensureEntityPositionAlignedWithTileSize(const sf::Vector2u& mapTileSize) {
+    int x = getPosition().x;
+    int y = getPosition().y;
+    int xRemainder = x % mapTileSize.x;
+    int yRemainder = y % mapTileSize.y;
+
+    if(xRemainder != 0) {
+        printf("position is bad and its being adjusted in NpcEntity::ensureEntityPositionAlignedWithTileSize\n");
+        setPosition((x - xRemainder), y);
+    }
+    if(yRemainder != 0) {
+        printf("position is bad and its being adjusted in NpcEntity::ensureEntityPositionAlignedWithTileSize\n");
+        setPosition(x, (y - yRemainder));
+    }
+}
+
+void NpcEntity::ensureEntityInsideBounds() {
+    if(getPosition().x > (moveBoundaries.left + moveBoundaries.width)) {
+        printf("moved too far to the right of boundary, fixing in NpcEntity::ensureEntityInsideBounds\n");
+        setPosition((moveBoundaries.left + moveBoundaries.width), getPosition().y);
+    }
+    if(getPosition().x < moveBoundaries.left) {
+        printf("moved too far to the left of boundary, fixing in NpcEntity::ensureEntityInsideBounds\n");
+        setPosition(moveBoundaries.left, getPosition().y);
+    }
+    if(getPosition().y > (moveBoundaries.top + moveBoundaries.height)) {
+        printf("moved too far down of boundary, fixing in NpcEntity::ensureEntityInsideBounds\n");
+        setPosition(getPosition().x, (moveBoundaries.top + moveBoundaries.height));
+    }
+    if(getPosition().y < moveBoundaries.top) {
+        printf("moved too far up of boundary, fixing in NpcEntity::ensureEntityInsideBounds\n");
+        setPosition(getPosition().x, moveBoundaries.top);
     }
 }
 
@@ -175,9 +245,11 @@ MoveDirection NpcEntity::chooseRandomDirection() {
 
 int NpcEntity::determineRandomDistanceToMoveEntity(int maxDistanceEntityCanTravel, int tileSize) {
     int distanceToMoveEntity = 0;
-    int minDistanceEntityCanTravel = tileSize * 2; //normally want to move at least tileSize*2 units
-    if(minDistanceEntityCanTravel > maxDistanceEntityCanTravel) { //but if minimum distance is less, just set the minimum to the smallest unit possible (tileSize)
-        minDistanceEntityCanTravel = tileSize;
+
+    int minDistanceEntityCanTravel = tileSize;
+    if(maxDistanceEntityCanTravel < minDistanceEntityCanTravel) {
+        printf("Npc::Entity::determineRandomDistanceToMoveEntity got a max distance less than tile size. Need to verify that this corrected the npc's position\n");
+        minDistanceEntityCanTravel = 0; //TODO: if this happens, then the NPC is in a weird place and it needs to be corrected. Will this correct it?
     }
 
     if(tileSize > 0 && maxDistanceEntityCanTravel > 0) {
@@ -202,7 +274,6 @@ int NpcEntity::determineRandomDistanceToMoveEntity(int maxDistanceEntityCanTrave
     return distanceToMoveEntity;
 }
 
-//TODO: this already exists in MovableEntity
 int NpcEntity::getTileSizeForDirection(MoveDirection moveDirection, const sf::Vector2u& mapTileSize) {
     switch (moveDirection) {
         case MoveDirection::UP:
@@ -215,12 +286,6 @@ int NpcEntity::getTileSizeForDirection(MoveDirection moveDirection, const sf::Ve
             printf("NpcEntity.getTileSizeForDirection was given an invalid direction\n");
             return 0;
     }
-}
-
-void NpcEntity::setEntityStandingState() {
-    state = STATE_STANDING;
-    currentDirection = MoveDirection::NONE;
-    distanceMoved = 0;
 }
 
 //TODO: these probably belong in a utility class somewhere
@@ -236,6 +301,7 @@ float NpcEntity::getRandomFloatInRange(float min, float max) {
     return distr(eng);
 }
 
+//TODO: can this be moved to the header file?
 //TODO: EVERYTHING needs to be multiples of  tile size, including the character textures (its frames). There should be a check to ensure this is happening so that I don't forget
 void NpcEntity::initializeAnimations() {
 

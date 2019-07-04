@@ -13,6 +13,7 @@ void NpcManager::initialize(std::shared_ptr<EventBus> eventBus,
 
     eventBus->subscribe(this, &NpcManager::onOpenDialogueEvent);
     eventBus->subscribe(this, &NpcManager::onCloseDialogueEvent);
+    eventBus->subscribe(this, &NpcManager::onNpcCollisionEvent);
 }
 
 void NpcManager::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
@@ -27,7 +28,7 @@ void NpcManager::draw(sf::RenderWindow* window) {
     }
 }
 
-//TODO: stop writing out this for loop for every single function that needs to look at all of the npcs
+//TODO: stop writing out this for loop for every single function that needs to look at all of the npcs. Or put the NPCs in a map?
 void NpcManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
     if(event->interactedWith.getType() == ObjectType::NPC) {
         for(std::shared_ptr<NpcEntity> npc : npcs) {
@@ -46,6 +47,15 @@ void NpcManager::onCloseDialogueEvent(CloseDialogueEvent* event) {
                 npc->onPlayerInteractionFinish();
                 break;
             }
+        }
+    }
+}
+
+void NpcManager::onNpcCollisionEvent(NpcCollisionEvent* event) {
+    for(std::shared_ptr<NpcEntity> npc : npcs) {
+        if(event->npc.getName() == npc->getName()) {
+            npc->onCollisionEvent(event->collidedWith);
+            break;
         }
     }
 }
@@ -69,5 +79,6 @@ std::vector<std::shared_ptr<NpcEntity>>& NpcManager::getNpcEntities() {
 }
 
 void NpcManager::release() {
+    //TODO: unsubscribe from event bus!
     npcs.clear();
 }

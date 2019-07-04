@@ -12,6 +12,7 @@ public:
     void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) override;
     void onPlayerInteractionStart(MoveDirection playerFacingDirection);
     void onPlayerInteractionFinish();
+    void onCollisionEvent(const Collidable& collidedWith);
 private:
     sf::IntRect moveBoundaries;
     sf::Time moveDelay;
@@ -29,7 +30,9 @@ private:
 
     void setupEntityMovement(const sf::Vector2u& mapTileSize);
     int getMaxDistanceEntityCanTravel(MoveDirection moveDirection);
-    void moveEntityTowardMovementGoal(sf::Vector2f previousPosition);
+    void handleEntityMovementTowardGoal(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
+    void ensureEntityInsideBounds();
+    void ensureEntityPositionAlignedWithTileSize(const sf::Vector2u& mapTileSize);
 
     MoveDirection chooseRandomDirection();
     int determineRandomDistanceToMoveEntity(int maxDistanceEntityCanTravel, int tileSize);
@@ -37,7 +40,6 @@ private:
     float getRandomFloatInRange(float min, float max);
     bool decideIfNpcShouldMove();
     static int getTileSizeForDirection(MoveDirection moveDirection, const sf::Vector2u& mapTileSize);
-    void setEntityStandingState();
 };
 
 

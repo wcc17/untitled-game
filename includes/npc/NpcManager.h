@@ -8,6 +8,7 @@
 #include "../../includes/events/event/CloseDialogueEvent.h"
 #include "../../includes/events/event/OpenDialogueEvent.h"
 #include "../../includes/events/event/ExitGameEvent.h"
+#include "../events/event/NpcCollisionEvent.h"
 
 class NpcManager {
 
@@ -24,6 +25,7 @@ private:
     void initializeNpc(Collidable& collidable, sf::Texture* texture);
     void onOpenDialogueEvent(OpenDialogueEvent* event);
     void onCloseDialogueEvent(CloseDialogueEvent* event);
+    void onNpcCollisionEvent(NpcCollisionEvent* event);
 };
 
 

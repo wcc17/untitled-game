@@ -14,13 +14,13 @@ public:
     void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize, EntityState& state);
     MoveDirection getCurrentDirection();
     void setCurrentDirection(MoveDirection direction);
+    sf::Vector2f getRegularMovement(float speed); //TODO: this should be protected
 
 protected:
     MoveDirection getCurrentFacingDirection();
     MoveDirection currentDirection;
 
 private:
-    sf::Vector2f getRegularMovement(float speed);
     sf::Vector2f getGoalLimitedMovement(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     bool movementGoalReached(const sf::Vector2u& mapTileSize);
     void performRegularMove(sf::Time deltaTime);

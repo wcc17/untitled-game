@@ -37,6 +37,8 @@ void SceneManager::drawForDefaultView(sf::RenderWindow* window) {
 }
 
 void SceneManager::release() {
+    //TODO: don't forget to unsubscribe things from eventBus!
+
     textureManager.releaseTextures();
     scene.release(); //TODO: will eventually be called somewhere else when the scene changes
     npcManager.release();

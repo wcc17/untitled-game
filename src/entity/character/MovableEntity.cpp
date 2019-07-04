@@ -14,7 +14,6 @@ void MovableEntity::handleStandingState(sf::Time deltaTime, EntityState& state) 
 }
 
 void MovableEntity::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize, EntityState& state) {
-    //NOTE: using a moving goal limits me to making everything based on a set tile size (8 pixels for example). any collision bounds must be in multiples of 8 or entities won't collide correctly
     if(movementGoalReached(mapTileSize)) {
         if(currentDirection == MoveDirection::NONE) {
             state = STATE_STANDING;

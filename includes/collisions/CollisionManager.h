@@ -8,6 +8,7 @@
 #include "../entity/player/Player.h"
 #include "../events/event/PlayerCollisionEvent.h"
 #include "../events/event/PlayerVicinityCollisionEvent.h"
+#include "../events/event/NpcCollisionEvent.h"
 
 class CollisionManager {
 public:
@@ -18,14 +19,18 @@ public:
 
 private:
     std::shared_ptr<EventBus> eventBus;
+
+    void handlePlayerCollisions(const Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities, const std::vector<std::shared_ptr<Collidable>>& mapCollidables);
     bool publishCollisionsWithPlayerAndMap(const Player& player, const std::vector<std::shared_ptr<Collidable>>& collidables);
     bool publishCollisionsWithPlayerAndEntities(const Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities);
-    void publishCollisionBetweenEntitiesAndPlayer(const Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities);
-    void publishCollisionsBetweenEntitiesAndMap(const std::vector<std::shared_ptr<NpcEntity>>& entities,
-            const std::vector<std::shared_ptr<Collidable>>& collidables);
 
-    bool collisionOccurred(const Collidable& collidable1, const Collidable& collidable2);
-    bool playerVicinityCollisionOccurred(const Player& player, const Collidable& collidable);
+    void handleEntityCollisions(const Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities, const std::vector<std::shared_ptr<Collidable>>& mapCollidables);
+    void initializeEntityCollidedMap(const std::vector<std::shared_ptr<NpcEntity>>& entities, std::map<std::string, bool>& hasEntityCollidedMap);
+    void publishCollisionBetweenEntitiesAndPlayer(const Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities, std::map<std::string, bool>& hasEntityCollidedMap);
+    void publishCollisionsBetweenEntitiesAndMap(const std::vector<std::shared_ptr<NpcEntity>>& entities, const std::vector<std::shared_ptr<Collidable>>& collidables, std::map<std::string, bool>& hasEntityCollidedMap);
+
+    static bool collisionOccurred(const Collidable& collidable1, const Collidable& collidable2);
+    static bool playerVicinityCollisionOccurred(const Player& player, const Collidable& collidable);
 };
 
 
