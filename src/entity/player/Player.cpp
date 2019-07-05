@@ -13,10 +13,7 @@ void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture
     currentDirection = MoveDirection::NONE;
 
     this->state = STATE_STANDING;
-    //TODO: could be in entityCollidable.initialize
-    this->entityCollidable.setName(collidable.getName());
-    this->entityCollidable.setType(collidable.getType());
-    this->entityCollidable.setBoundingBox(collidable.getBoundingBox());
+    this->entityCollidable.initialize(collidable);
     this->entityCollidable.setVicinityBoundsOffset(VICINITY_BOUNDS_OFFSET);
     sf::Sprite::setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
 
@@ -46,10 +43,6 @@ void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
             handleInteractingState();
             break;
     }
-
-    //TODO: this should be in the handleState functions
-    sf::Sprite::setTextureRect(entityAnimation.getTextureRect());
-    this->entityCollidable.setBoundingBox(sf::FloatRect(getPosition().x, getPosition().y, PLAYER_WIDTH, PLAYER_HEIGHT));
 }
 
 void Player::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
@@ -57,11 +50,7 @@ void Player::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTile
     entityMovement.handleStanding(deltaTime, state, currentDirection, newPosition);
     setPosition(newPosition);
 
-    //TODO: DRY
-    entityAnimation.update(deltaTime, currentDirection);
-    handleActionButtonPressed();
-    resetAfterFrame();
-    adjustPlayerAndViewPositions();
+    handleState(deltaTime);
 }
 
 void Player::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
@@ -69,15 +58,20 @@ void Player::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSi
     entityMovement.handleMoving(deltaTime, mapTileSize, state, currentDirection, newPosition);
     setPosition(newPosition);
 
-    //TODO: DRY
-    entityAnimation.update(deltaTime, currentDirection);
-    handleActionButtonPressed();
-    resetAfterFrame();
-    adjustPlayerAndViewPositions();
+    handleState(deltaTime);
 }
 
 void Player::handleInteractingState() {
     resetAfterFrame();
+}
+
+void Player::handleState(sf::Time deltaTime) {
+    entityAnimation.update(deltaTime, currentDirection);
+    handleActionButtonPressed();
+    resetAfterFrame();
+    adjustPlayerAndViewPositions();
+    sf::Sprite::setTextureRect(entityAnimation.getTextureRect());
+    this->entityCollidable.setBoundingBox(sf::FloatRect(getPosition().x, getPosition().y, PLAYER_WIDTH, PLAYER_HEIGHT));
 }
 
 void Player::adjustPlayerAndViewPositions() {
@@ -131,13 +125,11 @@ void Player::roundPosition() {
 }
 
 EntityCollidable Player::getEntityCollidable() {
-    entityCollidable.setBoundingBox(sf::FloatRect(getPosition().x, getPosition().y, PLAYER_WIDTH, PLAYER_HEIGHT)); //TODO: is this needed. debug and check if boundingBox is already correct here
     return entityCollidable;
 }
 
 void Player::initializeAnimations() {
     //TODO: EVERYTHING needs to be multiples of tile size, including the character textures (its frames). Should there be a check to ensure this is happening so that I don't forget? How can I get the tile size here? Also NpcEntity
-
     //TODO: I don't like that the animations are public members of EntityAnimation. The way animations are handled needs to be refactored
     entityAnimation.walkingAnimationDown.setSpriteSheet(*this->getTexture());
     entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(0, 0, PLAYER_WIDTH, PLAYER_HEIGHT));

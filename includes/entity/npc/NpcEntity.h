@@ -19,6 +19,7 @@ public:
     EntityCollidable getEntityCollidable();
 private:
     EntityState state;
+    EntityState stateBeforeInteraction;
     EntityAnimation entityAnimation;
     EntityCollidable entityCollidable;
     EntityAutonomousMovement entityAutonomousMovement;
@@ -26,8 +27,9 @@ private:
     void initializeAnimations();
     void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
-    void handleInteractingState();
+    void handleInteractingState(sf::Time deltaTime);
     void roundPosition();
+    void setEntityPosition(const sf::Vector2f& position);
 };
 
 

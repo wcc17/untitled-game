@@ -11,35 +11,32 @@
 class EntityAutonomousMovement {
 public:
     void initialize(sf::IntRect moveBoundaries, float moveSpeed);
-    void handleStanding(sf::Time deltaTime, const sf::Vector2u& mapTileSize, EntityState& state, sf::Vector2f& currentPosition);
-    void handleMoving(sf::Time deltaTime, const sf::Vector2u& mapTileSize, sf::Vector2f& currentPosition, EntityState& state);
-    void resetDistanceMoved();
+    void handleStanding(sf::Time deltaTime, const sf::Vector2u& mapTileSize, EntityState& state, const sf::Vector2f& currentPosition);
+    sf::Vector2f handleMoveAndReturnPosition(sf::Time deltaTime, sf::Vector2f currentPosition, EntityState& state);
     MoveDirection getCurrentDirection();
-    void setCurrentDirection(MoveDirection direction);
+    void stopMovement(EntityState& state);
 private:
-    EntityMovement entityMovement;
     std::random_device randomDevice; // obtain a random number from hardware
     sf::IntRect moveBoundaries;
     sf::Time moveDelay;
-    int distanceMoved = 0;
-    int movementGoal = 0;
+    float movementGoal = 0;
     float moveSpeed = 0;
     MoveDirection currentDirection;
 
     void setMoveDelayTimer();
     bool moveDelayTimerDone(sf::Time deltaTime);
 
-    void setupEntityMovement(const sf::Vector2u& mapTileSize, EntityState& state, sf::Vector2f& currentPosition);
+    void move(sf::Time deltaTime, sf::Vector2f& currentPosition);
+    void checkMovementGoal(sf::Vector2f& currentPosition, EntityState& state);
+    void setupEntityMovement(const sf::Vector2u& mapTileSize, EntityState& state, const sf::Vector2f& currentPosition);
     int getMaxDistanceEntityCanTravel(MoveDirection moveDirection, sf::Vector2f currentPosition);
-    void ensureEntityInsideBounds(sf::Vector2f& currentPosition);
-    void ensureEntityPositionAlignedWithTileSize(const sf::Vector2u& mapTileSize, sf::Vector2f& currentPosition);
-
     MoveDirection chooseRandomDirection();
     int determineRandomDistanceToMoveEntity(int maxDistanceEntityCanTravel, int tileSize);
     int getRandomIntInRange(int min, int max);
     float getRandomFloatInRange(float min, float max);
     bool decideIfNpcShouldMove();
     static int getTileSizeForDirection(MoveDirection moveDirection, const sf::Vector2u& mapTileSize);
+    sf::Vector2f getRegularMovement(float speed);
 
 };
 

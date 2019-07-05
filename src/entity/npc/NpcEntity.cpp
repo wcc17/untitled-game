@@ -9,9 +9,7 @@ void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, s
     sf::Sprite::setTexture(*texture);
 
     this->state = STATE_STANDING;
-    this->entityCollidable.setName(collidable.getName());
-    this->entityCollidable.setType(collidable.getType());
-    this->entityCollidable.setBoundingBox(collidable.getBoundingBox());
+    this->entityCollidable.initialize(collidable);
     this->setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
 
     entityAnimation.setFrameTime(sf::seconds(ENTITY_FRAME_TIME));
@@ -29,58 +27,60 @@ void NpcEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
             handleMovingState(deltaTime, mapTileSize);
             break;
         case STATE_INTERACTING:
-            handleInteractingState();
+            handleInteractingState(deltaTime);
             break;
     }
 }
 
 void NpcEntity::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     entityAnimation.update(deltaTime, entityAutonomousMovement.getCurrentDirection());
-    roundPosition();
-
-    sf::Vector2f currentPosition = getPosition();
-    entityAutonomousMovement.handleStanding(deltaTime, mapTileSize, state, currentPosition);
-    setPosition(currentPosition);
-
-    //TODO: DRY
     sf::Sprite::setTextureRect(entityAnimation.getTextureRect());
-    this->entityCollidable.setBoundingBox(sf::FloatRect(getPosition().x, getPosition().y, ENTITY_WIDTH, ENTITY_HEIGHT));
+
+    entityAutonomousMovement.handleStanding(deltaTime, mapTileSize, state, getPosition());
+
+    if(fmod(getPosition().x, mapTileSize.x) != 0 || fmod(getPosition().y,mapTileSize.y) != 0) {
+        printf("somethings up!!\n"); //TODO: delete this soon
+    }
 }
 
 void NpcEntity::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     entityAnimation.update(deltaTime, entityAutonomousMovement.getCurrentDirection());
-
-    sf::Vector2f currentPosition = getPosition();
-    entityAutonomousMovement.handleMoving(deltaTime, mapTileSize, currentPosition, state);
-    setPosition(currentPosition);
-    roundPosition();
-
-    //TODO: DRY
     sf::Sprite::setTextureRect(entityAnimation.getTextureRect());
-    this->entityCollidable.setBoundingBox(sf::FloatRect(getPosition().x, getPosition().y, ENTITY_WIDTH, ENTITY_HEIGHT));
+
+    sf::Vector2f newPosition = entityAutonomousMovement.handleMoveAndReturnPosition(deltaTime, getPosition(), state);
+    setEntityPosition(newPosition);
 }
 
-void NpcEntity::handleInteractingState() { }
+void NpcEntity::handleInteractingState(sf::Time deltaTime) {
+    entityAnimation.update(deltaTime, entityAutonomousMovement.getCurrentDirection());
+}
 
 void NpcEntity::onPlayerInteractionStart(MoveDirection playerFacingDirection) {
     entityAnimation.turnToFaceEntityFacingDirection(playerFacingDirection);
+    sf::Sprite::setTextureRect(entityAnimation.getTextureRect());
+    stateBeforeInteraction = state;
     state = STATE_INTERACTING;
-    //TODO: can this put the entity in a weird position? Will it be fixed?
 }
 
 void NpcEntity::onPlayerInteractionFinish() {
-    state = STATE_STANDING;
-    entityAutonomousMovement.setCurrentDirection(MoveDirection::NONE);
-    entityAutonomousMovement.resetDistanceMoved();
+    state = stateBeforeInteraction;
 }
 
 void NpcEntity::onCollisionEvent(const Collidable& collidedWith) {
-//    CollidableEntity::fixPositionAfterCollision(collidedWith, currentDirection);
-//    roundPosition();
+    printf("npc is colliding with something in NpcEntity::onCollisionEvent \n");
+    sf::Vector2f newPosition = entityCollidable.getFixedPositionAfterCollision(collidedWith, entityAutonomousMovement.getCurrentDirection());
+    setEntityPosition(newPosition);
+    entityAutonomousMovement.stopMovement(state);
 }
 
 void NpcEntity::roundPosition() {
     setPosition(std::round(getPosition().x), std::round(getPosition().y));
+}
+
+void NpcEntity::setEntityPosition(const sf::Vector2f& position) {
+    setPosition(position);
+    this->entityCollidable.setBoundingBox(sf::FloatRect(getPosition().x, getPosition().y, ENTITY_WIDTH, ENTITY_HEIGHT));
+    roundPosition();
 }
 
 EntityCollidable NpcEntity::getEntityCollidable() {

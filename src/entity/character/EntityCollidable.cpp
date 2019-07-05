@@ -1,14 +1,21 @@
 #include "../../../includes/entity/character/EntityCollidable.h"
 
+void EntityCollidable::initialize(const Collidable& collidable) {
+    setName(collidable.getName());
+    setType(collidable.getType());
+    setBoundingBox(collidable.getBoundingBox());
+}
+
 sf::Vector2f EntityCollidable::getFixedPositionAfterCollision(const Collidable& collidedWith, MoveDirection entityDirection) {
     bool isColliding = true;
-    float left = getBoundingBox().left;
-    float top = getBoundingBox().top;
+    int left = getBoundingBox().left;
+    int top = getBoundingBox().top;
     sf::FloatRect newBounds;
     while(isColliding) {
         if(entityDirection == MoveDirection::NONE) {
-            printf("error with entity collision - the entity didn't move into this collision so theres no way to move him out\n");
-//            isColliding = false?
+            //NOTE: If an entity is moving into this one while its standing still, the entity will handle the collision. Otherwise this should never happen
+            printf("EntityCollidable::getFixedPositionAfterCollision: possible error with %s collision - the entity didn't move into this collision so theres no way to move him out\n", getName().c_str());
+            isColliding = false;
         }
 
         if(entityDirection == MoveDirection::RIGHT) {
@@ -33,12 +40,6 @@ sf::Vector2f EntityCollidable::getFixedPositionAfterCollision(const Collidable& 
     return sf::Vector2f(left, top);
 }
 bool EntityCollidable::isFacingCollidableInVicinity(MoveDirection facingDirection, Collidable& collidableInVicinity) {
-    //types not being covered here. I think they're unimportant right now, but could potentially improve this function later on:
-    //entity could have his left side in the middle of the collidable, but the right side on the outside of the collidable to the right
-    //entity could have his right side in the middle of the collidable, but the left side on the outside of the collidable to the left
-    //this works now because everything has a minimum width of 16. If there was something less wide than the player he could still interact with it, but it would look weird
-    //NOTE: Previous to 06/23/19, I was checking that the player wasn't on top of the collidable it was colliding with (its left + width didn't go over the collidables left value for example). Can see old commits if that ends up being needed
-
     sf::FloatRect roundedEntityBounds = getBoundingBox();
     sf::FloatRect collidableRect = collidableInVicinity.getBoundingBox();
     switch(facingDirection) {

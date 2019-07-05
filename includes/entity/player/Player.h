@@ -34,6 +34,7 @@ private:
     void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void handleInteractingState();
+    void handleState(sf::Time deltaTime);
     void resetAfterFrame();
     void roundPosition();
 

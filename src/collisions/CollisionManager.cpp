@@ -50,7 +50,7 @@ bool CollisionManager::publishCollisionsWithPlayerAndEntities(Player& player, co
         }
 
         if(playerVicinityCollisionOccurred(player, npc->getEntityCollidable())) {
-            eventBus->publish(new PlayerVicinityCollisionEvent(std::make_shared<Collidable>(npc->getEntityCollidable()))); //TODO: will this shared_ptr be properly disposed of?
+            eventBus->publish(new PlayerVicinityCollisionEvent(std::make_shared<Collidable>(npc->getEntityCollidable())));
         }
     }
 

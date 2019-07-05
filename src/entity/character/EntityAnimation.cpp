@@ -137,18 +137,22 @@ void EntityAnimation::moveRight() {
 
 void EntityAnimation::faceUp() {
     this->currentAnimation = &walkingAnimationUp;
+    setTextureRectBasedOnCurrentFrame();
 }
 
 void EntityAnimation::faceLeft() {
     this->currentAnimation = &walkingAnimationLeft;
+    setTextureRectBasedOnCurrentFrame();
 }
 
 void EntityAnimation::faceDown() {
     this->currentAnimation = &walkingAnimationDown;
+    setTextureRectBasedOnCurrentFrame();
 }
 
 void EntityAnimation::faceRight() {
     this->currentAnimation = &walkingAnimationRight;
+    setTextureRectBasedOnCurrentFrame();
 }
 
 void EntityAnimation::stop() {

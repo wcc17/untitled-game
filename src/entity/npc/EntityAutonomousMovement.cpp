@@ -5,46 +5,87 @@ const sf::Vector2f moveDelayRange = sf::Vector2f(1.5f, 5.5f); //TODO: do i want 
 void EntityAutonomousMovement::initialize(sf::IntRect moveBoundaries, float moveSpeed) {
     this->moveBoundaries = moveBoundaries;
     this->moveSpeed = moveSpeed;
-    entityMovement.initialize(moveSpeed);
     setMoveDelayTimer();
 }
 
 void EntityAutonomousMovement::handleStanding(sf::Time deltaTime, const sf::Vector2u& mapTileSize, EntityState& state,
-        sf::Vector2f& currentPosition) {
+        const sf::Vector2f& currentPosition) {
     if(moveDelayTimerDone(deltaTime)) {
         setupEntityMovement(mapTileSize, state, currentPosition);
     }
 }
 
-void EntityAutonomousMovement::handleMoving(sf::Time deltaTime, const sf::Vector2u& mapTileSize,
-        sf::Vector2f& currentPosition, EntityState& state) {
-    sf::Vector2f previousPosition = currentPosition;
-    entityMovement.performRegularMoveOnCurrentPosition(deltaTime, currentDirection, currentPosition);
+sf::Vector2f EntityAutonomousMovement::handleMoveAndReturnPosition(sf::Time deltaTime, sf::Vector2f currentPosition, EntityState& state) {
+    move(deltaTime, currentPosition);
+    checkMovementGoal(currentPosition, state);
+    return currentPosition;
+}
 
-    sf::Vector2f distanceTravelledThisFrame = currentPosition;
-    distanceTravelledThisFrame -= previousPosition;
+void EntityAutonomousMovement::move(sf::Time deltaTime, sf::Vector2f& currentPosition) {
+    sf::Vector2f moveVector = getRegularMovement(moveSpeed);
+    sf::Vector2f moveVectorWithSpeed = moveVector * deltaTime.asSeconds();
+    currentPosition = sf::Vector2f(currentPosition.x + moveVectorWithSpeed.x, currentPosition.y + moveVectorWithSpeed.y);
+}
+
+void EntityAutonomousMovement::checkMovementGoal(sf::Vector2f& currentPosition, EntityState& state) {
     switch(currentDirection) {
         case MoveDirection::UP:
+            if(currentPosition.y < movementGoal) {
+                currentPosition.y = movementGoal;
+                stopMovement(state);
+            }
+            break;
         case MoveDirection::DOWN:
-            distanceMoved += abs(distanceTravelledThisFrame.y);
+            if(currentPosition.y > movementGoal) {
+                currentPosition.y = movementGoal;
+                stopMovement(state);
+            }
             break;
         case MoveDirection::LEFT:
+            if(currentPosition.x < movementGoal) {
+                currentPosition.x = movementGoal;
+                stopMovement(state);
+            }
+            break;
         case MoveDirection::RIGHT:
-            distanceMoved += abs(distanceTravelledThisFrame.x);
+            if(currentPosition.x > movementGoal) {
+                currentPosition.x = movementGoal;
+                stopMovement(state);
+            }
             break;
         default:
-            printf("EntityAutonomousMovement::moveEntityTowardMovementGoal -- Invalid currentDirection value\n");
+            printf("Invalid\n");
+            break;
+    }
+}
+
+void EntityAutonomousMovement::stopMovement(EntityState& state) {
+    state = STATE_STANDING;
+    currentDirection = MoveDirection::NONE;
+}
+
+sf::Vector2f EntityAutonomousMovement::getRegularMovement(float speed) {
+    sf::Vector2f movement;
+
+    switch(currentDirection) {
+        case MoveDirection::UP:
+            movement.y -= speed;
+            break;
+        case MoveDirection::LEFT:
+            movement.x -= speed;
+            break;
+        case MoveDirection::DOWN:
+            movement.y += speed;
+            break;
+        case MoveDirection::RIGHT:
+            movement.x += speed;
+            break;
+        default:
+            printf("EntityAutonomousMovement.getRegularMovement. this should not be happening\n");
             break;
     }
 
-    if(distanceMoved >= movementGoal) {
-        ensureEntityPositionAlignedWithTileSize(mapTileSize, currentPosition);
-        ensureEntityInsideBounds(currentPosition);
-
-        state = STATE_STANDING;
-        currentDirection = MoveDirection::NONE;
-        distanceMoved = 0;
-    }
+    return movement;
 }
 
 bool EntityAutonomousMovement::moveDelayTimerDone(sf::Time deltaTime) {
@@ -71,13 +112,32 @@ void EntityAutonomousMovement::setMoveDelayTimer() {
     this->moveDelay = sf::seconds(delay);
 }
 
-void EntityAutonomousMovement::setupEntityMovement(const sf::Vector2u& mapTileSize, EntityState& state, sf::Vector2f& currentPosition) {
+void EntityAutonomousMovement::setupEntityMovement(const sf::Vector2u& mapTileSize, EntityState& state, const sf::Vector2f& currentPosition) {
     if (decideIfNpcShouldMove()) {
         MoveDirection moveDirection = chooseRandomDirection();
         int maxDistanceEntityCanTravel = getMaxDistanceEntityCanTravel(moveDirection, currentPosition);
         if(maxDistanceEntityCanTravel > 0) {
             int tileSize = getTileSizeForDirection(moveDirection, mapTileSize);
-            this->movementGoal = determineRandomDistanceToMoveEntity(maxDistanceEntityCanTravel, tileSize);
+            int distance = determineRandomDistanceToMoveEntity(maxDistanceEntityCanTravel, tileSize);
+
+            switch(moveDirection) {
+                case MoveDirection::UP:
+                    movementGoal = currentPosition.y - distance;
+                    break;
+                case MoveDirection::DOWN:
+                    movementGoal = currentPosition.y + distance;
+                    break;
+                case MoveDirection::LEFT:
+                    movementGoal = currentPosition.x - distance;
+                    break;
+                case MoveDirection::RIGHT:
+                    movementGoal = currentPosition.x + distance;
+                    break;
+                default:
+                    printf("invalid\n");
+                    break;
+            }
+
             this->currentDirection = moveDirection;
             state = STATE_MOVING;
         } else {
@@ -121,41 +181,6 @@ int EntityAutonomousMovement::getMaxDistanceEntityCanTravel(MoveDirection moveDi
     return maxDistanceEntityCanTravel;
 }
 
-void EntityAutonomousMovement::ensureEntityPositionAlignedWithTileSize(const sf::Vector2u& mapTileSize, sf::Vector2f& currentPosition) {
-    int x = currentPosition.x;
-    int y = currentPosition.y;
-    int xRemainder = x % mapTileSize.x;
-    int yRemainder = y % mapTileSize.y;
-
-    if(xRemainder != 0) {
-        printf("position is bad and its being adjusted in EntityAutonomousMovement::ensureEntityPositionAlignedWithTileSize\n");
-        currentPosition.x = x - xRemainder;
-    }
-    if(yRemainder != 0) {
-        printf("position is bad and its being adjusted in EntityAutonomousMovement::ensureEntityPositionAlignedWithTileSize\n");
-        currentPosition.y = y - yRemainder;
-    }
-}
-
-void EntityAutonomousMovement::ensureEntityInsideBounds(sf::Vector2f& currentPosition) {
-    if(currentPosition.x > (moveBoundaries.left + moveBoundaries.width)) {
-        printf("moved too far to the right of boundary, fixing in EntityAutonomousMovement::ensureEntityInsideBounds\n");
-        currentPosition.x = moveBoundaries.left + moveBoundaries.width;
-    }
-    if(currentPosition.x < moveBoundaries.left) {
-        printf("moved too far to the left of boundary, fixing in EntityAutonomousMovement::ensureEntityInsideBounds\n");
-        currentPosition.x = moveBoundaries.left;
-    }
-    if(currentPosition.y > (moveBoundaries.top + moveBoundaries.height)) {
-        printf("moved too far down of boundary, fixing in EntityAutonomousMovement::ensureEntityInsideBounds\n");
-        currentPosition.y = moveBoundaries.top + moveBoundaries.height;
-    }
-    if(currentPosition.y < moveBoundaries.top) {
-        printf("moved too far up of boundary, fixing in EntityAutonomousMovement::ensureEntityInsideBounds\n");
-        currentPosition.y = moveBoundaries.top;
-    }
-}
-
 bool EntityAutonomousMovement::decideIfNpcShouldMove() {
     int shouldMove = getRandomIntInRange(1, 5);
     if(shouldMove > 5 || shouldMove < 1) {
@@ -180,7 +205,7 @@ int EntityAutonomousMovement::determineRandomDistanceToMoveEntity(int maxDistanc
     int minDistanceEntityCanTravel = tileSize;
     if(maxDistanceEntityCanTravel < minDistanceEntityCanTravel) {
         printf("Npc::Entity::determineRandomDistanceToMoveEntity got a max distance less than tile size. Need to verify that this corrected the npc's position\n");
-        minDistanceEntityCanTravel = 0; //TODO: if this happens, then the NPC is in a weird place and it needs to be corrected. Will this correct it?
+        minDistanceEntityCanTravel = 0;
     }
 
     if(tileSize > 0 && maxDistanceEntityCanTravel > 0) {
@@ -219,16 +244,8 @@ int EntityAutonomousMovement::getTileSizeForDirection(MoveDirection moveDirectio
     }
 }
 
-void EntityAutonomousMovement::resetDistanceMoved() {
-    distanceMoved = 0;
-}
-
 MoveDirection EntityAutonomousMovement::getCurrentDirection() {
     return this->currentDirection;
-}
-
-void EntityAutonomousMovement::setCurrentDirection(MoveDirection direction) {
-    currentDirection = direction;
 }
 
 //TODO: these probably belong in a utility class somewhere

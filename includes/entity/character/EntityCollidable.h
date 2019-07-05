@@ -9,6 +9,7 @@
 
 class EntityCollidable : public Collidable {
 public:
+    void initialize(const Collidable& collidable);
     sf::Vector2f getFixedPositionAfterCollision(const Collidable& collidedWith, MoveDirection entityDirection);
     sf::FloatRect getVicinityBounds() const;
     std::vector<std::shared_ptr<Collidable>> getCollidablesInVicinity();
