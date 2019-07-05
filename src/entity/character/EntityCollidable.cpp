@@ -11,8 +11,10 @@ sf::Vector2f EntityCollidable::getFixedPositionAfterCollision(const Collidable& 
     int top = getBoundingBox().top;
     sf::FloatRect newBounds;
 
+    //NOTE: assigning left and top to integers effectively rounds the number, so collision has to be checked here again
     newBounds = sf::FloatRect(left, top, getBoundingBox().width, getBoundingBox().height);
-    bool isColliding = newBounds.intersects(collidedWith.getBoundingBox());;
+    bool isColliding = newBounds.intersects(collidedWith.getBoundingBox());
+
     while(isColliding) {
         if(entityDirection == MoveDirection::NONE) {
             //NOTE: If an entity is moving into this one while its standing still, the entity will handle the collision. Otherwise this should never happen
@@ -20,17 +22,7 @@ sf::Vector2f EntityCollidable::getFixedPositionAfterCollision(const Collidable& 
             break;
         }
 
-        if(entityDirection == MoveDirection::RIGHT) {
-            left -= 1;
-        } else if(entityDirection == MoveDirection::LEFT) {
-            left += 1;
-        }
-
-        if(entityDirection == MoveDirection::DOWN) {
-            top -= 1;
-        } else if(entityDirection == MoveDirection::UP) {
-            top += 1;
-        }
+        adjustPositionsByOne(entityDirection, left, top);
 
         newBounds = sf::FloatRect(left, top, getBoundingBox().width, getBoundingBox().height);
         isColliding = newBounds.intersects(collidedWith.getBoundingBox());
@@ -39,6 +31,7 @@ sf::Vector2f EntityCollidable::getFixedPositionAfterCollision(const Collidable& 
     setBoundingBox(newBounds);
     return sf::Vector2f(left, top);
 }
+
 bool EntityCollidable::isFacingCollidableInVicinity(MoveDirection facingDirection, Collidable& collidableInVicinity) {
     sf::FloatRect roundedEntityBounds = getBoundingBox();
     sf::FloatRect collidableRect = collidableInVicinity.getBoundingBox();
@@ -63,6 +56,20 @@ bool EntityCollidable::isFacingCollidableInVicinity(MoveDirection facingDirectio
         default:
             printf("EntityCollidable.isEntityRectAlignedWithCollidableRect should not be passed anything other than up, down, left, right\n");
             return false;
+    }
+}
+
+void EntityCollidable::adjustPositionsByOne(MoveDirection entityDirection, int& left, int& top) {
+    if(entityDirection == MoveDirection::RIGHT) {
+        left -= 1;
+    } else if(entityDirection == MoveDirection::LEFT) {
+        left += 1;
+    }
+
+    if(entityDirection == MoveDirection::DOWN) {
+        top -= 1;
+    } else if(entityDirection == MoveDirection::UP) {
+        top += 1;
     }
 }
 

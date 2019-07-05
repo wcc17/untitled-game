@@ -23,6 +23,7 @@ protected:
 
 private:
     int vicinityBoundsOffset;
+    static void adjustPositionsByOne(MoveDirection entityDirection, int& left, int& top);
 };
 
 
