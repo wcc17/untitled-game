@@ -7,15 +7,17 @@ void EntityCollidable::initialize(const Collidable& collidable) {
 }
 
 sf::Vector2f EntityCollidable::getFixedPositionAfterCollision(const Collidable& collidedWith, MoveDirection entityDirection) {
-    bool isColliding = true;
     int left = getBoundingBox().left;
     int top = getBoundingBox().top;
     sf::FloatRect newBounds;
+
+    newBounds = sf::FloatRect(left, top, getBoundingBox().width, getBoundingBox().height);
+    bool isColliding = newBounds.intersects(collidedWith.getBoundingBox());;
     while(isColliding) {
         if(entityDirection == MoveDirection::NONE) {
             //NOTE: If an entity is moving into this one while its standing still, the entity will handle the collision. Otherwise this should never happen
             printf("EntityCollidable::getFixedPositionAfterCollision: possible error with %s collision - the entity didn't move into this collision so theres no way to move him out\n", getName().c_str());
-            isColliding = false;
+            break;
         }
 
         if(entityDirection == MoveDirection::RIGHT) {
@@ -31,9 +33,7 @@ sf::Vector2f EntityCollidable::getFixedPositionAfterCollision(const Collidable& 
         }
 
         newBounds = sf::FloatRect(left, top, getBoundingBox().width, getBoundingBox().height);
-        if(!newBounds.intersects(collidedWith.getBoundingBox())) {
-            isColliding = false;
-        }
+        isColliding = newBounds.intersects(collidedWith.getBoundingBox());
     }
 
     setBoundingBox(newBounds);
