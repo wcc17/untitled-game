@@ -6,6 +6,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include "../../controller/MoveDirection.h"
 #include "../character/EntityState.h"
+#include "../../util/Logger.h"
 
 class EntityMovement {
 public:
@@ -28,6 +29,8 @@ private:
     MoveDirection lastFacingDirection; //NOTE: only used to get the last direction the player was facing. Should not be assigned anywhere else except when direction initially changes. Since previousDirection is used elsewhere, not using it
     MoveDirection previousDirection;
     float moveSpeed;
+
+    static Logger logger;
 };
 
 

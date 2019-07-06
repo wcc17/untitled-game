@@ -4,7 +4,7 @@ project(newnew)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
 set(SOURCE_FILES src/main.cpp
-        src/FramerateCounter.cpp
+        src/util/FramerateCounter.cpp
         src/asset/FontManager.cpp
         src/Game.cpp
         src/controller/BaseController.cpp
@@ -34,7 +34,7 @@ set(SOURCE_FILES src/main.cpp
         src/text/dialogue/DialoguePiece.cpp
         src/entity/npc/EntityAutonomousMovement.cpp)
 
-set(INCLUDE_FILES includes/FramerateCounter.h
+set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/asset/FontManager.h
         includes/Game.h
         includes/controller/BaseController.h
@@ -79,7 +79,7 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/CloseDialogueEvent.h
         includes/events/event/PlayerPositionChangeEvent.h
         includes/events/event/ExitGameEvent.h
-        includes/events/event/NpcCollisionEvent.h)
+        includes/events/event/NpcCollisionEvent.h src/util/Logger.cpp includes/util/Logger.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 

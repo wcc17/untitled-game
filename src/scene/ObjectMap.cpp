@@ -8,6 +8,8 @@ const static std::string NPC_OBJECT_TYPE = "npc";
 const static std::string NPC_MOVE_BOUNDARY_OBJECT_TYPE = "npc_move_boundary";
 const static std::string PLAYER_OBJECT_TYPE = "player";
 
+Logger ObjectMap::logger("ObjectMap");
+
 void ObjectMap::loadObjectLayer(const tmx::ObjectGroup& layer) {
     std::string layerName = layer.getName();
     for(int i = 0; i < layer.getObjects().size(); i++) {
@@ -16,9 +18,9 @@ void ObjectMap::loadObjectLayer(const tmx::ObjectGroup& layer) {
         if(object.getShape() == tmx::Object::Shape::Rectangle) {
             loadRectangleObjects(object);
         } else if(object.getShape() == tmx::Object::Shape::Polygon) {
-            printf("NOTE: polygon collision is more complicated than AABB, haven't found a situation yet where I NEED polygons\n");
+            logger.logError("NOTE: polygon collision is more complicated than AABB, haven't found a situation yet where I NEED polygons");
         } else {
-            printf("this object shape is not yet supported\n");
+            logger.logError("this object shape is not yet supported");
         }
     }
 }
@@ -60,7 +62,7 @@ ObjectType ObjectMap::determineObjectType(std::string typeName) {
         return ObjectType::NPC_MOVE_BOUNDARY;
     }
 
-    printf("this type not yet supported\n");
+    logger.logError("this type not yet supported");
     return ObjectType::NO_TYPE;
 }
 

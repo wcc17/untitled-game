@@ -14,7 +14,6 @@ void BaseController::handleSfEvents(std::vector<sf::Event> sfEvents) {
                 handleKeyReleasedEvent(event.key.code);
                 break;
             default:
-//                printf("unsupported event\n");
                 break;
         }
     }

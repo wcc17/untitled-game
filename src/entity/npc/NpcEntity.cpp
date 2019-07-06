@@ -5,6 +5,9 @@ const float ENTITY_HEIGHT = 24.f;
 const float ENTITY_MOVEMENT_SPEED = 65.f;
 const float ENTITY_FRAME_TIME = 0.16f; //TODO: not sure where I want to load this from yet
 
+//TODO: need to wrap logger methods to indicate which entity is printing to the log. See EntityAutonomousMovement. Maybe Collidable should have the wrapped log functions? Idk
+Logger NpcEntity::logger("NpcEntity");
+
 void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries) {
     sf::Sprite::setTexture(*texture);
 
@@ -15,7 +18,7 @@ void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, s
     entityAnimation.setFrameTime(sf::seconds(ENTITY_FRAME_TIME));
     initializeAnimations();
 
-    entityAutonomousMovement.initialize(moveBoundaries, ENTITY_MOVEMENT_SPEED);
+    entityAutonomousMovement.initialize(entityCollidable.getName(), moveBoundaries, ENTITY_MOVEMENT_SPEED);
 }
 
 void NpcEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
@@ -39,7 +42,7 @@ void NpcEntity::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapT
     entityAutonomousMovement.handleStanding(deltaTime, mapTileSize, state, getPosition());
 
     if(fmod(getPosition().x, mapTileSize.x) != 0 || fmod(getPosition().y,mapTileSize.y) != 0) {
-        printf("somethings up!!\n"); //TODO: delete this soon
+        logger.logError("handleStandingState(). NpcEntity has invalid position not divisible by mapTileSize"); //TODO: delete this soon
     }
 }
 
@@ -67,7 +70,7 @@ void NpcEntity::onPlayerInteractionFinish() {
 }
 
 void NpcEntity::onCollisionEvent(const Collidable& collidedWith) {
-    printf("npc is colliding with something in NpcEntity::onCollisionEvent \n");
+    logger.logDebug("npc is colliding with something in onCollisionEvent()");
     sf::Vector2f newPosition = entityCollidable.getFixedPositionAfterCollision(collidedWith, entityAutonomousMovement.getCurrentDirection());
     setEntityPosition(newPosition);
     entityAutonomousMovement.stopMovement(state);

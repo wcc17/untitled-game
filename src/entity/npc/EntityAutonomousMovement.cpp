@@ -1,8 +1,10 @@
 #include "../../../includes/entity/npc/EntityAutonomousMovement.h"
 
 const sf::Vector2f moveDelayRange = sf::Vector2f(1.5f, 5.5f); //TODO: do i want this hardcoded?
+Logger EntityAutonomousMovement::logger("EntityAutonomousMovement");
 
-void EntityAutonomousMovement::initialize(sf::IntRect moveBoundaries, float moveSpeed) {
+void EntityAutonomousMovement::initialize(std::string npcName, sf::IntRect moveBoundaries, float moveSpeed) {
+    this->npcName = npcName;
     this->moveBoundaries = moveBoundaries;
     this->moveSpeed = moveSpeed;
     setMoveDelayTimer();
@@ -54,7 +56,7 @@ void EntityAutonomousMovement::checkMovementGoal(sf::Vector2f& currentPosition, 
             }
             break;
         default:
-            printf("Invalid\n");
+            logError("Invalid direction when checking movement goal in EntityAutonomousMovement.checkMovementGoal");
             break;
     }
 }
@@ -81,7 +83,7 @@ sf::Vector2f EntityAutonomousMovement::getRegularMovement(float speed) {
             movement.x += speed;
             break;
         default:
-            printf("EntityAutonomousMovement.getRegularMovement. this should not be happening\n");
+            logError("EntityAutonomousMovement.getRegularMovement. this should not be happening");
             break;
     }
 
@@ -103,11 +105,8 @@ void EntityAutonomousMovement::setMoveDelayTimer() {
     float max = moveDelayRange.y;
     float delay = getRandomFloatInRange(min, max);
 
-    printf("\n");
-    if(delay > max || delay < min) {
-        printf("invalid value in EntityAutonomousMovement::setMoveDelayTimer\n");
-    }
-    printf("move delay timer set to %f\n", delay);
+    logDebug("");
+    logDebug("move delay timer set to %f", delay);
 
     this->moveDelay = sf::seconds(delay);
 }
@@ -134,14 +133,14 @@ void EntityAutonomousMovement::setupEntityMovement(const sf::Vector2u& mapTileSi
                     movementGoal = currentPosition.x + distance;
                     break;
                 default:
-                    printf("invalid\n");
+                    logError("invalid direction");
                     break;
             }
 
             this->currentDirection = moveDirection;
             state = STATE_MOVING;
         } else {
-            printf("entity is not going to move after all\n");
+            logDebug("entity is not going to move after all");
         }
     }
 }
@@ -152,50 +151,42 @@ int EntityAutonomousMovement::getMaxDistanceEntityCanTravel(MoveDirection moveDi
         case 1:
             maxDistanceEntityCanTravel = moveBoundaries.top;
             maxDistanceEntityCanTravel = currentPosition.y - maxDistanceEntityCanTravel;
-            printf("npc wants to move up\n");
+            logDebug("npc wants to move up");
             break;
         case 2:
             maxDistanceEntityCanTravel = moveBoundaries.top + moveBoundaries.height;
             maxDistanceEntityCanTravel -= currentPosition.y;
-            printf("npc wants to move down\n");
+            logDebug("npc wants to move down");
             break;
         case 3:
             maxDistanceEntityCanTravel = moveBoundaries.left;
             maxDistanceEntityCanTravel = currentPosition.x - maxDistanceEntityCanTravel;
-            printf("npc wants to move left\n");
+            logDebug("npc wants to move left");
             break;
         case 4:
             maxDistanceEntityCanTravel = moveBoundaries.left + moveBoundaries.width;
             maxDistanceEntityCanTravel -= currentPosition.x;
-            printf("npc wants to move right\n");
+            logDebug("npc wants to move right");
             break;
         default:
-            printf("Assigned an invalid direction in EntityAutonomousMovement::getMaxDistanceEntityCanTravel\n");
+            logError("Assigned an invalid direction in EntityAutonomousMovement::getMaxDistanceEntityCanTravel");
             maxDistanceEntityCanTravel = 0;
             break;
     }
 
-    printf("current position: %f, %f\n", currentPosition.x, currentPosition.y);
-    printf("bounds: left: %i, top: %i, width: %i, height: %i\n", moveBoundaries.left, moveBoundaries.top, moveBoundaries.width, moveBoundaries.height);
-    printf("max distance: %i\n", maxDistanceEntityCanTravel);
+    logDebug("current position: %f, %f", currentPosition.x, currentPosition.y);
+    logDebug("bounds: left: %i, top: %i, width: %i, height: %i", moveBoundaries.left, moveBoundaries.top, moveBoundaries.width, moveBoundaries.height);
+    logDebug("max distance: %i", maxDistanceEntityCanTravel);
     return maxDistanceEntityCanTravel;
 }
 
 bool EntityAutonomousMovement::decideIfNpcShouldMove() {
     int shouldMove = getRandomIntInRange(1, 5);
-    if(shouldMove > 5 || shouldMove < 1) {
-        printf("wrong shouldMove value in EntityAutonomousMovement::decideIfNpcShouldMove\n");
-    }
     return (shouldMove <= 3);
 }
 
 MoveDirection EntityAutonomousMovement::chooseRandomDirection() {
     int randomDirection = getRandomIntInRange(1, 4);
-    if(randomDirection > 4 || randomDirection < 1) {
-        randomDirection = 0;
-        printf("wrong direction chosen in EntityAutonomousMovement::chooseRandomDirection\n");
-    }
-
     return static_cast<MoveDirection>(randomDirection);
 }
 
@@ -204,13 +195,13 @@ int EntityAutonomousMovement::determineRandomDistanceToMoveEntity(int maxDistanc
 
     int minDistanceEntityCanTravel = tileSize;
     if(maxDistanceEntityCanTravel < minDistanceEntityCanTravel) {
-        printf("Npc::Entity::determineRandomDistanceToMoveEntity got a max distance less than tile size. Need to verify that this corrected the npc's position\n");
+        logDebug("Npc::Entity::determineRandomDistanceToMoveEntity got a max distance less than tile size. Need to verify that this corrected the npc's position");
         minDistanceEntityCanTravel = 0;
     }
 
     if(tileSize > 0 && maxDistanceEntityCanTravel > 0) {
         distanceToMoveEntity = getRandomIntInRange(minDistanceEntityCanTravel, maxDistanceEntityCanTravel);
-        printf("random distance chosen: %i\n", distanceToMoveEntity);
+        logDebug("random distance chosen: %i", distanceToMoveEntity);
 
         //make the distance the highest multiple of tileSize possible
         int remainder = distanceToMoveEntity % tileSize;
@@ -221,12 +212,12 @@ int EntityAutonomousMovement::determineRandomDistanceToMoveEntity(int maxDistanc
         }
 
         if (distanceToMoveEntity % tileSize != 0) {
-            printf("EntityAutonomousMovement is trying to move in a distance that isn't a multiple of the tile size\n");
+            logError("EntityAutonomousMovement is trying to move in a distance that isn't a multiple of the tile size");
             distanceToMoveEntity = 0;
         }
     }
 
-    printf("is going to move with distance: %i\n", distanceToMoveEntity);
+    logDebug("is going to move with distance: %i", distanceToMoveEntity);
     return distanceToMoveEntity;
 }
 
@@ -239,13 +230,27 @@ int EntityAutonomousMovement::getTileSizeForDirection(MoveDirection moveDirectio
         case MoveDirection::RIGHT:
             return mapTileSize.x;
         default:
-            printf("EntityAutonomousMovement.getTileSizeForDirection was given an invalid direction\n");
+            logError("EntityAutonomousMovement.getTileSizeForDirection was given an invalid direction");
             return 0;
     }
 }
 
 MoveDirection EntityAutonomousMovement::getCurrentDirection() {
     return this->currentDirection;
+}
+
+void EntityAutonomousMovement::logDebug(const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    logger.logDebugWithPrepend(npcName + " - ", format, args);
+    va_end(args);
+}
+
+void EntityAutonomousMovement::logError(const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    logger.logErrorWithPrepend(npcName, format, args);
+    va_end(args);
 }
 
 //TODO: these probably belong in a utility class somewhere

@@ -23,6 +23,7 @@ private:
     EntityAnimation entityAnimation;
     EntityCollidable entityCollidable;
     EntityAutonomousMovement entityAutonomousMovement;
+    static Logger logger;
 
     void initializeAnimations();
     void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);

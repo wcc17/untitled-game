@@ -1,5 +1,7 @@
 #include "../includes/Game.h"
 
+Logger Game::logger("Game");
+
 Game::Game() {
     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920,1080,32),"newnew", sf::Style::Titlebar | sf::Style::Close);
      window->setFramerateLimit(60);
@@ -73,6 +75,6 @@ std::vector<sf::Event> Game::handleEvents() {
 }
 
 void Game::onExitGameEvent(ExitGameEvent* event) {
-    printf("Exiting game. Reason given: %s\n", event->exitMessage.c_str());
+    logger.logError("Exiting game. Reason given: %s", event->exitMessage.c_str());
     shouldExitGame = true;
 }

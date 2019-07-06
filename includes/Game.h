@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "asset/FontManager.h"
 #include "asset/AssetPath.h"
-#include "FramerateCounter.h"
+#include "util/FramerateCounter.h"
 #include "events/EventBus.h"
 #include "scene/SceneManager.h"
 #include "controller/KeyboardController.h"
@@ -23,6 +23,7 @@ private:
     FramerateCounter framerateCounter;
     FontManager fontManager;
     bool shouldExitGame = false;
+    static Logger logger;
 
     void initialize();
     void update(std::vector<sf::Event> events);

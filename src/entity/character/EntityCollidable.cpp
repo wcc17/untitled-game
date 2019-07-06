@@ -1,5 +1,8 @@
 #include "../../../includes/entity/character/EntityCollidable.h"
 
+//TODO: need to wrap logger methods to indicate which entity is printing to the log. See EntityAutonomousMovement. Maybe Collidable should have the wrapped log functions? Idk
+Logger EntityCollidable::logger("EntityCollidable");
+
 void EntityCollidable::initialize(const Collidable& collidable) {
     setName(collidable.getName());
     setType(collidable.getType());
@@ -18,7 +21,7 @@ sf::Vector2f EntityCollidable::getFixedPositionAfterCollision(const Collidable& 
     while(isColliding) {
         if(entityDirection == MoveDirection::NONE) {
             //NOTE: If an entity is moving into this one while its standing still, the entity will handle the collision. Otherwise this should never happen
-            printf("EntityCollidable::getFixedPositionAfterCollision: possible error with %s collision - the entity didn't move into this collision so theres no way to move him out\n", getName().c_str());
+            logger.logError("getFixedPositionAfterCollision(): possible error with %s collision - the entity didn't move into this collision so theres no way to move him out", getName().c_str());
             break;
         }
 
@@ -54,7 +57,7 @@ bool EntityCollidable::isFacingCollidableInVicinity(MoveDirection facingDirectio
             }
             return false;
         default:
-            printf("EntityCollidable.isEntityRectAlignedWithCollidableRect should not be passed anything other than up, down, left, right\n");
+            logger.logError("isEntityRectAlignedWithCollidableRect() should not be passed anything other than up, down, left, right");
             return false;
     }
 }

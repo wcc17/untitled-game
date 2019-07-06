@@ -10,6 +10,7 @@
 #include <cmath>
 #include "TileMap.h"
 #include "ObjectMap.h"
+#include "../util/Logger.h"
 
 class Scene : public sf::Drawable, public sf::Transformable, public ObjectMap, public TileMap {
 public:
@@ -28,6 +29,7 @@ private:
     sf::Vector2u tileSize;
 
     void loadTileMap();
+    static Logger logger;
 };
 
 

@@ -1,5 +1,7 @@
 #include "../../includes/text/TextManager.h"
 
+Logger TextManager::logger("TextManager");
+
 void TextManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font) {
     this->eventBus = eventBus;
 
@@ -57,9 +59,8 @@ void TextManager::updateDialogueTextPosition(sf::RenderWindow* window, sf::View&
     dialogueText.setPosition(coordsToPixel.x, coordsToPixel.y);
 }
 
-//TODO: I think the dialogue stuff should be in its own class. See C++ composition maybe?
 void TextManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
-    printf("ready to handle the dialogue box in TextManager\n");
+    logger.logDebug("ready to handle the dialogue box in TextManager");
     entityPlayerInteractedWith = event->interactedWith;
 
     /**

@@ -6,6 +6,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <vector>
 #include "../../collisions/Collidable.h"
+#include "../../../includes/util/Logger.h"
 
 class EntityCollidable : public Collidable {
 public:
@@ -24,6 +25,7 @@ protected:
 private:
     int vicinityBoundsOffset;
     static void adjustPositionsByOne(MoveDirection entityDirection, int& left, int& top);
+    static Logger logger;
 };
 
 

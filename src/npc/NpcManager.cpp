@@ -66,7 +66,7 @@ void NpcManager::initializeNpc(Collidable& collidable, sf::Texture* texture) {
     try {
         npcEntity->initialize(texture, collidable, npcMoveBoundaries.at(collidable.getName())); //TODO: obviously need a better way to assign textures to npcs
     } catch (const std::out_of_range& e) {
-        std::string exitMessage = "Entity " + collidable.getName() + " is not assigned a move boundary. Exiting\n";
+        std::string exitMessage = "Entity " + collidable.getName() + " is not assigned a move boundary. Exiting";
         eventBus->publish(new ExitGameEvent(exitMessage));
     }
 

@@ -1,5 +1,7 @@
 #include "../../includes/controller/KeyboardController.h"
 
+Logger KeyboardController::logger("KeyboardController");
+
 void KeyboardController::initialize(std::shared_ptr<EventBus> eventBus) {
     BaseController::initialize(eventBus);
 }
@@ -24,11 +26,11 @@ void KeyboardController::handleInput(std::vector<sf::Event> sfEvents) {
 void KeyboardController::handleKeyPressedEvent(sf::Keyboard::Key key) {
     switch(key) {
         case sf::Keyboard::Enter:
-            printf("enter pressed\n");
+            logger.logDebug("enter pressed");
             break;
         case sf::Keyboard::Space:
             //TODO: do I want to limit how many times/how often the player can hit this key? Otherwise we will spam playerManager with events
-            printf("space pressed\n");
+            logger.logDebug("space pressed");
             eventBus->publish(new ControllerActionEvent());
         default:
             break;
@@ -38,10 +40,10 @@ void KeyboardController::handleKeyPressedEvent(sf::Keyboard::Key key) {
 void KeyboardController::handleKeyReleasedEvent(sf::Keyboard::Key key) {
     switch(key) {
         case sf::Keyboard::Enter:
-            printf("enter released\n");
+            logger.logDebug("enter released");
             break;
         case sf::Keyboard::Space:
-            printf("space released\n");
+            logger.logDebug("space released");
         default:
             break;
     }

@@ -1,5 +1,7 @@
 #include "../../includes/scene/Scene.h"
 
+Logger Scene::logger("Scene");
+
 void Scene::initialize(std::string tileMapPath) {
     this->tileMapPath = tileMapPath;
     this->loadTileMap();
@@ -29,11 +31,11 @@ void Scene::loadTileMap() {
         } else if(layer->getType() == tmx::Layer::Type::Object) {
             loadObjectLayer(layer->getLayerAs<tmx::ObjectGroup>());
         } else {
-            printf("not supporting this type of layer yet\n");
+            logger.logError("not supporting this type of layer yet");
         }
     }
 
-    printf("done loading tile map\n");
+    logger.logDebug("done loading tile map");
 }
 
 void Scene::draw(sf::RenderTarget& target, sf::RenderStates states) const {

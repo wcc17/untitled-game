@@ -7,21 +7,25 @@
 #include <SFML/System/Time.hpp>
 #include "../../controller/MoveDirection.h"
 #include "../character/EntityMovement.h"
+#include "../../../includes/util/Logger.h"
 
 class EntityAutonomousMovement {
 public:
-    void initialize(sf::IntRect moveBoundaries, float moveSpeed);
+    void initialize(std::string npcName, sf::IntRect moveBoundaries, float moveSpeed);
     void handleStanding(sf::Time deltaTime, const sf::Vector2u& mapTileSize, EntityState& state, const sf::Vector2f& currentPosition);
     sf::Vector2f handleMoveAndReturnPosition(sf::Time deltaTime, sf::Vector2f currentPosition, EntityState& state);
     MoveDirection getCurrentDirection();
     void stopMovement(EntityState& state);
 private:
-    std::random_device randomDevice; // obtain a random number from hardware
     sf::IntRect moveBoundaries;
     sf::Time moveDelay;
     float movementGoal = 0;
     float moveSpeed = 0;
     MoveDirection currentDirection;
+    std::string npcName;
+
+    std::random_device randomDevice; // obtain a random number from hardware //TODO: should this be static?
+    static Logger logger;
 
     void setMoveDelayTimer();
     bool moveDelayTimerDone(sf::Time deltaTime);
@@ -35,9 +39,11 @@ private:
     int getRandomIntInRange(int min, int max);
     float getRandomFloatInRange(float min, float max);
     bool decideIfNpcShouldMove();
-    static int getTileSizeForDirection(MoveDirection moveDirection, const sf::Vector2u& mapTileSize);
+    int getTileSizeForDirection(MoveDirection moveDirection, const sf::Vector2u& mapTileSize);
     sf::Vector2f getRegularMovement(float speed);
 
+    void logDebug(const char* format, ...);
+    void logError(const char* format, ...);
 };
 
 

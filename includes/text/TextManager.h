@@ -11,6 +11,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include "../../includes/events/EventBus.h"
 #include "dialogue/DialogueEvent.h"
+#include "../../includes/util/Logger.h"
 
 class TextManager {
 public:
@@ -28,6 +29,7 @@ private:
     bool dialogueIsActive = false;
     bool dialoguePositionSet = false;
     Collidable entityPlayerInteractedWith;
+    static Logger logger;
 
     void onControllerActionEvent(ControllerActionEvent* event);
     void onOpenDialogueEvent(OpenDialogueEvent* event);

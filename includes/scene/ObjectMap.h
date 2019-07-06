@@ -5,6 +5,7 @@
 #include <tmxlite/ObjectGroup.hpp>
 #include <map>
 #include "../collisions/Collidable.h"
+#include "../util/Logger.h"
 
 class ObjectMap {
 
@@ -35,6 +36,8 @@ private:
     std::vector<std::shared_ptr<Collidable>> mapCollidables;
     std::vector<Collidable> npcCollidables;
     Collidable playerCollidable;
+
+    static Logger logger;
 };
 
 
