@@ -5,9 +5,6 @@ const float ENTITY_HEIGHT = 24.f;
 const float ENTITY_MOVEMENT_SPEED = 65.f;
 const float ENTITY_FRAME_TIME = 0.16f; //TODO: not sure where I want to load this from yet
 
-//TODO: need to wrap logger methods to indicate which entity is printing to the log. See EntityAutonomousMovement. Maybe Collidable should have the wrapped log functions? Idk
-Logger NpcEntity::logger("NpcEntity");
-
 void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries) {
     sf::Sprite::setTexture(*texture);
 
@@ -19,6 +16,7 @@ void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, s
     initializeAnimations();
 
     entityAutonomousMovement.initialize(entityCollidable.getName(), moveBoundaries, ENTITY_MOVEMENT_SPEED);
+    entityLogger.initialize("NpcEntity", entityCollidable.getName());
 }
 
 void NpcEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
@@ -42,7 +40,7 @@ void NpcEntity::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapT
     entityAutonomousMovement.handleStanding(deltaTime, mapTileSize, state, getPosition());
 
     if(fmod(getPosition().x, mapTileSize.x) != 0 || fmod(getPosition().y,mapTileSize.y) != 0) {
-        logger.logError("handleStandingState(). NpcEntity has invalid position not divisible by mapTileSize"); //TODO: delete this soon
+        entityLogger.logError("handleStandingState(). NpcEntity has invalid position not divisible by mapTileSize"); //TODO: delete this soon
     }
 }
 
@@ -70,7 +68,7 @@ void NpcEntity::onPlayerInteractionFinish() {
 }
 
 void NpcEntity::onCollisionEvent(const Collidable& collidedWith) {
-    logger.logDebug("npc is colliding with something in onCollisionEvent()");
+    entityLogger.logDebug("npc is colliding with something in onCollisionEvent()");
     sf::Vector2f newPosition = entityCollidable.getFixedPositionAfterCollision(collidedWith, entityAutonomousMovement.getCurrentDirection());
     setEntityPosition(newPosition);
     entityAutonomousMovement.stopMovement(state);

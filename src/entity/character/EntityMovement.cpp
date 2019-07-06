@@ -1,9 +1,7 @@
 #include "../../../includes/entity/character/EntityMovement.h"
 
-//TODO: need to wrap logger methods to indicate which entity is printing to the log. See EntityAutonomousMovement
-Logger EntityMovement::logger("EntityMovement");
-
-void EntityMovement::initialize(float moveSpeed) {
+void EntityMovement::initialize(std::string entityName, float moveSpeed) {
+    this->entityLogger.initialize("EntityMovement", entityName);
     this->moveSpeed = moveSpeed;
     previousDirection = MoveDirection::UP;
 }
@@ -32,7 +30,7 @@ void EntityMovement::handleMoving(sf::Time deltaTime, const sf::Vector2u& mapTil
 
 bool EntityMovement::movementGoalReached(const sf::Vector2u& mapTileSize, sf::Vector2f currentPosition) {
     if(previousDirection == MoveDirection::NONE) {
-        logger.logError("MovableEntity.movementGoalReached().this should not be happening");
+        entityLogger.logError("MovableEntity.movementGoalReached().this should not be happening");
         return true;
     }
 
@@ -45,7 +43,7 @@ sf::Vector2f EntityMovement::getGoalLimitedMovement(sf::Time deltaTime, const sf
         MoveDirection& currentDirection, sf::Vector2f currentPosition) {
 
     if(currentDirection == MoveDirection::NONE) {
-        logger.logError("this should not be happening. shouldn't be setting GoalLimitedMovement without a direction other than NONE");
+        entityLogger.logError("this should not be happening. shouldn't be setting GoalLimitedMovement without a direction other than NONE");
         return sf::Vector2f(0.f, 0.f);
     }
 
@@ -81,7 +79,7 @@ sf::Vector2f EntityMovement::getRegularMovement(float speed, MoveDirection& curr
             movement.x += speed;
             break;
         default:
-            logger.logError("getRegularMovement() invalid direction was passed");
+            entityLogger.logError("getRegularMovement() invalid direction was passed");
             break;
     }
 
@@ -121,7 +119,7 @@ int EntityMovement::getChangingPosition(const MoveDirection& direction, const sf
         case MoveDirection::RIGHT:
             return position.x;
         default:
-            logger.logError("getChangingPosition() returning a bad value");
+            entityLogger.logError("getChangingPosition() returning a bad value");
             return 0;
     }
 }
@@ -135,7 +133,7 @@ int EntityMovement::getTileSizeForDirection(const MoveDirection& direction, cons
         case MoveDirection::RIGHT:
             return mapTileSize.x;
         default:
-            logger.logError("getTileSizeForDirection() returning a bad value");
+            entityLogger.logError("getTileSizeForDirection() returning a bad value");
             return 0;
     }
 }

@@ -9,7 +9,7 @@ const int VICINITY_BOUNDS_OFFSET = 4;
 void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, const Collidable& collidable) {
     sf::Sprite::setTexture(*texture);
 
-    entityMovement.initialize(MOVEMENT_SPEED);
+    entityMovement.initialize(collidable.getName(), MOVEMENT_SPEED);
     currentDirection = MoveDirection::NONE;
 
     this->state = STATE_STANDING;

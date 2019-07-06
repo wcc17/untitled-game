@@ -1,10 +1,9 @@
 #include "../../../includes/entity/npc/EntityAutonomousMovement.h"
 
 const sf::Vector2f moveDelayRange = sf::Vector2f(1.5f, 5.5f); //TODO: do i want this hardcoded?
-Logger EntityAutonomousMovement::logger("EntityAutonomousMovement");
 
 void EntityAutonomousMovement::initialize(std::string npcName, sf::IntRect moveBoundaries, float moveSpeed) {
-    this->npcName = npcName;
+    this->entityLogger.initialize("EntityAutonomousMovement", npcName);
     this->moveBoundaries = moveBoundaries;
     this->moveSpeed = moveSpeed;
     setMoveDelayTimer();
@@ -56,7 +55,7 @@ void EntityAutonomousMovement::checkMovementGoal(sf::Vector2f& currentPosition, 
             }
             break;
         default:
-            logError("Invalid direction when checking movement goal in EntityAutonomousMovement.checkMovementGoal");
+            entityLogger.logError("Invalid direction when checking movement goal in EntityAutonomousMovement.checkMovementGoal");
             break;
     }
 }
@@ -83,7 +82,7 @@ sf::Vector2f EntityAutonomousMovement::getRegularMovement(float speed) {
             movement.x += speed;
             break;
         default:
-            logError("EntityAutonomousMovement.getRegularMovement. this should not be happening");
+            entityLogger.logError("EntityAutonomousMovement.getRegularMovement. this should not be happening");
             break;
     }
 
@@ -105,8 +104,8 @@ void EntityAutonomousMovement::setMoveDelayTimer() {
     float max = moveDelayRange.y;
     float delay = getRandomFloatInRange(min, max);
 
-    logDebug("");
-    logDebug("move delay timer set to %f", delay);
+    entityLogger.logDebug("");
+    entityLogger.logDebug("move delay timer set to %f", delay);
 
     this->moveDelay = sf::seconds(delay);
 }
@@ -133,14 +132,14 @@ void EntityAutonomousMovement::setupEntityMovement(const sf::Vector2u& mapTileSi
                     movementGoal = currentPosition.x + distance;
                     break;
                 default:
-                    logError("invalid direction");
+                    entityLogger.logError("invalid direction");
                     break;
             }
 
             this->currentDirection = moveDirection;
             state = STATE_MOVING;
         } else {
-            logDebug("entity is not going to move after all");
+            entityLogger.logDebug("entity is not going to move after all");
         }
     }
 }
@@ -151,32 +150,32 @@ int EntityAutonomousMovement::getMaxDistanceEntityCanTravel(MoveDirection moveDi
         case 1:
             maxDistanceEntityCanTravel = moveBoundaries.top;
             maxDistanceEntityCanTravel = currentPosition.y - maxDistanceEntityCanTravel;
-            logDebug("npc wants to move up");
+            entityLogger.logDebug("npc wants to move up");
             break;
         case 2:
             maxDistanceEntityCanTravel = moveBoundaries.top + moveBoundaries.height;
             maxDistanceEntityCanTravel -= currentPosition.y;
-            logDebug("npc wants to move down");
+            entityLogger.logDebug("npc wants to move down");
             break;
         case 3:
             maxDistanceEntityCanTravel = moveBoundaries.left;
             maxDistanceEntityCanTravel = currentPosition.x - maxDistanceEntityCanTravel;
-            logDebug("npc wants to move left");
+            entityLogger.logDebug("npc wants to move left");
             break;
         case 4:
             maxDistanceEntityCanTravel = moveBoundaries.left + moveBoundaries.width;
             maxDistanceEntityCanTravel -= currentPosition.x;
-            logDebug("npc wants to move right");
+            entityLogger.logDebug("npc wants to move right");
             break;
         default:
-            logError("Assigned an invalid direction in EntityAutonomousMovement::getMaxDistanceEntityCanTravel");
+            entityLogger.logError("Assigned an invalid direction in EntityAutonomousMovement::getMaxDistanceEntityCanTravel");
             maxDistanceEntityCanTravel = 0;
             break;
     }
 
-    logDebug("current position: %f, %f", currentPosition.x, currentPosition.y);
-    logDebug("bounds: left: %i, top: %i, width: %i, height: %i", moveBoundaries.left, moveBoundaries.top, moveBoundaries.width, moveBoundaries.height);
-    logDebug("max distance: %i", maxDistanceEntityCanTravel);
+    entityLogger.logDebug("current position: %f, %f", currentPosition.x, currentPosition.y);
+    entityLogger.logDebug("bounds: left: %i, top: %i, width: %i, height: %i", moveBoundaries.left, moveBoundaries.top, moveBoundaries.width, moveBoundaries.height);
+    entityLogger.logDebug("max distance: %i", maxDistanceEntityCanTravel);
     return maxDistanceEntityCanTravel;
 }
 
@@ -195,13 +194,13 @@ int EntityAutonomousMovement::determineRandomDistanceToMoveEntity(int maxDistanc
 
     int minDistanceEntityCanTravel = tileSize;
     if(maxDistanceEntityCanTravel < minDistanceEntityCanTravel) {
-        logDebug("Npc::Entity::determineRandomDistanceToMoveEntity got a max distance less than tile size. Need to verify that this corrected the npc's position");
+        entityLogger.logDebug("Npc::Entity::determineRandomDistanceToMoveEntity got a max distance less than tile size. Need to verify that this corrected the npc's position");
         minDistanceEntityCanTravel = 0;
     }
 
     if(tileSize > 0 && maxDistanceEntityCanTravel > 0) {
         distanceToMoveEntity = getRandomIntInRange(minDistanceEntityCanTravel, maxDistanceEntityCanTravel);
-        logDebug("random distance chosen: %i", distanceToMoveEntity);
+        entityLogger.logDebug("random distance chosen: %i", distanceToMoveEntity);
 
         //make the distance the highest multiple of tileSize possible
         int remainder = distanceToMoveEntity % tileSize;
@@ -212,12 +211,12 @@ int EntityAutonomousMovement::determineRandomDistanceToMoveEntity(int maxDistanc
         }
 
         if (distanceToMoveEntity % tileSize != 0) {
-            logError("EntityAutonomousMovement is trying to move in a distance that isn't a multiple of the tile size");
+            entityLogger.logError("EntityAutonomousMovement is trying to move in a distance that isn't a multiple of the tile size");
             distanceToMoveEntity = 0;
         }
     }
 
-    logDebug("is going to move with distance: %i", distanceToMoveEntity);
+    entityLogger.logDebug("is going to move with distance: %i", distanceToMoveEntity);
     return distanceToMoveEntity;
 }
 
@@ -230,27 +229,13 @@ int EntityAutonomousMovement::getTileSizeForDirection(MoveDirection moveDirectio
         case MoveDirection::RIGHT:
             return mapTileSize.x;
         default:
-            logError("EntityAutonomousMovement.getTileSizeForDirection was given an invalid direction");
+            entityLogger.logError("EntityAutonomousMovement.getTileSizeForDirection was given an invalid direction");
             return 0;
     }
 }
 
 MoveDirection EntityAutonomousMovement::getCurrentDirection() {
     return this->currentDirection;
-}
-
-void EntityAutonomousMovement::logDebug(const char* format, ...) {
-    va_list args;
-    va_start(args, format);
-    logger.logDebugWithPrepend(npcName + " - ", format, args);
-    va_end(args);
-}
-
-void EntityAutonomousMovement::logError(const char* format, ...) {
-    va_list args;
-    va_start(args, format);
-    logger.logErrorWithPrepend(npcName, format, args);
-    va_end(args);
 }
 
 //TODO: these probably belong in a utility class somewhere

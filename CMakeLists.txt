@@ -79,7 +79,7 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/CloseDialogueEvent.h
         includes/events/event/PlayerPositionChangeEvent.h
         includes/events/event/ExitGameEvent.h
-        includes/events/event/NpcCollisionEvent.h src/util/Logger.cpp includes/util/Logger.h)
+        includes/events/event/NpcCollisionEvent.h src/util/Logger.cpp includes/util/Logger.h src/entity/character/EntityLogger.cpp includes/entity/character/EntityLogger.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 

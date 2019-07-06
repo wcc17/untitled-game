@@ -8,6 +8,7 @@
 #include "../../controller/MoveDirection.h"
 #include "../character/EntityMovement.h"
 #include "../../../includes/util/Logger.h"
+#include "../character/EntityLogger.h"
 
 class EntityAutonomousMovement {
 public:
@@ -22,10 +23,9 @@ private:
     float movementGoal = 0;
     float moveSpeed = 0;
     MoveDirection currentDirection;
-    std::string npcName;
 
     std::random_device randomDevice; // obtain a random number from hardware //TODO: should this be static?
-    static Logger logger;
+    EntityLogger entityLogger;
 
     void setMoveDelayTimer();
     bool moveDelayTimerDone(sf::Time deltaTime);
@@ -41,9 +41,6 @@ private:
     bool decideIfNpcShouldMove();
     int getTileSizeForDirection(MoveDirection moveDirection, const sf::Vector2u& mapTileSize);
     sf::Vector2f getRegularMovement(float speed);
-
-    void logDebug(const char* format, ...);
-    void logError(const char* format, ...);
 };
 
 
