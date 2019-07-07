@@ -1,6 +1,8 @@
 #include "../../../includes/text/dialogue/Dialogue.h"
 
-Dialogue::Dialogue(std::string first, std::string second): first(first), second(second) { }
+Dialogue::Dialogue(std::string first, std::string second): first(first), second(second) {
+    this->first += "\n";
+}
 
 std::string& Dialogue::getCurrentDialoguePiece() {
     return (first.length() > 0) ? first : second;

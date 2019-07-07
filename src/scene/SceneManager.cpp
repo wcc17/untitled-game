@@ -11,9 +11,11 @@ void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font
     npcManager.initialize(eventBus, scene.getNpcCollidables(), textureManager.getTexture(AssetPath::NPC_TEXTURE), scene.getNpcMoveBoundariesMap());
 
     textureManager.loadTexture(AssetPath::DIALOGUE_BOX_TEXTURE);
-    textManager.initialize(eventBus, textureManager.getTexture(AssetPath::DIALOGUE_BOX_TEXTURE), font);
+    std::vector<DialogueEvent> entityDialogueEvents = xmlManager.loadEntityDialogueForScene("scene1");
+    textManager.initialize(eventBus, textureManager.getTexture(AssetPath::DIALOGUE_BOX_TEXTURE), font, entityDialogueEvents);
 
     collisionManager.initialize(eventBus);
+
 }
 
 void SceneManager::update(sf::Time elapsedTime, sf::RenderWindow* window) {

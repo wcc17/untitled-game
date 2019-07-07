@@ -10,6 +10,7 @@
 #include "../npc/NpcManager.h"
 #include "../text/TextManager.h"
 #include "ViewManager.h"
+#include "../util/XmlManager.h"
 
 class SceneManager {
 public:
@@ -24,6 +25,7 @@ private:
     NpcManager npcManager;
     TextManager textManager;
     ViewManager viewManager;
+    XmlManager xmlManager;
 
     Player player;
     Scene scene;

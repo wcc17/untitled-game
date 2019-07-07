@@ -1,12 +1,15 @@
 #include "../../../includes/text/dialogue/DialogueEvent.h"
 
-DialogueEvent::DialogueEvent(std::vector<Dialogue> dialogues) {
-    this->dialogues = dialogues;
-    startNextDialogue();
+DialogueEvent::DialogueEvent(std::string entityName) : currentDialogue(Dialogue("", "")) {
+    this->entityName = entityName;
+}
+
+void DialogueEvent::addDialogue(Dialogue dialogue) {
+    dialogues.push_back(dialogue);
 }
 
 std::string& DialogueEvent::getCurrentDialoguePiece() {
-    return currentDialogue->getCurrentDialoguePiece();
+    return currentDialogue.getCurrentDialoguePiece();
 }
 
 bool DialogueEvent::dialoguesLeftToDraw() {
@@ -15,7 +18,7 @@ bool DialogueEvent::dialoguesLeftToDraw() {
 
 bool DialogueEvent::currentDialogueDone() {
     //if one still has characters, dialogue is not done
-    return currentDialogue->dialogueDone();
+    return currentDialogue.dialogueDone();
 }
 
 bool DialogueEvent::shouldStartNextDialogue() {
@@ -27,7 +30,10 @@ bool DialogueEvent::isDialogueEventDone() {
 }
 
 void DialogueEvent::startNextDialogue() {
-    currentDialogue.reset();
-    currentDialogue = std::make_unique<Dialogue>(dialogues[0]);
+    currentDialogue = dialogues[0];
     dialogues.erase(dialogues.begin());
+}
+
+std::string DialogueEvent::getName() {
+    return this->entityName;
 }

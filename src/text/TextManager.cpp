@@ -2,8 +2,11 @@
 
 Logger TextManager::logger("TextManager");
 
-void TextManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font) {
+TextManager::TextManager() : defaultDialogueEvent("default") { }
+
+void TextManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font, std::vector<DialogueEvent> entityDialogueEvents) {
     this->eventBus = eventBus;
+    this->entityDialogueEvents = entityDialogueEvents;
 
     this->dialogueBoxSprite.setTexture(*texture);
     this->dialogueBoxSprite.scale(0.33f, 0.33f); //TODO: this shouldn't be done this way. Dialog box should just be drawn at the right size for the view
@@ -14,6 +17,9 @@ void TextManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* te
 
     eventBus->subscribe(this, &TextManager::onControllerActionEvent);
     eventBus->subscribe(this, &TextManager::onOpenDialogueEvent);
+
+    Dialogue defaultDialogue("Nothing to see here.", "");
+    defaultDialogueEvent.addDialogue(defaultDialogue);
 }
 
 void TextManager::update(sf::RenderWindow* window, sf::View& view, sf::Time deltaTime) {
@@ -62,23 +68,6 @@ void TextManager::updateDialogueTextPosition(sf::RenderWindow* window, sf::View&
 void TextManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
     logger.logDebug("ready to handle the dialogue box in TextManager");
     entityPlayerInteractedWith = event->interactedWith;
-
-    /**
-     * Just an example, not final
-     *
-     * <dialogueEvent>
-     *   <dialogue>
-     *    <dialoguePiece>Hello, this is some text!</dialoguePiece>
-     *    <dialoguePiece>This is just a test though... It can be as long as I want, but if its too long, it'll be split into seperate lines</dialoguePiece>
-     *   </dialogue>
-     *
-     *   <dialogue>
-     *    <dialoguePiece>I want this to be the only text to appear in the box!</dialoguePiece>
-     *   </dialogue>
-     * </dialogueEvent>
-     * Opens up future where I can give certain dialoguePieces special effects, change their font size, etc.
-     */
-
     initializeText();
     dialogueIsActive = true;
 }
@@ -88,36 +77,45 @@ void TextManager::closeDialogue() {
     dialoguePositionSet = false;
     this->stringBeingDrawn = "";
     this->dialogueText.setString("");
+    this->currentDialogueEvent.reset();
     eventBus->publish(new CloseDialogueEvent(entityPlayerInteractedWith));
 }
 
 void TextManager::onControllerActionEvent(ControllerActionEvent* event) {
     if(dialogueIsActive) {
 
-        if(dialogueEvent->shouldStartNextDialogue()) {
+        if(currentDialogueEvent->shouldStartNextDialogue()) {
             startNextDialogue();
-        } else if(!dialogueEvent->currentDialogueDone()) {
+        } else if(!currentDialogueEvent->currentDialogueDone()) {
             //player wants to rush the dialogue by mashing action button
             rushDrawText();
-        } else if(dialogueEvent->isDialogueEventDone()) {
+        } else if(currentDialogueEvent->isDialogueEventDone()) {
             closeDialogue();
         }
     }
 }
 
 void TextManager::initializeText() {
-    //TODO: manually inserting new line character, but that should happen when loading the first line from file
-    //TODO: this should all happen elsewhere when loading dialogue info from a file
-    std::vector<Dialogue> dialogues;
-    dialogues.push_back(Dialogue("Nothing to see here.\n", "Actually there is SOMETHING to see here"));
-    dialogues.push_back(Dialogue("This is the second dialogue piece object.\n", "I'm done talking to you now"));
-    dialogueEvent = std::make_unique<DialogueEvent>(dialogues);
+    std::string entityName = entityPlayerInteractedWith.getName();
 
+    currentDialogueEvent = nullptr;
+    for(int i = 0; i < entityDialogueEvents.size(); i++) {
+        if(entityDialogueEvents[i].getName() == entityName) {
+            currentDialogueEvent = std::make_unique<DialogueEvent>(entityDialogueEvents[i]);
+            break;
+        }
+    }
+
+    if(currentDialogueEvent == nullptr) {
+        currentDialogueEvent = std::make_unique<DialogueEvent>(defaultDialogueEvent);
+    }
+
+    currentDialogueEvent->startNextDialogue();
     this->stringBeingDrawn = "";
 }
 
 void TextManager::updateText(sf::Time deltaTime) {
-    if(!dialogueEvent->currentDialogueDone()) {
+    if(!currentDialogueEvent->currentDialogueDone()) {
         stringDrawTimer += deltaTime;
         if(stringDrawTimer.asMilliseconds() > 20) {
             drawMoreText();
@@ -127,7 +125,7 @@ void TextManager::updateText(sf::Time deltaTime) {
 }
 
 void TextManager::drawMoreText() {
-    std::string& dialoguePiece = dialogueEvent->getCurrentDialoguePiece();
+    std::string& dialoguePiece = currentDialogueEvent->getCurrentDialoguePiece();
 
     this->stringBeingDrawn += dialoguePiece[0];
     this->dialogueText.setString(stringBeingDrawn);
@@ -137,7 +135,7 @@ void TextManager::drawMoreText() {
 }
 
 void TextManager::rushDrawText() {
-    std::string& dialoguePiece = dialogueEvent->getCurrentDialoguePiece();
+    std::string& dialoguePiece = currentDialogueEvent->getCurrentDialoguePiece();
 
     this->stringBeingDrawn += dialoguePiece;
     this->dialogueText.setString(stringBeingDrawn);
@@ -148,5 +146,5 @@ void TextManager::rushDrawText() {
 
 void TextManager::startNextDialogue() {
     this->stringBeingDrawn = "";
-    dialogueEvent->startNextDialogue();
+    currentDialogueEvent->startNextDialogue();
 }

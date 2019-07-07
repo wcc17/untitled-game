@@ -15,13 +15,13 @@
 
 class TextManager {
 public:
-    void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font);
+    TextManager();
+    void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font, std::vector<DialogueEvent> entityDialogueEvents);
     void update(sf::RenderWindow* window, sf::View& view, sf::Time deltaTime);
     void draw(sf::RenderWindow* window);
     void drawForDefaultView(sf::RenderWindow* window);
 private:
     std::shared_ptr<EventBus> eventBus;
-    std::unique_ptr<DialogueEvent> dialogueEvent;
     sf::Sprite dialogueBoxSprite;
     sf::Text dialogueText;
     std::string stringBeingDrawn;
@@ -30,6 +30,10 @@ private:
     bool dialoguePositionSet = false;
     Collidable entityPlayerInteractedWith;
     static Logger logger;
+
+    std::unique_ptr<DialogueEvent> currentDialogueEvent;
+    std::vector<DialogueEvent> entityDialogueEvents;
+    DialogueEvent defaultDialogueEvent;
 
     void onControllerActionEvent(ControllerActionEvent* event);
     void onOpenDialogueEvent(OpenDialogueEvent* event);

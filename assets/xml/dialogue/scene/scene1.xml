@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<entity>
+    <dialogueEvent name="npc1">
+        <dialogue>
+            <dialoguePiece>Hello, have you ever been here before?</dialoguePiece>
+            <dialoguePiece>Probably not.. You look pretty lost.</dialoguePiece>
+        </dialogue>
+        <dialogue>
+            <dialoguePiece>.........</dialoguePiece>
+        </dialogue>
+        <dialogue>
+            <dialoguePiece>You don't really talk much do you?</dialoguePiece>
+        </dialogue>
+        <dialogue>
+            <dialoguePiece>Okay...</dialoguePiece>
+            <dialoguePiece>bye.</dialoguePiece>
+        </dialogue>
+    </dialogueEvent>
+
+    <dialogueEvent name="npc2">
+        <dialogue>
+            <dialoguePiece>That guy over there is kind of an idiot.</dialoguePiece>
+            <dialoguePiece>I wouldn't really listen to him.</dialoguePiece>
+        </dialogue>
+    </dialogueEvent>
+
+    <dialogueEvent name="sign_house4">
+        <dialogue>
+            <dialoguePiece>Not your house.</dialoguePiece>
+        </dialogue>
+    </dialogueEvent>
+</entity>

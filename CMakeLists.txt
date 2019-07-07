@@ -32,7 +32,10 @@ set(SOURCE_FILES src/main.cpp
         src/text/dialogue/DialogueEvent.cpp
         src/text/dialogue/Dialogue.cpp
         src/text/dialogue/DialoguePiece.cpp
-        src/entity/npc/EntityAutonomousMovement.cpp)
+        src/entity/npc/EntityAutonomousMovement.cpp
+        src/util/Logger.cpp
+        src/entity/character/EntityLogger.cpp
+        src/util/XmlManager.cpp)
 
 set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/asset/FontManager.h
@@ -61,7 +64,10 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/text/dialogue/DialogueEvent.h
         includes/text/dialogue/Dialogue.h
         includes/text/dialogue/DialoguePiece.h
-        includes/entity/npc/EntityAutonomousMovement.h)
+        includes/entity/npc/EntityAutonomousMovement.h
+        includes/util/Logger.h
+        includes/entity/character/EntityLogger.h
+        includes/util/XmlManager.h)
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/EntityCollisionEvent.h
@@ -79,12 +85,15 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/CloseDialogueEvent.h
         includes/events/event/PlayerPositionChangeEvent.h
         includes/events/event/ExitGameEvent.h
-        includes/events/event/NpcCollisionEvent.h src/util/Logger.cpp includes/util/Logger.h src/entity/character/EntityLogger.cpp includes/entity/character/EntityLogger.h)
+        includes/events/event/NpcCollisionEvent.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 
 find_library(TMX_LITE_LIB lib/libtmxlite.a)
 target_link_libraries(newnew ${TMX_LITE_LIB})
+
+find_library(TINY_XML2_LIB lib/libtinyxml2.7.0.1.dylib)
+target_link_libraries(newnew ${TINY_XML2_LIB})
 
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake_modules")
 find_package(SFML REQUIRED system window graphics network audio)
