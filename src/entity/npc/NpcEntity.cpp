@@ -1,7 +1,7 @@
 #include "../../../includes/entity/npc/NpcEntity.h"
 
 const float ENTITY_WIDTH = 16.f;
-const float ENTITY_HEIGHT = 24.f;
+const float ENTITY_HEIGHT = 16.f;
 const float ENTITY_MOVEMENT_SPEED = 65.f;
 const float ENTITY_FRAME_TIME = 0.16f; //TODO: not sure where I want to load this from yet
 

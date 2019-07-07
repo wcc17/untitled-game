@@ -1,7 +1,7 @@
 #include "../../../includes/entity/player/Player.h"
 
 const float PLAYER_WIDTH = 16.f;
-const float PLAYER_HEIGHT = 24.f;
+const float PLAYER_HEIGHT = 16.f;
 const float PLAYER_FRAME_TIME =  0.16f;
 const float MOVEMENT_SPEED = 80.f;
 const int VICINITY_BOUNDS_OFFSET = 4;

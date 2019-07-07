@@ -24,9 +24,9 @@
         </dialogue>
     </dialogueEvent>
 
-    <dialogueEvent name="sign_house4">
+    <dialogueEvent name="sign_1">
         <dialogue>
-            <dialoguePiece>Not your house.</dialoguePiece>
+            <dialoguePiece>This sign doesn't point to anything.</dialoguePiece>
         </dialogue>
     </dialogueEvent>
 </entity>
