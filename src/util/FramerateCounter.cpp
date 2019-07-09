@@ -4,7 +4,7 @@ void FramerateCounter::initialize(sf::Font* font) {
     frames = 0;
     fpsText.setString(std::to_string(0));
     fpsText.setFont(*font);
-    fpsText.setCharacterSize(24);
+    fpsText.setCharacterSize(36);
     fpsText.setPosition(fpsText.getGlobalBounds().width/2, fpsText.getGlobalBounds().height/2);
 }
 

@@ -408,6 +408,20 @@
   <object id="93" type="wall" x="416" y="272" width="16" height="8"/>
   <object id="94" type="wall" x="424" y="264" width="8" height="8"/>
   <object id="95" type="wall" x="432" y="256" width="8" height="104"/>
+  <object id="65" type="wall" x="536" y="400" width="16" height="16"/>
+  <object id="66" type="wall" x="552" y="400" width="16" height="16"/>
+  <object id="67" type="wall" x="440" y="456" width="16" height="16"/>
+  <object id="68" type="wall" x="440" y="488" width="16" height="16"/>
+  <object id="69" type="wall" x="440" y="520" width="16" height="16"/>
+  <object id="70" type="wall" x="440" y="552" width="16" height="16"/>
+  <object id="71" type="wall" x="488" y="456" width="16" height="16"/>
+  <object id="72" type="wall" x="488" y="488" width="16" height="16"/>
+  <object id="73" type="wall" x="488" y="520" width="16" height="16"/>
+  <object id="74" type="wall" x="488" y="552" width="16" height="16"/>
+  <object id="75" type="wall" x="536" y="584" width="16" height="16"/>
+  <object id="76" type="wall" x="672" y="584" width="16" height="16"/>
+  <object id="77" type="wall" x="336" y="584" width="16" height="16"/>
+  <object id="78" type="wall" x="200" y="584" width="16" height="16"/>
  </objectgroup>
  <layer id="13" name="walls" width="112" height="112">
   <data encoding="csv">
@@ -529,25 +543,19 @@
   <object id="1" name="player1" type="player" x="360" y="424" width="8" height="8"/>
  </objectgroup>
  <objectgroup id="3" name="npcs">
-  <object id="5" name="npc1" type="npc" x="528" y="424" width="8" height="8"/>
-  <object id="8" name="npc2" type="npc" x="368" y="504" width="8" height="8"/>
+  <object id="5" name="npc1" type="npc" x="528" y="424" width="8" height="8">
+   <properties>
+    <property name="assetName" value="npc1"/>
+   </properties>
+  </object>
+  <object id="8" name="npc2" type="npc" x="368" y="504" width="8" height="8">
+   <properties>
+    <property name="assetName" value="npc1"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="4" name="npc_move_boundaries">
   <object id="4" name="npc1" type="npc_move_boundary" x="488" y="392" width="80" height="72"/>
   <object id="9" name="npc2" type="npc_move_boundary" x="328" y="408" width="88" height="112"/>
-  <object id="65" type="wall" x="536" y="400" width="16" height="16"/>
-  <object id="66" type="wall" x="552" y="400" width="16" height="16"/>
-  <object id="67" type="wall" x="440" y="456" width="16" height="16"/>
-  <object id="68" type="wall" x="440" y="488" width="16" height="16"/>
-  <object id="69" type="wall" x="440" y="520" width="16" height="16"/>
-  <object id="70" type="wall" x="440" y="552" width="16" height="16"/>
-  <object id="71" type="wall" x="488" y="456" width="16" height="16"/>
-  <object id="72" type="wall" x="488" y="488" width="16" height="16"/>
-  <object id="73" type="wall" x="488" y="520" width="16" height="16"/>
-  <object id="74" type="wall" x="488" y="552" width="16" height="16"/>
-  <object id="75" type="wall" x="536" y="584" width="16" height="16"/>
-  <object id="76" type="wall" x="672" y="584" width="16" height="16"/>
-  <object id="77" type="wall" x="336" y="584" width="16" height="16"/>
-  <object id="78" type="wall" x="200" y="584" width="16" height="16"/>
  </objectgroup>
 </map>

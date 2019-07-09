@@ -6,28 +6,27 @@ const float PLAYER_FRAME_TIME =  0.16f;
 const float MOVEMENT_SPEED = 80.f;
 const int VICINITY_BOUNDS_OFFSET = 4;
 
-void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, const Collidable& collidable) {
+void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture) {
     sf::Sprite::setTexture(*texture);
-
-    entityMovement.initialize(collidable.getName(), MOVEMENT_SPEED);
-    currentDirection = MoveDirection::NONE;
-
+    this->eventBus = eventBus;
     this->state = STATE_STANDING;
-    this->entityCollidable.initialize(collidable);
-    this->entityCollidable.setVicinityBoundsOffset(VICINITY_BOUNDS_OFFSET);
-    sf::Sprite::setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
+    this->currentDirection = MoveDirection::NONE;
 
     entityAnimation.setFrameTime(sf::seconds(PLAYER_FRAME_TIME));
     initializeAnimations();
-
-    this->eventBus = eventBus;
 
     eventBus->subscribe(this, &Player::onControllerMoveEvent);
     eventBus->subscribe(this, &Player::onControllerActionEvent);
     eventBus->subscribe(this, &Player::onVicinityCollisionEvent);
     eventBus->subscribe(this, &Player::onCloseDialogueEvent);
     eventBus->subscribe(this, &Player::onCollisionEvent);
+}
 
+void Player::initializeForScene(const Collidable& collidable) {
+    entityMovement.initialize(collidable.getName(), MOVEMENT_SPEED);
+    entityCollidable.initialize(collidable);
+    entityCollidable.setVicinityBoundsOffset(VICINITY_BOUNDS_OFFSET);
+    sf::Sprite::setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
     adjustPlayerAndViewPositions();
 }
 

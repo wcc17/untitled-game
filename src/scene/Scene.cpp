@@ -2,15 +2,16 @@
 
 Logger Scene::logger("Scene");
 
-void Scene::initialize(std::string tileMapPath) {
-    this->tileMapPath = tileMapPath;
+void Scene::initialize(std::string sceneName) {
+    this->sceneName = sceneName;
     this->loadTileMap();
 }
 
 void Scene::loadTileMap() {
     tmx::Map map;
 
-    if(!map.load(tileMapPath)) {
+    std::string sceneMapPath = AssetPath::getSceneMapPath(sceneName);
+    if(!map.load(sceneMapPath)) {
         //TODO: exit the application after printing the error that the file couldn't be loaded
     }
 

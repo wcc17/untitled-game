@@ -14,7 +14,3 @@ sf::Texture* TextureManager::getTexture(std::string filename) {
 void TextureManager::releaseTexture(std::string filename) {
     releaseResource(filename, textureMap);
 }
-
-void TextureManager::releaseTextures() {
-    releaseTexture(AssetPath::PLAYER_TEXTURE);
-}

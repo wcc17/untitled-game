@@ -11,10 +11,11 @@
 #include "TileMap.h"
 #include "ObjectMap.h"
 #include "../util/Logger.h"
+#include "../asset/AssetPath.h"
 
 class Scene : public sf::Drawable, public sf::Transformable, public ObjectMap, public TileMap {
 public:
-    void initialize(std::string tileMapPath);
+    void initialize(std::string sceneName);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     void release();
     sf::Vector2u getMapSizeInPixels();
@@ -22,8 +23,8 @@ public:
     sf::Vector2u getMapTileSize();
 
 private:
+    std::string sceneName;
     sf::Texture texture;
-    std::string tileMapPath;
     sf::Vector2u mapSizeInPixels;
     sf::Vector2u mapSizeInTiles;
     sf::Vector2u tileSize;

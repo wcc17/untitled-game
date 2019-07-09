@@ -4,16 +4,15 @@ Logger TextManager::logger("TextManager");
 
 TextManager::TextManager() : defaultDialogueEvent("default") { }
 
-void TextManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font, std::vector<DialogueEvent> entityDialogueEvents) {
+void TextManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font) {
     this->eventBus = eventBus;
-    this->entityDialogueEvents = entityDialogueEvents;
 
     this->dialogueBoxSprite.setTexture(*texture);
     this->dialogueBoxSprite.scale(0.33f, 0.33f); //TODO: this shouldn't be done this way. Dialog box should just be drawn at the right size for the view
     this->dialogueText.setFillColor(sf::Color::Black);
-    this->dialogueText.setLineSpacing(1.1f);
+    this->dialogueText.setLineSpacing(1.2f);
     this->dialogueText.setFont(*font);
-    this->dialogueText.setCharacterSize(60);
+    this->dialogueText.setCharacterSize(64);
 
     eventBus->subscribe(this, &TextManager::onControllerActionEvent);
     eventBus->subscribe(this, &TextManager::onOpenDialogueEvent);
@@ -61,7 +60,7 @@ void TextManager::updateDialogueBoxPosition(sf::View& view) {
 void TextManager::updateDialogueTextPosition(sf::RenderWindow* window, sf::View& view) {
     sf::Vector2i coordsToPixel = window->mapCoordsToPixel(dialogueBoxSprite.getPosition(), view);
     coordsToPixel.x = coordsToPixel.x + (dialogueBoxSprite.getTextureRect().width / 14); //NOTE: using textureRect with because text is drawn to default view instead of camera view
-    coordsToPixel.y = coordsToPixel.y + (dialogueBoxSprite.getTextureRect().height / 3);
+    coordsToPixel.y = coordsToPixel.y + (dialogueBoxSprite.getTextureRect().height / 3); //TODO: why the magic numbers
     dialogueText.setPosition(coordsToPixel.x, coordsToPixel.y);
 }
 
@@ -147,4 +146,8 @@ void TextManager::rushDrawText() {
 void TextManager::startNextDialogue() {
     this->stringBeingDrawn = "";
     currentDialogueEvent->startNextDialogue();
+}
+
+void TextManager::setEntityDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents) {
+    this->entityDialogueEvents = entityDialogueEvents;
 }

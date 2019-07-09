@@ -20,15 +20,18 @@ public:
     void drawForDefaultView(sf::RenderWindow* window);
     void release();
 private:
+    void loadScene(std::string sceneName);
+
+    std::unique_ptr<Scene> scene;
+    std::shared_ptr<EventBus> eventBus;
+
     TextureManager textureManager;
     CollisionManager collisionManager;
     NpcManager npcManager;
     TextManager textManager;
     ViewManager viewManager;
     XmlManager xmlManager;
-
     Player player;
-    Scene scene;
 };
 
 

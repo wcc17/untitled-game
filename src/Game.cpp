@@ -13,10 +13,10 @@ Game::Game() {
 
 void Game::initialize() {
     eventBus = std::make_shared<EventBus>();
-    fontManager.loadFont(AssetPath::OPENSANS_REGULAR);
-    framerateCounter.initialize(fontManager.getFont(AssetPath::OPENSANS_REGULAR));
+    fontManager.loadFont(AssetPath::MUNRO_REGULAR);
+    framerateCounter.initialize(fontManager.getFont(AssetPath::MUNRO_REGULAR));
     keyboardController.initialize(eventBus);
-    sceneManager.initialize(eventBus, fontManager.getFont(AssetPath::OPENSANS_REGULAR));
+    sceneManager.initialize(eventBus, fontManager.getFont(AssetPath::MUNRO_REGULAR));
 
     eventBus->subscribe(this, &Game::onExitGameEvent);
 }

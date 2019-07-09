@@ -18,7 +18,8 @@
 class Player : public sf::Sprite {
 
 public:
-    void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, const Collidable& collidable);
+    void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture);
+    void initializeForScene(const Collidable& collidable);
     void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     EntityCollidable getEntityCollidable();
 private:

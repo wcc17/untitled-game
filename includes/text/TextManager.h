@@ -16,10 +16,11 @@
 class TextManager {
 public:
     TextManager();
-    void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font, std::vector<DialogueEvent> entityDialogueEvents);
+    void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font);
     void update(sf::RenderWindow* window, sf::View& view, sf::Time deltaTime);
     void draw(sf::RenderWindow* window);
     void drawForDefaultView(sf::RenderWindow* window);
+    void setEntityDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents);
 private:
     std::shared_ptr<EventBus> eventBus;
     sf::Sprite dialogueBoxSprite;
