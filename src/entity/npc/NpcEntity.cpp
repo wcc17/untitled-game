@@ -5,9 +5,10 @@ const float ENTITY_HEIGHT = 16.f;
 const float ENTITY_MOVEMENT_SPEED = 65.f;
 const float ENTITY_FRAME_TIME = 0.16f; //TODO: not sure where I want to load this from yet
 
-void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries) {
+void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries, std::string assetName) {
     sf::Sprite::setTexture(*texture);
 
+    this->assetName = assetName;
     this->state = STATE_STANDING;
     this->entityCollidable.initialize(collidable);
     this->setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
@@ -86,6 +87,10 @@ void NpcEntity::setEntityPosition(const sf::Vector2f& position) {
 
 EntityCollidable NpcEntity::getEntityCollidable() {
     return this->entityCollidable;
+}
+
+std::string NpcEntity::getAssetName() {
+    return this->assetName;
 }
 
 //TODO: can this be moved to the header file?

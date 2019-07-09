@@ -11,12 +11,13 @@
 class NpcEntity : public sf::Sprite {
 
 public:
-    void initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries);
+    void initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries, std::string assetName);
     void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void onPlayerInteractionStart(MoveDirection playerFacingDirection);
     void onPlayerInteractionFinish();
     void onCollisionEvent(const Collidable& collidedWith);
     EntityCollidable getEntityCollidable();
+    std::string getAssetName();
 private:
     EntityState state;
     EntityState stateBeforeInteraction;
@@ -24,6 +25,7 @@ private:
     EntityCollidable entityCollidable;
     EntityAutonomousMovement entityAutonomousMovement;
     EntityLogger entityLogger;
+    std::string assetName;
 
     void initializeAnimations();
     void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);

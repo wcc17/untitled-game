@@ -21,8 +21,6 @@ public:
     void release();
 private:
     void loadScene(std::string sceneName);
-    void loadNpcTexturesForScene(std::map<std::string, std::string> npcNameToNpcAssetNameMap);
-    void releaseNpcTexturesForScene(std::map<std::string, std::string> npcNameToNpcAssetNameMap);
 
     std::unique_ptr<Scene> scene;
     std::shared_ptr<EventBus> eventBus;

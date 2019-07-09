@@ -110,8 +110,12 @@ void Player::onCloseDialogueEvent(CloseDialogueEvent* event) {
 }
 
 void Player::onCollisionEvent(PlayerCollisionEvent* event) {
-    setPosition(entityCollidable.getFixedPositionAfterCollision(event->collidedWith, currentDirection));
-    adjustPlayerAndViewPositions();
+    if(event->collidedWith.getType() != ObjectType::DOOR) {
+        setPosition(entityCollidable.getFixedPositionAfterCollision(event->collidedWith, currentDirection));
+        adjustPlayerAndViewPositions();
+    } else {
+//        eventBus->
+    }
 }
 
 void Player::resetAfterFrame() {

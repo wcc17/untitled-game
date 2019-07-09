@@ -6,12 +6,12 @@ void NpcManager::initialize(std::shared_ptr<EventBus> eventBus,
                             std::map<std::string, std::string> npcNameToNpcAssetNameMap,
                             TextureManager& textureManager) {
     this->eventBus = eventBus;
-    this->npcMoveBoundaries = npcMoveBoundaries;
 
     for(Collidable collidable : collidables) {
         std::string assetName = npcNameToNpcAssetNameMap.at(collidable.getName());
-        sf::Texture* texture = textureManager.getTexture(AssetPath::getNpcAssetPath(assetName));
-        initializeNpc(collidable, texture);
+        sf::IntRect moveBoundaries = npcMoveBoundaries.at(collidable.getName());
+        sf::Texture* texture = loadAndRetrieveNpcTexture(assetName, textureManager);
+        initializeNpc(collidable, moveBoundaries, texture, assetName);
     }
 
     eventBus->subscribe(this, &NpcManager::onOpenDialogueEvent);
@@ -63,11 +63,10 @@ void NpcManager::onNpcCollisionEvent(NpcCollisionEvent* event) {
     }
 }
 
-void NpcManager::initializeNpc(Collidable& collidable, sf::Texture* texture) {
+void NpcManager::initializeNpc(Collidable& collidable, sf::IntRect moveBoundaries, sf::Texture* texture, std::string assetName) {
     std::shared_ptr<NpcEntity> npcEntity = std::make_shared<NpcEntity>();
-
     try {
-        npcEntity->initialize(texture, collidable, npcMoveBoundaries.at(collidable.getName()));
+        npcEntity->initialize(texture, collidable, moveBoundaries, assetName);
     } catch (const std::out_of_range& e) {
         std::string exitMessage = "Entity " + collidable.getName() + " is not assigned a move boundary. Exiting";
         eventBus->publish(new ExitGameEvent(exitMessage));
@@ -76,11 +75,26 @@ void NpcManager::initializeNpc(Collidable& collidable, sf::Texture* texture) {
     npcs.push_back(npcEntity);
 }
 
+sf::Texture* NpcManager::loadAndRetrieveNpcTexture(std::string assetName, TextureManager& textureManager) {
+    std::string assetFilePath = AssetPath::getNpcAssetPath(assetName);
+    textureManager.loadTexture(assetFilePath);
+    return textureManager.getTexture(assetFilePath);
+}
+
+void NpcManager::releaseNpcTextures(std::string assetName, TextureManager& textureManager) {
+    textureManager.releaseTexture(AssetPath::getNpcAssetPath(assetName));
+}
+
 std::vector<std::shared_ptr<NpcEntity>>& NpcManager::getNpcEntities() {
     return this->npcs;
 }
 
-void NpcManager::release() {
+//TODO: this isn't being utilized yet
+void NpcManager::release(TextureManager& textureManager) {
     //TODO: unsubscribe from event bus!
+
+    for(std::shared_ptr<NpcEntity> npc : npcs) {
+        releaseNpcTextures(npc->getAssetName(), textureManager);
+    }
     npcs.clear();
 }

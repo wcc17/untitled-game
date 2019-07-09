@@ -12,24 +12,26 @@
 #include "ObjectMap.h"
 #include "../util/Logger.h"
 #include "../asset/AssetPath.h"
+#include "../asset/TextureManager.h"
 
 class Scene : public sf::Drawable, public sf::Transformable, public ObjectMap, public TileMap {
 public:
-    void initialize(std::string sceneName);
+    void initialize(std::string sceneName, TextureManager& textureManager);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-    void release();
+    void release(TextureManager& textureManager);
     sf::Vector2u getMapSizeInPixels();
     sf::Vector2u getMapSizeInTiles();
     sf::Vector2u getMapTileSize();
 
 private:
     std::string sceneName;
+    std::string tilesetImagePath;
     sf::Texture texture;
     sf::Vector2u mapSizeInPixels;
     sf::Vector2u mapSizeInTiles;
     sf::Vector2u tileSize;
 
-    void loadTileMap();
+    void loadTileMap(TextureManager& textureManager);
     static Logger logger;
 };
 

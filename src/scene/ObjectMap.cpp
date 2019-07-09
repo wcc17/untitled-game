@@ -35,10 +35,7 @@ void ObjectMap::loadRectangleObjects(const tmx::Object& object) {
     ObjectType type = determineObjectType(object.getType());
     Collidable collidable = Collidable(objectName, type, position, size);
     if(type == ObjectType::NPC) {
-        //TODO: should I refactor this and initialize the NpcEntity here? I could even initialize npcMoveBoundaries in NpcEntity after all objects are parsed
-        std::string assetName = getObjectPropertyValue("assetName", object.getProperties());
-        npcNameToNpcAssetNameMap.insert(std::make_pair(collidable.getName(), assetName));
-
+        npcNameToNpcAssetNameMap.insert(std::make_pair(collidable.getName(), getObjectPropertyValue("assetName", object.getProperties())));
         npcCollidables.push_back(collidable);
     } else if(type == ObjectType::PLAYER) {
         playerCollidable = collidable;

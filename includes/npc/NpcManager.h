@@ -22,15 +22,16 @@ public:
     void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void draw(sf::RenderWindow* window);
     std::vector<std::shared_ptr<NpcEntity>>& getNpcEntities();
-    void release();
+    void release(TextureManager& textureManager);
 private:
     std::shared_ptr<EventBus> eventBus;
     std::vector<std::shared_ptr<NpcEntity>> npcs;
-    std::map<std::string, sf::IntRect> npcMoveBoundaries;
-    void initializeNpc(Collidable& collidable, sf::Texture* texture);
+    void initializeNpc(Collidable& collidable, sf::IntRect moveBoundaries, sf::Texture* texture, std::string assetName);
     void onOpenDialogueEvent(OpenDialogueEvent* event);
     void onCloseDialogueEvent(CloseDialogueEvent* event);
     void onNpcCollisionEvent(NpcCollisionEvent* event);
+    sf::Texture* loadAndRetrieveNpcTexture(std::string assetName, TextureManager& textureManager);
+    void releaseNpcTextures(std::string assetName, TextureManager& textureManager);
 };
 
 

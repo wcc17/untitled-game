@@ -2,12 +2,12 @@
 
 Logger Scene::logger("Scene");
 
-void Scene::initialize(std::string sceneName) {
+void Scene::initialize(std::string sceneName, TextureManager& textureManager) {
     this->sceneName = sceneName;
-    this->loadTileMap();
+    this->loadTileMap(textureManager);
 }
 
-void Scene::loadTileMap() {
+void Scene::loadTileMap(TextureManager& textureManager) {
     tmx::Map map;
 
     std::string sceneMapPath = AssetPath::getSceneMapPath(sceneName);
@@ -17,7 +17,10 @@ void Scene::loadTileMap() {
 
     //TODO: this assumes that each scene is only going to have a single tileset
     tmx::Tileset tileset = map.getTilesets()[0];
-    texture.loadFromFile(tileset.getImagePath()); //TODO: this should be loaded in TextureManager so that it can be released later
+
+    this->tilesetImagePath = tileset.getImagePath();
+    textureManager.loadTexture(tilesetImagePath);
+    texture = *textureManager.getTexture(tilesetImagePath);
 
     //tile count and tile size
     mapSizeInTiles = sf::Vector2u(map.getTileCount().x, map.getTileCount().y);
@@ -60,7 +63,8 @@ sf::Vector2u Scene::getMapTileSize() {
     return this->tileSize;
 }
 
-void Scene::release() {
+void Scene::release(TextureManager& textureManager) {
+    textureManager.releaseTexture(tilesetImagePath);
     ObjectMap::release();
 //    TileMap::release(); not actually needed right now
 }
