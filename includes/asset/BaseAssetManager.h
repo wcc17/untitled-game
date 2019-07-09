@@ -8,6 +8,7 @@ class BaseAssetManager {
 
 public:
     template <class T> void loadResource(std::string filename, std::map<std::string, std::unique_ptr<T>>& resourceMap);
+protected:
     template <class T> void releaseResource(std::string filename, std::map<std::string, std::unique_ptr<T>>& resourceMap);
 private:
     template <class T> bool mapContainsValueForKey(std::string key, std::map<std::string, std::unique_ptr<T>>& resourceMap);

@@ -24,6 +24,7 @@ public:
     std::vector<std::shared_ptr<Collidable>>& getMapCollidables();
     std::vector<Collidable> getNpcCollidables();
     std::map<std::string, sf::IntRect> getNpcMoveBoundariesMap();
+    std::map<std::string, std::string> getNpcNameToNpcAssetNameMap();
     Collidable getPlayerCollidable();
 
 protected:
@@ -32,9 +33,11 @@ protected:
 private:
     void loadRectangleObjects(const tmx::Object& object);
     ObjectType determineObjectType(std::string typeName);
+    std::string getObjectPropertyValue(std::string propertyName, const std::vector<tmx::Property> objectProperties);
     std::map<std::string, sf::IntRect> npcMoveBoundaries;
-    std::vector<std::shared_ptr<Collidable>> mapCollidables;
     std::vector<Collidable> npcCollidables;
+    std::map<std::string, std::string> npcNameToNpcAssetNameMap;
+    std::vector<std::shared_ptr<Collidable>> mapCollidables;
     Collidable playerCollidable;
 
     static Logger logger;

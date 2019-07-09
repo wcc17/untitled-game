@@ -35,6 +35,10 @@ void ObjectMap::loadRectangleObjects(const tmx::Object& object) {
     ObjectType type = determineObjectType(object.getType());
     Collidable collidable = Collidable(objectName, type, position, size);
     if(type == ObjectType::NPC) {
+        //TODO: should I refactor this and initialize the NpcEntity here? I could even initialize npcMoveBoundaries in NpcEntity after all objects are parsed
+        std::string assetName = getObjectPropertyValue("assetName", object.getProperties());
+        npcNameToNpcAssetNameMap.insert(std::make_pair(collidable.getName(), assetName));
+
         npcCollidables.push_back(collidable);
     } else if(type == ObjectType::PLAYER) {
         playerCollidable = collidable;
@@ -66,6 +70,14 @@ ObjectType ObjectMap::determineObjectType(std::string typeName) {
     return ObjectType::NO_TYPE;
 }
 
+std::string ObjectMap::getObjectPropertyValue(std::string propertyName, const std::vector<tmx::Property> objectProperties) {
+    for(const tmx::Property property : objectProperties) {
+        if(property.getType() == tmx::Property::Type::String && property.getName() == propertyName) {
+            return property.getStringValue();
+        }
+    }
+}
+
 std::vector<std::shared_ptr<Collidable>>& ObjectMap::getMapCollidables() {
     return this->mapCollidables;
 }
@@ -80,6 +92,10 @@ std::map<std::string, sf::IntRect> ObjectMap::getNpcMoveBoundariesMap() {
 
 Collidable ObjectMap::getPlayerCollidable() {
     return this->playerCollidable;
+}
+
+std::map<std::string, std::string> ObjectMap::getNpcNameToNpcAssetNameMap() {
+    return this->npcNameToNpcAssetNameMap;
 }
 
 void ObjectMap::release() {

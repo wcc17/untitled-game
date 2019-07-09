@@ -4,19 +4,21 @@
 Logger XmlManager::logger("XmlManager");
 
 std::vector<DialogueEvent> XmlManager::loadEntityDialogueForScene(std::string sceneName) {
-    std::string filePath = "assets/xml/dialogue/scene/" + sceneName + ".xml";
+    std::string filePath = "assets/xml/dialogue/scene/" + sceneName + ".xml"; //TODO: needs a method in AssetPath
 
     tinyxml2::XMLDocument doc;
+    std::vector<DialogueEvent> dialogueEvents;
     doc.LoadFile(filePath.c_str());
 
-    std::vector<DialogueEvent> dialogueEvents;
-    tinyxml2::XMLElement* entityElement = doc.FirstChildElement("entity");
-    tinyxml2::XMLElement* entityDialogueEventElement = entityElement->FirstChildElement();
-    while(entityDialogueEventElement) {
-        DialogueEvent event = loadEntityDialogueEvent(entityDialogueEventElement);
-        dialogueEvents.push_back(event);
+    if(!doc.Error()) {
+        tinyxml2::XMLElement* entityElement = doc.FirstChildElement("entity");
+        tinyxml2::XMLElement* entityDialogueEventElement = entityElement->FirstChildElement();
+        while(entityDialogueEventElement) {
+            DialogueEvent event = loadEntityDialogueEvent(entityDialogueEventElement);
+            dialogueEvents.push_back(event);
 
-        entityDialogueEventElement = entityDialogueEventElement->NextSiblingElement();
+            entityDialogueEventElement = entityDialogueEventElement->NextSiblingElement();
+        }
     }
 
     return dialogueEvents;

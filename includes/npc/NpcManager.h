@@ -9,11 +9,16 @@
 #include "../../includes/events/event/OpenDialogueEvent.h"
 #include "../../includes/events/event/ExitGameEvent.h"
 #include "../events/event/NpcCollisionEvent.h"
+#include "../asset/TextureManager.h"
 
 class NpcManager {
 
 public:
-    void initialize(std::shared_ptr<EventBus> eventBus, std::vector<Collidable> collidables, sf::Texture* texture, std::map<std::string, sf::IntRect> npcMoveBoundaries);
+    void initialize(std::shared_ptr<EventBus> eventBus,
+                    std::vector<Collidable> collidables,
+                    std::map<std::string, sf::IntRect> npcMoveBoundaries,
+                    std::map<std::string, std::string> npcNameToNpcAssetNameMap,
+                    TextureManager& textureManager);
     void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void draw(sf::RenderWindow* window);
     std::vector<std::shared_ptr<NpcEntity>>& getNpcEntities();

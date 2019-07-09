@@ -2,12 +2,15 @@
 
 void NpcManager::initialize(std::shared_ptr<EventBus> eventBus,
                             std::vector<Collidable> collidables,
-                            sf::Texture* texture, //TODO: the texture will not be passed to NpcManager unless its in a vector of texture references for the different NPCs (theres only 1 for now)
-                            std::map<std::string, sf::IntRect> npcMoveBoundaries) {
+                            std::map<std::string, sf::IntRect> npcMoveBoundaries,
+                            std::map<std::string, std::string> npcNameToNpcAssetNameMap,
+                            TextureManager& textureManager) {
     this->eventBus = eventBus;
     this->npcMoveBoundaries = npcMoveBoundaries;
 
     for(Collidable collidable : collidables) {
+        std::string assetName = npcNameToNpcAssetNameMap.at(collidable.getName());
+        sf::Texture* texture = textureManager.getTexture(AssetPath::getNpcAssetPath(assetName));
         initializeNpc(collidable, texture);
     }
 
@@ -64,7 +67,7 @@ void NpcManager::initializeNpc(Collidable& collidable, sf::Texture* texture) {
     std::shared_ptr<NpcEntity> npcEntity = std::make_shared<NpcEntity>();
 
     try {
-        npcEntity->initialize(texture, collidable, npcMoveBoundaries.at(collidable.getName())); //TODO: obviously need a better way to assign textures to npcs
+        npcEntity->initialize(texture, collidable, npcMoveBoundaries.at(collidable.getName()));
     } catch (const std::out_of_range& e) {
         std::string exitMessage = "Entity " + collidable.getName() + " is not assigned a move boundary. Exiting";
         eventBus->publish(new ExitGameEvent(exitMessage));

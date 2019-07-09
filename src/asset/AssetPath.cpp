@@ -8,11 +8,12 @@ const std::string AssetPath::MUNRO_REGULAR = "assets/fonts/munro.ttf";
 //const std::string AssetPath::PLAYER_TEXTURE = "assets/gfx/character_cropped.png";
 const std::string AssetPath::PLAYER_TEXTURE = "assets/gfx/entity/player.png";
 
-//const std::string AssetPath::NPC_TEXTURE = "assets/gfx/npc_cropped.png";
-const std::string AssetPath::NPC_TEXTURE = "assets/gfx/entity/npc1.png";
-
 const std::string AssetPath::DIALOGUE_BOX_TEXTURE = "assets/gfx/dialogue_box.png";
 
 std::string AssetPath::getSceneMapPath(std::string sceneName) {
     return "assets/gfx/tileset/" + sceneName + "_map.tmx";
+}
+
+std::string AssetPath::getNpcAssetPath(std::string npcName) {
+    return "assets/gfx/entity/" + npcName + ".png";
 }
