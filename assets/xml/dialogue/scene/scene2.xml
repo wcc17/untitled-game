@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<entity>
+    <dialogueEvent name="npc1">
+        <dialogue>
+            <dialoguePiece>Oh look you made it to scene2.</dialoguePiece>
+            <dialoguePiece>There's literally nothing to do here.</dialoguePiece>
+        </dialogue>
+    </dialogueEvent>
+
+    <dialogueEvent name="npc2">
+        <dialogue>
+            <dialoguePiece>Go back where you came from!</dialoguePiece>
+            <dialoguePiece>....</dialoguePiece>
+        </dialogue>
+        <dialogue>
+            <dialoguePiece>....</dialoguePiece>
+            <dialoguePiece>....</dialoguePiece>
+        </dialogue>
+        <dialogue>
+            <dialoguePiece>Why wouldn't I be serious!?</dialoguePiece>
+        </dialogue>
+    </dialogueEvent>
+
+    <dialogueEvent name="sign_1">
+        <dialogue>
+            <dialoguePiece>This sign doesn't point to anything.</dialoguePiece>
+        </dialogue>
+    </dialogueEvent>
+</entity>

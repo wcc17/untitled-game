@@ -10,6 +10,7 @@
 #include "../../events/event/OpenDialogueEvent.h"
 #include "../../events/event/PlayerCollisionEvent.h"
 #include "../../events/event/PlayerPositionChangeEvent.h"
+#include "../../events/event/ChangeSceneEvent.h"
 #include "../character/EntityAnimation.h"
 #include "../character/EntityCollidable.h"
 #include "../character/EntityState.h"

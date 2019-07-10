@@ -12,30 +12,48 @@ void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font
     textureManager.loadTexture(AssetPath::DIALOGUE_BOX_TEXTURE);
     textManager.initialize(eventBus, textureManager.getTexture(AssetPath::DIALOGUE_BOX_TEXTURE), font);
 
+    eventBus->subscribe(this, &SceneManager::onChangeSceneEvent);
+
     loadScene("scene1");
 }
 
-void SceneManager::loadScene(std::string sceneName) {
-    scene = std::make_unique<Scene>(); //TODO: make sure scene is reset before this happens
-    scene->initialize(sceneName, textureManager); //TODO: make sure scene is reset before this happens
-
-    player.initializeForScene(scene->getPlayerCollidable());
-
-    npcManager.initialize(eventBus, scene->getNpcCollidables(), scene->getNpcMoveBoundariesMap(),
-            scene->getNpcNameToNpcAssetNameMap(), textureManager); //TODO: make sure that this can be re-initialized without throwing the old npcManager away. probably needs a release function or something. TODO: any good alternatives to passing textureManager?
-
-    std::vector<DialogueEvent> entityDialogueEvents = xmlManager.loadEntityDialogueForScene(sceneName);
-    textManager.setEntityDialogueEvents(entityDialogueEvents);
+void SceneManager::update(sf::Time elapsedTime, sf::RenderWindow* window) {
+    switch(state) {
+        case SceneState::STATE_SCENE:
+            updateSceneState(elapsedTime, window);
+            break;
+        case SceneState::STATE_CHANGING_SCENE:
+            updateChangeSceneState();
+            break;
+    }
 }
 
-void SceneManager::update(sf::Time elapsedTime, sf::RenderWindow* window) {
+void SceneManager::updateSceneState(sf::Time elapsedTime, sf::RenderWindow* window) {
     player.update(elapsedTime, scene->getMapTileSize());
     npcManager.update(elapsedTime, scene->getMapTileSize());
     collisionManager.handleCollisions(player, npcManager.getNpcEntities(), scene->getMapCollidables());
     textManager.update(window, viewManager.getView(), elapsedTime);
 }
 
+void SceneManager::updateChangeSceneState() {
+    releaseScene();
+    loadScene(nextSceneName);
+    nextSceneName = "";
+    state = SceneState::STATE_SCENE;
+}
+
 void SceneManager::draw(sf::RenderWindow* window) {
+    switch(state) {
+        case SceneState::STATE_SCENE:
+            drawSceneState(window);
+            break;
+        case SceneState::STATE_CHANGING_SCENE:
+            drawChangeSceneState(window);
+            break;
+    }
+}
+
+void SceneManager::drawSceneState(sf::RenderWindow* window) {
     window->setView(viewManager.getView());
     window->draw(*scene);
     npcManager.draw(window);
@@ -43,9 +61,30 @@ void SceneManager::draw(sf::RenderWindow* window) {
     textManager.draw(window);
 }
 
+void SceneManager::drawChangeSceneState(sf::RenderWindow* window) {
+}
+
 void SceneManager::drawForDefaultView(sf::RenderWindow* window) {
     window->setView(window->getDefaultView());
     textManager.drawForDefaultView(window);
+}
+
+void SceneManager::loadScene(std::string sceneName) {
+    scene = std::make_unique<Scene>();
+    scene->initialize(sceneName, textureManager);
+
+    player.initializeForScene(scene->getPlayerCollidable());
+
+    npcManager.initialize(eventBus, scene->getNpcCollidables(), scene->getNpcMoveBoundariesMap(),
+                          scene->getNpcNameToNpcAssetNameMap(), textureManager);
+
+    std::vector<DialogueEvent> entityDialogueEvents = xmlManager.loadEntityDialogueForScene(sceneName);
+    textManager.setEntityDialogueEvents(entityDialogueEvents);
+}
+
+void SceneManager::onChangeSceneEvent(ChangeSceneEvent* event) {
+    this->nextSceneName = event->door.getName();
+    this->state = SceneState::STATE_CHANGING_SCENE;
 }
 
 void SceneManager::release() {
@@ -53,9 +92,12 @@ void SceneManager::release() {
 
     textureManager.releaseTexture(AssetPath::PLAYER_TEXTURE);
     textureManager.releaseTexture(AssetPath::DIALOGUE_BOX_TEXTURE);
+    releaseScene();
+}
 
-    scene->release(textureManager); //TODO: will eventually be called somewhere else when the scene changes
-    scene.reset();  //TODO: will eventually be called somewhere else when the scene changes
-
+void SceneManager::releaseScene() {
+    scene->release(textureManager);
+    scene.reset();
+    scene = nullptr;
     npcManager.release(textureManager);
 }

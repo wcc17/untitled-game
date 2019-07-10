@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="112" height="112" tilewidth="8" tileheight="8" infinite="0" nextlayerid="7" nextobjectid="14">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="112" height="112" tilewidth="8" tileheight="8" infinite="0" nextlayerid="8" nextobjectid="16">
  <tileset firstgid="1" source="scene1_tileset.tsx"/>
  <layer id="3" name="background" width="112" height="112">
   <data encoding="csv">
@@ -239,6 +239,10 @@
   <object id="3" type="wall" x="0" y="168" width="184" height="128"/>
   <object id="4" type="wall" x="0" y="328" width="184" height="400"/>
   <object id="7" type="wall" x="712" y="168" width="184" height="560"/>
+  <object id="14" type="wall" x="0" y="296" width="176" height="32"/>
+ </objectgroup>
+ <objectgroup id="7" name="doors">
+  <object id="15" name="scene1" type="door" x="176" y="296" width="8" height="32"/>
  </objectgroup>
  <objectgroup id="6" name="players">
   <object id="13" name="player1" type="player" x="184" y="304" width="8" height="8"/>

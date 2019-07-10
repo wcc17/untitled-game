@@ -1,0 +1,9 @@
+#ifndef NEWNEW_SCENESTATE_H
+#define NEWNEW_SCENESTATE_H
+
+enum SceneState {
+    STATE_SCENE,
+    STATE_CHANGING_SCENE,
+};
+
+#endif //NEWNEW_SCENESTATE_H

@@ -352,7 +352,6 @@
  <objectgroup id="19" name="doors">
   <object id="96" name="scene2" type="door" x="712" y="600" width="16" height="32"/>
   <object id="98" name="scene3" type="door" x="168" y="600" width="16" height="32"/>
-  <object id="100" x="1112" y="304" height="8"/>
  </objectgroup>
  <objectgroup id="16" name="signs">
   <object id="15" name="sign_1" type="sign" x="432" y="400" width="16" height="16"/>
@@ -545,7 +544,7 @@
 </data>
  </layer>
  <objectgroup id="2" name="players">
-  <object id="1" name="player1" type="player" x="360" y="424" width="8" height="8"/>
+  <object id="1" name="player1" type="player" x="688" y="616" width="8" height="8"/>
  </objectgroup>
  <objectgroup id="3" name="npcs">
   <object id="5" name="npc1" type="npc" x="528" y="424" width="8" height="8">

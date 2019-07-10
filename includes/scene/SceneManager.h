@@ -11,6 +11,7 @@
 #include "../text/TextManager.h"
 #include "ViewManager.h"
 #include "../util/XmlManager.h"
+#include "SceneState.h"
 
 class SceneManager {
 public:
@@ -21,9 +22,18 @@ public:
     void release();
 private:
     void loadScene(std::string sceneName);
+    void releaseScene();
+    void onChangeSceneEvent(ChangeSceneEvent* event);
+    void updateSceneState(sf::Time elapsedTime, sf::RenderWindow* window);
+    void updateChangeSceneState();
+    void drawChangeSceneState(sf::RenderWindow* window);
+    void drawSceneState(sf::RenderWindow* window);
 
     std::unique_ptr<Scene> scene;
     std::shared_ptr<EventBus> eventBus;
+
+    SceneState state = SceneState::STATE_SCENE;
+    std::string nextSceneName;
 
     TextureManager textureManager;
     CollisionManager collisionManager;

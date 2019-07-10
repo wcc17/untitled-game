@@ -89,9 +89,10 @@ std::vector<std::shared_ptr<NpcEntity>>& NpcManager::getNpcEntities() {
     return this->npcs;
 }
 
-//TODO: this isn't being utilized yet
 void NpcManager::release(TextureManager& textureManager) {
-    //TODO: unsubscribe from event bus!
+    eventBus->unsubscribe(this, &NpcManager::onOpenDialogueEvent);
+    eventBus->unsubscribe(this, &NpcManager::onCloseDialogueEvent);
+    eventBus->unsubscribe(this, &NpcManager::onNpcCollisionEvent);
 
     for(std::shared_ptr<NpcEntity> npc : npcs) {
         releaseNpcTextures(npc->getAssetName(), textureManager);
