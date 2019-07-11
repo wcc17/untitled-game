@@ -7,6 +7,7 @@
 #include "../events/EventBus.h"
 #include "../events/event/ControllerMoveEvent.h"
 #include "../collisions/CollisionManager.h"
+#include "SFML/Graphics/RenderTexture.hpp"
 #include "../npc/NpcManager.h"
 #include "../text/TextManager.h"
 #include "ViewManager.h"
@@ -17,8 +18,8 @@ class SceneManager {
 public:
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font);
     void update(sf::Time elapsedTime, sf::RenderWindow* window);
-    void draw(sf::RenderWindow* window);
-    void drawForDefaultView(sf::RenderWindow* window);
+    void drawToRenderTexture(sf::RenderTexture* renderTexture);
+    void drawToRenderTextureWithDefaultView(sf::RenderTexture* renderTexture);
     void release();
 private:
     void loadScene(std::string sceneName);
@@ -26,8 +27,8 @@ private:
     void onChangeSceneEvent(ChangeSceneEvent* event);
     void updateSceneState(sf::Time elapsedTime, sf::RenderWindow* window);
     void updateChangeSceneState();
-    void drawChangeSceneState(sf::RenderWindow* window);
-    void drawSceneState(sf::RenderWindow* window);
+    void drawSceneStateToRenderTexture(sf::RenderTexture* renderTexture);
+    void drawChangeSceneStateToRenderTexture(sf::RenderTexture* renderTexture);
 
     std::unique_ptr<Scene> scene;
     std::shared_ptr<EventBus> eventBus;

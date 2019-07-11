@@ -42,31 +42,31 @@ void SceneManager::updateChangeSceneState() {
     state = SceneState::STATE_SCENE;
 }
 
-void SceneManager::draw(sf::RenderWindow* window) {
+void SceneManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
     switch(state) {
         case SceneState::STATE_SCENE:
-            drawSceneState(window);
+            drawSceneStateToRenderTexture(renderTexture);
             break;
         case SceneState::STATE_CHANGING_SCENE:
-            drawChangeSceneState(window);
+            drawChangeSceneStateToRenderTexture(renderTexture);
             break;
     }
 }
 
-void SceneManager::drawSceneState(sf::RenderWindow* window) {
-    window->setView(viewManager.getView());
-    window->draw(*scene);
-    npcManager.draw(window);
-    window->draw(player);
-    textManager.draw(window);
+void SceneManager::drawSceneStateToRenderTexture(sf::RenderTexture* renderTexture) {
+    renderTexture->setView(viewManager.getView());
+    renderTexture->draw(*scene);
+    npcManager.drawToRenderTexture(renderTexture);
+    renderTexture->draw(player);
+//    textManager.draw(window);
 }
 
-void SceneManager::drawChangeSceneState(sf::RenderWindow* window) {
+void SceneManager::drawChangeSceneStateToRenderTexture(sf::RenderTexture* renderTexture) {
 }
 
-void SceneManager::drawForDefaultView(sf::RenderWindow* window) {
-    window->setView(window->getDefaultView());
-    textManager.drawForDefaultView(window);
+void SceneManager::drawToRenderTextureWithDefaultView(sf::RenderTexture* renderTexture) {
+//    window->setView(window->getDefaultView());
+//    textManager.drawForDefaultView(window);
 }
 
 void SceneManager::loadScene(std::string sceneName) {

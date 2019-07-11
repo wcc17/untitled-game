@@ -2,13 +2,19 @@
 #include "../includes/Game.h"
 
 Logger Game::logger("Game");
+const int SCREEN_WIDTH = 1920;
+const int SCREEN_HEIGHT = 1080;
 
 Game::Game() {
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920,1080,32),"newnew", sf::Style::Titlebar | sf::Style::Close);
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,32),"newnew", sf::Style::Titlebar | sf::Style::Close);
      window->setFramerateLimit(60);
 //    window->setVerticalSyncEnabled(true);
 
     initialize();
+
+    if (!renderTexture.create(SCREEN_WIDTH, SCREEN_HEIGHT)) {
+        logger.logError("Error creating renderTexture. Exiting Game");
+    }
 }
 
 void Game::initialize() {
@@ -43,13 +49,18 @@ void Game::draw() {
     window->clear(sf::Color::Black);
 
     //draw to player view
-    sceneManager.draw(window.get());
+    renderTexture.clear();
+    sceneManager.drawToRenderTexture(&renderTexture);
 
     //draw to default view
-    window->setView(window->getDefaultView());
-    sceneManager.drawForDefaultView(window.get());
-    window->draw(framerateCounter.getFpsText());
+    //TODO: should I just move framerateCounter into SceneManager? Does it really matter where it goes?
+//    window->setView(window->getDefaultView());
+//    sceneManager.drawForDefaultView(window.get());
+//    window->draw(framerateCounter.getFpsText());
+    renderTexture.display();
 
+    sf::Sprite sprite(renderTexture.getTexture()); //TODO: should set the texture on a Game.renderSprite
+    window->draw(sprite);
     window->display();
 }
 

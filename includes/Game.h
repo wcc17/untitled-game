@@ -24,6 +24,7 @@ private:
     FontManager fontManager;
     bool shouldExitGame = false;
     static Logger logger;
+    sf::RenderTexture renderTexture; //TODO: should be a unique_ptr that Game controls.
 
     void initialize();
     void update(std::vector<sf::Event> events);
