@@ -72,7 +72,7 @@ void CollisionManager::handleEntityCollisions(Player& player,
     initializeEntityCollidedMap(entities, hasEntityCollidedMap);
 
     publishCollisionBetweenEntitiesAndPlayer(player, entities, hasEntityCollidedMap);
-    publishCollisionsBetweenEntitiesAndEntity(entities, hasEntityCollidedMap);
+//    publishCollisionsBetweenEntitiesAndEntity(entities, hasEntityCollidedMap); //TODO: this isn't working right now. Entities can push each other out of the map. May have to approach differently
     publishCollisionsBetweenEntitiesAndMap(entities, mapCollidables, hasEntityCollidedMap);
 }
 
@@ -99,7 +99,9 @@ void CollisionManager::publishCollisionsBetweenEntitiesAndEntity(const std::vect
         if(!hasEntityCollidedMap[npc1->getEntityCollidable().getName()]) {
 
             for(std::shared_ptr<NpcEntity> npc2 : entities) {
-                if(!hasEntityCollidedMap[npc2->getEntityCollidable().getName()] && collisionOccurred(npc1->getEntityCollidable(), npc2->getEntityCollidable())) {
+                if(npc1->getEntityCollidable().getName() != npc2->getEntityCollidable().getName()
+                    && !hasEntityCollidedMap[npc2->getEntityCollidable().getName()]
+                    && collisionOccurred(npc1->getEntityCollidable(), npc2->getEntityCollidable())) {
 
                     hasEntityCollidedMap[npc1->getEntityCollidable().getName()] = true;
                     hasEntityCollidedMap[npc2->getEntityCollidable().getName()] = true;

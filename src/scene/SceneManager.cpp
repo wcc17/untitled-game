@@ -32,6 +32,10 @@ void SceneManager::update(sf::Time elapsedTime, sf::RenderWindow* window) {
         case SceneState::STATE_CHANGING_SCENE:
             updateChangeSceneState();
             break;
+        case SceneState::STATE_SKIP_FRAME:
+            //skip a frame so that everything can catch up after loading a new scene
+            setNextScene();
+            break;
     }
 }
 
@@ -76,6 +80,7 @@ void SceneManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
             drawSceneStateToRenderTexture(renderTexture);
             break;
         case SceneState::STATE_CHANGING_SCENE:
+        case SceneState::STATE_SKIP_FRAME:
 //            drawChangeSceneStateToRenderTexture(renderTexture);
             break;
     }
@@ -116,6 +121,9 @@ void SceneManager::setNextScene() {
             state = STATE_CHANGING_SCENE;
             break;
         case STATE_CHANGING_SCENE:
+            state = STATE_SKIP_FRAME;
+            break;
+        case STATE_SKIP_FRAME:
             state = STATE_TRANSITION_SCENE_IN;
             break;
         case STATE_TRANSITION_SCENE_IN:
