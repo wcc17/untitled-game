@@ -7,6 +7,7 @@ const static std::string WALL_OBJECT_TYPE = "wall";
 const static std::string NPC_OBJECT_TYPE = "npc";
 const static std::string NPC_MOVE_BOUNDARY_OBJECT_TYPE = "npc_move_boundary";
 const static std::string PLAYER_OBJECT_TYPE = "player";
+const static std::string DEFAULT_SPAWN_NAME = "default_spawn";
 
 Logger ObjectMap::logger("ObjectMap");
 
@@ -38,7 +39,9 @@ void ObjectMap::loadRectangleObjects(const tmx::Object& object) {
         npcNameToNpcAssetNameMap.insert(std::make_pair(collidable.getName(), getObjectPropertyValue("assetName", object.getProperties())));
         npcCollidables.push_back(collidable);
     } else if(type == ObjectType::PLAYER) {
-        playerCollidable = collidable;
+        std::string spawnName = collidable.getName(); //using spawnName as object name makes tiled map easier to read
+        collidable.setName("player"); //rest of the game doesn't need the collidable name as the spawn name, makes more sense as Player
+        playerCollidables.insert(std::make_pair(spawnName, collidable));
     } else if(type == ObjectType::NPC_MOVE_BOUNDARY) {
         sf::IntRect rect = sf::IntRect(position.x, position.y, size.x, size.y);
         npcMoveBoundaries.insert(std::make_pair(objectName, rect));
@@ -90,12 +93,32 @@ std::map<std::string, sf::IntRect> ObjectMap::getNpcMoveBoundariesMap() {
     return this->npcMoveBoundaries;
 }
 
-Collidable ObjectMap::getPlayerCollidable() {
-    return this->playerCollidable;
+Collidable ObjectMap::getPlayerCollidable(std::string spawnName) {
+    try {
+        return this->playerCollidables.at(spawnName);
+    } catch (const std::out_of_range& e) {
+        logger.logError("No spawn found for the player");
+        throw e; //at the very least, should have an "default_spawn" playerCollidable. If not, let the game crash
+    }
 }
 
 std::map<std::string, std::string> ObjectMap::getNpcNameToNpcAssetNameMap() {
     return this->npcNameToNpcAssetNameMap;
+}
+
+std::string ObjectMap::getPlayerSpawnPointName(std::string sceneName) {
+    std::string spawnPointName = DEFAULT_SPAWN_NAME;
+
+    if(sceneName != "") {
+        spawnPointName = "from_" + sceneName;
+
+        auto it = playerCollidables.find(spawnPointName);
+        if(it == playerCollidables.end()) {
+            spawnPointName = DEFAULT_SPAWN_NAME; //should always at least be default_spawn in playerCollidables if the from_ name doesn't exist
+        }
+    }
+
+    return spawnPointName;
 }
 
 void ObjectMap::release() {

@@ -22,7 +22,7 @@ public:
     void release();
     sf::Color getSceneTransparency(sf::Color currentColor);
 private:
-    void loadScene(std::string sceneName);
+    void loadScene(std::string previousSceneName, std::string sceneName);
     void setNextScene();
     void releaseScene();
     void onChangeSceneEvent(ChangeSceneEvent* event);

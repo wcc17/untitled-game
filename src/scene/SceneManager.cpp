@@ -16,7 +16,7 @@ void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font
 
     eventBus->subscribe(this, &SceneManager::onChangeSceneEvent);
 
-    loadScene("scene1");
+    loadScene("", "scene1");
 }
 
 void SceneManager::update(sf::Time elapsedTime, sf::RenderWindow* window) {
@@ -42,7 +42,6 @@ void SceneManager::updateSceneState(sf::Time elapsedTime, sf::RenderWindow* wind
     textManager.update(window, viewManager.getView(), elapsedTime);
 }
 
-//TODO: needs refactoring?
 void SceneManager::updateSceneTransition(sf::Time elapsedTime) {
     float transitionSpeed = elapsedTime.asSeconds() * SCENE_TRANSITION_SPEED;
     if(state == SceneState::STATE_TRANSITION_SCENE_IN) {
@@ -61,8 +60,10 @@ void SceneManager::updateSceneTransition(sf::Time elapsedTime) {
 }
 
 void SceneManager::updateChangeSceneState() {
+    //will only run once, just switching scenes
+    std::string previousSceneName = scene->getSceneName();
     releaseScene();
-    loadScene(nextSceneName);
+    loadScene(previousSceneName, nextSceneName);
     nextSceneName = "";
     setNextScene();
 }
@@ -75,7 +76,7 @@ void SceneManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
             drawSceneStateToRenderTexture(renderTexture);
             break;
         case SceneState::STATE_CHANGING_SCENE:
-            drawChangeSceneStateToRenderTexture(renderTexture);
+//            drawChangeSceneStateToRenderTexture(renderTexture);
             break;
     }
 }
@@ -91,15 +92,12 @@ void SceneManager::drawSceneStateToRenderTexture(sf::RenderTexture* renderTextur
     textManager.drawToRenderTextureForDefaultView(renderTexture);
 }
 
-void SceneManager::drawChangeSceneStateToRenderTexture(sf::RenderTexture* renderTexture) {
-    //I don't do anything
-}
-
-void SceneManager::loadScene(std::string sceneName) {
+void SceneManager::loadScene(std::string previousSceneName, std::string sceneName) {
     scene = std::make_unique<Scene>();
     scene->initialize(sceneName, textureManager);
+    std::string spawnName = scene->getPlayerSpawnPointName(previousSceneName);
 
-    player.initializeForScene(scene->getPlayerCollidable());
+    player.initializeForScene(scene->getPlayerCollidable(spawnName));
 
     npcManager.initialize(eventBus, scene->getNpcCollidables(), scene->getNpcMoveBoundariesMap(),
                           scene->getNpcNameToNpcAssetNameMap(), textureManager);
@@ -109,6 +107,7 @@ void SceneManager::loadScene(std::string sceneName) {
 }
 
 void SceneManager::setNextScene() {
+    //transition in > change scene > scene > transition out > change scene > transition in > ......
     switch(state) {
         case STATE_SCENE:
             state = STATE_TRANSITION_SCENE_OUT;

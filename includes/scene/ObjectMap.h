@@ -25,7 +25,8 @@ public:
     std::vector<Collidable> getNpcCollidables();
     std::map<std::string, sf::IntRect> getNpcMoveBoundariesMap();
     std::map<std::string, std::string> getNpcNameToNpcAssetNameMap();
-    Collidable getPlayerCollidable();
+    Collidable getPlayerCollidable(std::string spawnName);
+    std::string getPlayerSpawnPointName(std::string sceneName);
 
 protected:
     void release();
@@ -38,7 +39,7 @@ private:
     std::vector<Collidable> npcCollidables;
     std::map<std::string, std::string> npcNameToNpcAssetNameMap;
     std::vector<std::shared_ptr<Collidable>> mapCollidables;
-    Collidable playerCollidable;
+    std::map<std::string, Collidable> playerCollidables;
 
     static Logger logger;
 };
