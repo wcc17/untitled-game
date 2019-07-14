@@ -23,6 +23,7 @@ public:
     void initializeForScene(const Collidable& collidable);
     void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     EntityCollidable getEntityCollidable();
+    MoveDirection getLastFacingDirection();
 private:
     EntityState state;
     EntityAnimation entityAnimation;

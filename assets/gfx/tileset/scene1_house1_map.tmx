@@ -239,7 +239,7 @@
   <object id="6" type="wall" x="0" y="544" width="896" height="352"/>
   <object id="8" type="wall" x="536" y="544" width="128" height="360" rotation="-90"/>
  </objectgroup>
- <objectgroup id="7" name="doors" visible="0">
+ <objectgroup id="7" name="doors">
   <object id="13" name="scene1" type="door" x="440" y="536" width="16" height="8"/>
  </objectgroup>
  <objectgroup id="6" name="players">

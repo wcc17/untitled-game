@@ -73,6 +73,9 @@ std::string ObjectMap::getObjectPropertyValue(std::string propertyName, const st
             return property.getStringValue();
         }
     }
+
+    logger.logError("Object property value not found, letting game crash");
+    return nullptr;
 }
 
 std::vector<std::shared_ptr<Collidable>>& ObjectMap::getMapCollidables() {

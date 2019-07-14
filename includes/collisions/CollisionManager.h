@@ -19,6 +19,7 @@ public:
 
 private:
     std::shared_ptr<EventBus> eventBus;
+    static Logger logger;
 
     void handlePlayerCollisions(Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities, const std::vector<std::shared_ptr<Collidable>>& mapCollidables);
     bool publishCollisionsWithPlayerAndMap(Player& player, const std::vector<std::shared_ptr<Collidable>>& collidables);
@@ -31,6 +32,7 @@ private:
 
     static bool collisionOccurred(const Collidable& collidable1, const Collidable& collidable2);
     static bool playerVicinityCollisionOccurred(Player& player, const Collidable& collidable);
+    static bool playerDoorCollisionOccurred(Player& player, const Collidable& collidable);
 };
 
 
