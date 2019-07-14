@@ -2,13 +2,19 @@
 #include "../includes/Game.h"
 
 Logger Game::logger("Game");
+const int SCREEN_WIDTH = 1920;
+const int SCREEN_HEIGHT = 1080;
 
 Game::Game() {
-    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(1920,1080,32),"newnew", sf::Style::Titlebar | sf::Style::Close);
+    window = std::make_unique<sf::RenderWindow>(sf::VideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,32),"newnew", sf::Style::Titlebar | sf::Style::Close);
      window->setFramerateLimit(60);
 //    window->setVerticalSyncEnabled(true);
 
     initialize();
+
+    if (!renderTexture.create(SCREEN_WIDTH, SCREEN_HEIGHT)) {
+        logger.logError("Error creating renderTexture. Exiting Game");
+    }
 }
 
 void Game::initialize() {
@@ -42,14 +48,21 @@ void Game::update(std::vector<sf::Event> events) {
 void Game::draw() {
     window->clear(sf::Color::Black);
 
-    //draw to player view
-    sceneManager.draw(window.get());
+    //draw everything to renderTexture
+    renderTexture.clear();
+    sceneManager.drawToRenderTexture(&renderTexture);
 
-    //draw to default view
-    window->setView(window->getDefaultView());
-    sceneManager.drawForDefaultView(window.get());
-    window->draw(framerateCounter.getFpsText());
+    //draw to renderTexture with default view for text
+    renderTexture.setView(renderTexture.getDefaultView());
+    renderTexture.draw(framerateCounter.getFpsText());
 
+    //prepare renderTexture for display
+    renderTexture.display();
+    renderSprite.setTexture(renderTexture.getTexture());
+    renderSprite.setColor(sceneManager.getSceneTransparency(renderSprite.getColor()));
+
+    //draw renderTexture to window and display
+    window->draw(renderSprite);
     window->display();
 }
 

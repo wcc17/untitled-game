@@ -4,6 +4,7 @@
 #include "../entity/npc/NpcEntity.h"
 #include "../../includes/asset/AssetPath.h"
 #include "SFML/Graphics/RenderWindow.hpp"
+#include "SFML/Graphics/RenderTexture.hpp"
 #include "../events/EventBus.h"
 #include "../../includes/events/event/CloseDialogueEvent.h"
 #include "../../includes/events/event/OpenDialogueEvent.h"
@@ -20,7 +21,7 @@ public:
                     std::map<std::string, std::string> npcNameToNpcAssetNameMap,
                     TextureManager& textureManager);
     void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
-    void draw(sf::RenderWindow* window);
+    void drawToRenderTexture(sf::RenderTexture* renderTexture);
     std::vector<std::shared_ptr<NpcEntity>>& getNpcEntities();
     void release(TextureManager& textureManager);
 private:

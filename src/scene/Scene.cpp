@@ -63,6 +63,10 @@ sf::Vector2u Scene::getMapTileSize() {
     return this->tileSize;
 }
 
+std::string Scene::getSceneName() {
+    return this->sceneName;
+}
+
 void Scene::release(TextureManager& textureManager) {
     textureManager.releaseTexture(tilesetImagePath);
     ObjectMap::release();

@@ -1,5 +1,7 @@
 #include "../../includes/collisions/CollisionManager.h"
 
+Logger CollisionManager::logger("CollisionManager");
+
 void CollisionManager::initialize(std::shared_ptr<EventBus> eventBus) {
     this->eventBus = eventBus;
 }
@@ -28,8 +30,14 @@ bool CollisionManager::publishCollisionsWithPlayerAndMap(Player& player, const s
 
     for(std::shared_ptr<Collidable> collidable : collidables) {
         if(!collisionAlreadyOccurred && collisionOccurred(player.getEntityCollidable(), *collidable)) {
-            collisionAlreadyOccurred = true;
-            eventBus->publish(new PlayerCollisionEvent(*collidable));
+
+            if(collidable->getType() == ObjectType::DOOR && playerDoorCollisionOccurred(player, *collidable)) {
+                collisionAlreadyOccurred = true;
+                eventBus->publish(new PlayerCollisionEvent(*collidable));
+            } else if (collidable->getType() != ObjectType::DOOR) {
+                collisionAlreadyOccurred = true;
+                eventBus->publish(new PlayerCollisionEvent(*collidable));
+            }
         }
 
         if(playerVicinityCollisionOccurred(player, *collidable)) {
@@ -107,4 +115,32 @@ bool CollisionManager::collisionOccurred(const Collidable& collidable1, const Co
 bool CollisionManager::playerVicinityCollisionOccurred(Player& player, const Collidable& collidable) {
     const sf::FloatRect& playerVicinityBounds = player.getEntityCollidable().getVicinityBounds();
     return (playerVicinityBounds.intersects(collidable.getBoundingBox()));
+}
+
+//ensure player is actually inside the door
+bool CollisionManager::playerDoorCollisionOccurred(Player& player, const Collidable& collidable) {
+    const sf::FloatRect& playerBounds = player.getEntityCollidable().getBoundingBox();
+    const sf::FloatRect& doorBounds = collidable.getBoundingBox();
+
+    switch(player.getLastFacingDirection()) {
+        case MoveDirection::DOWN:
+        case MoveDirection::UP:
+            if( (playerBounds.left >= doorBounds.left)
+                && ((playerBounds.left + playerBounds.width) <= (doorBounds.left + doorBounds.width))) {
+                return true;
+            }
+            break;
+        case MoveDirection::RIGHT:
+        case MoveDirection::LEFT:
+            if( (playerBounds.top >= doorBounds.top)
+                && ((playerBounds.top + playerBounds.height) <= (doorBounds.top + doorBounds.height))) {
+                return true;
+            }
+            break;
+        default:
+            logger.logError("Should be looking at player's entityMovement's previous moving direction instead of its current direction.");
+            return false;
+    }
+
+    return false;
 }

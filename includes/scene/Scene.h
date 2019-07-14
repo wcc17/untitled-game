@@ -22,6 +22,7 @@ public:
     sf::Vector2u getMapSizeInPixels();
     sf::Vector2u getMapSizeInTiles();
     sf::Vector2u getMapTileSize();
+    std::string getSceneName();
 
 private:
     std::string sceneName;

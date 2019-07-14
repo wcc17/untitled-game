@@ -131,6 +131,10 @@ EntityCollidable Player::getEntityCollidable() {
     return entityCollidable;
 }
 
+MoveDirection Player::getLastFacingDirection() {
+    return entityMovement.getLastFacingDirection();
+}
+
 void Player::initializeAnimations() {
     //TODO: EVERYTHING needs to be multiples of tile size, including the character textures (its frames). Should there be a check to ensure this is happening so that I don't forget? How can I get the tile size here? Also NpcEntity
     //TODO: I don't like that the animations are public members of EntityAnimation. The way animations are handled needs to be refactored

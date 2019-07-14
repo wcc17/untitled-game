@@ -31,15 +31,15 @@ void TextManager::update(sf::RenderWindow* window, sf::View& view, sf::Time delt
     }
 }
 
-void TextManager::draw(sf::RenderWindow* window) {
+void TextManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
     if(dialogueIsActive) {
-        window->draw(dialogueBoxSprite);
+        renderTexture->draw(dialogueBoxSprite);
     }
 }
 
-void TextManager::drawForDefaultView(sf::RenderWindow* window) {
+void TextManager::drawToRenderTextureForDefaultView(sf::RenderTexture* renderTexture) {
     if(dialogueIsActive) {
-        window->draw(dialogueText);
+        renderTexture->draw(dialogueText);
     }
 }
 

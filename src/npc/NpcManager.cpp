@@ -25,9 +25,9 @@ void NpcManager::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     }
 }
 
-void NpcManager::draw(sf::RenderWindow* window) {
+void NpcManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
     for(std::shared_ptr<NpcEntity> npc : npcs) {
-        window->draw(*npc);
+        renderTexture->draw(*npc);
     }
 }
 

@@ -20,7 +20,13 @@ public:
     static std::string classNamesToPrint[];
 
 private:
-    void log(bool printPrepend, std::string prepend, const char* format, va_list args);
+    enum LogLevel {
+        ERROR,
+        DEBUG,
+        INFO
+    };
+
+    void log(LogLevel logLevel, bool printPrepend, std::string prepend, const char* format, va_list args);
     static bool shouldPrintForClass(std::string className);
 
     std::string className;
