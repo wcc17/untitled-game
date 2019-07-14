@@ -558,7 +558,7 @@
   </object>
   <object id="8" name="npc2" type="npc" x="368" y="504" width="8" height="8">
    <properties>
-    <property name="assetName" value="npc1"/>
+    <property name="assetName" value="npc2"/>
    </properties>
   </object>
  </objectgroup>

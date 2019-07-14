@@ -72,8 +72,8 @@ void CollisionManager::handleEntityCollisions(Player& player,
     initializeEntityCollidedMap(entities, hasEntityCollidedMap);
 
     publishCollisionBetweenEntitiesAndPlayer(player, entities, hasEntityCollidedMap);
+    publishCollisionsBetweenEntitiesAndEntity(entities, hasEntityCollidedMap);
     publishCollisionsBetweenEntitiesAndMap(entities, mapCollidables, hasEntityCollidedMap);
-//    publishCollisionsBetweenEntitiesAndEntities(entities); //TODO: skipping this for now until entities can actually move in the same area (boundary) as one another. Should come before map collidables though?
 }
 
 void CollisionManager::initializeEntityCollidedMap(const std::vector<std::shared_ptr<NpcEntity>>& entities, std::map<std::string, bool>& hasEntityCollidedMap) {
@@ -92,6 +92,22 @@ void CollisionManager::publishCollisionBetweenEntitiesAndPlayer(Player& player,
         }
     }
 
+}
+
+void CollisionManager::publishCollisionsBetweenEntitiesAndEntity(const std::vector<std::shared_ptr<NpcEntity>>& entities, std::map<std::string, bool>& hasEntityCollidedMap) {
+    for(std::shared_ptr<NpcEntity> npc1 : entities) {
+        if(!hasEntityCollidedMap[npc1->getEntityCollidable().getName()]) {
+
+            for(std::shared_ptr<NpcEntity> npc2 : entities) {
+                if(!hasEntityCollidedMap[npc2->getEntityCollidable().getName()] && collisionOccurred(npc1->getEntityCollidable(), npc2->getEntityCollidable())) {
+
+                    hasEntityCollidedMap[npc1->getEntityCollidable().getName()] = true;
+                    hasEntityCollidedMap[npc2->getEntityCollidable().getName()] = true;
+                    eventBus->publish(new NpcCollisionEvent(*npc1, npc2->getEntityCollidable()));
+                }
+            }
+        }
+    }
 }
 
 void CollisionManager::publishCollisionsBetweenEntitiesAndMap(const std::vector<std::shared_ptr<NpcEntity>>& entities,
