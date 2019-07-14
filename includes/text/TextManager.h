@@ -4,6 +4,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
 #include "../events/event/ControllerActionEvent.h"
 #include "../events/event/CloseDialogueEvent.h"
 #include "../events/event/OpenDialogueEvent.h"
@@ -18,8 +19,8 @@ public:
     TextManager();
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font);
     void update(sf::RenderWindow* window, sf::View& view, sf::Time deltaTime);
-    void draw(sf::RenderWindow* window);
-    void drawForDefaultView(sf::RenderWindow* window);
+    void drawToRenderTexture(sf::RenderTexture* renderTexture);
+    void drawToRenderTextureForDefaultView(sf::RenderTexture* renderTexture);
     void setEntityDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents);
 private:
     std::shared_ptr<EventBus> eventBus;

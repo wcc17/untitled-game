@@ -48,19 +48,21 @@ void Game::update(std::vector<sf::Event> events) {
 void Game::draw() {
     window->clear(sf::Color::Black);
 
-    //draw to player view
+    //draw everything to renderTexture
     renderTexture.clear();
     sceneManager.drawToRenderTexture(&renderTexture);
 
-    //draw to default view
-    //TODO: should I just move framerateCounter into SceneManager? Does it really matter where it goes?
-//    window->setView(window->getDefaultView());
-//    sceneManager.drawForDefaultView(window.get());
-//    window->draw(framerateCounter.getFpsText());
-    renderTexture.display();
+    //draw to renderTexture with default view for text
+    renderTexture.setView(renderTexture.getDefaultView());
+    renderTexture.draw(framerateCounter.getFpsText());
 
-    sf::Sprite sprite(renderTexture.getTexture()); //TODO: should set the texture on a Game.renderSprite
-    window->draw(sprite);
+    //prepare renderTexture for display
+    renderTexture.display();
+    renderSprite.setTexture(renderTexture.getTexture());
+    renderSprite.setColor(sceneManager.getSceneTransparency(renderSprite.getColor()));
+
+    //draw renderTexture to window and display
+    window->draw(renderSprite);
     window->display();
 }
 
