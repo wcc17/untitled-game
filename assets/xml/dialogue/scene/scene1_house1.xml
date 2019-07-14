@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<entity>
+    <dialogueEvent name="npc1">
+        <dialogue>
+            <dialoguePiece>Yeah I was actually wondering how many cats I could fit in here.</dialoguePiece>
+        </dialogue>
+    </dialogueEvent>
+
+    <dialogueEvent name="cat1">
+        <dialogue>
+            <dialoguePiece>mow.</dialoguePiece>
+        </dialogue>
+    </dialogueEvent>
+
+    <dialogueEvent name="cat2">
+        <dialogue>
+            <dialoguePiece>meow.</dialoguePiece>
+        </dialogue>
+    </dialogueEvent>
+
+    <dialogueEvent name="cat3">
+        <dialogue>
+            <dialoguePiece>meow!</dialoguePiece>
+        </dialogue>
+    </dialogueEvent>
+
+    <dialogueEvent name="cat4">
+        <dialogue>
+            <dialoguePiece>.....</dialoguePiece>
+        </dialogue>
+        <dialogue>
+            <dialoguePiece>The cat ignores you.</dialoguePiece>
+        </dialogue>
+    </dialogueEvent>
+</entity>
