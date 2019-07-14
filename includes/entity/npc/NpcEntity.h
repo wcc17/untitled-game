@@ -27,6 +27,9 @@ private:
     EntityLogger entityLogger;
     std::string assetName;
 
+    float entityWidth;
+    float entityHeight;
+
     void initializeAnimations();
     void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);

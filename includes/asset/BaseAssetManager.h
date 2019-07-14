@@ -12,6 +12,7 @@ protected:
     template <class T> void releaseResource(std::string filename, std::map<std::string, std::unique_ptr<T>>& resourceMap);
 private:
     template <class T> bool mapContainsValueForKey(std::string key, std::map<std::string, std::unique_ptr<T>>& resourceMap);
+    int resourceCount = 0;
 };
 
 
@@ -20,6 +21,7 @@ template <class T> void BaseAssetManager::loadResource(std::string filename, std
     if(!mapContainsValueForKey<T>(filename, resourceMap)) {
         resource->loadFromFile(filename);
         resourceMap.insert(std::make_pair(filename, std::unique_ptr<T>(resource)));
+        resourceCount++;
     }
 }
 
@@ -28,6 +30,7 @@ template <class T> void BaseAssetManager::releaseResource(std::string filename, 
     if(itr != resourceMap.end()) {
         itr->second.reset();
         resourceMap.erase(itr);
+        resourceCount--;
     }
 }
 

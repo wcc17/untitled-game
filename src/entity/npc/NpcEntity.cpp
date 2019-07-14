@@ -1,12 +1,15 @@
 #include "../../../includes/entity/npc/NpcEntity.h"
 
-const float ENTITY_WIDTH = 16.f;
-const float ENTITY_HEIGHT = 16.f;
+//const float ENTITY_WIDTH = 16.f;
+//const float ENTITY_HEIGHT = 16.f;
 const float ENTITY_MOVEMENT_SPEED = 65.f;
 const float ENTITY_FRAME_TIME = 0.16f; //TODO: not sure where I want to load this from yet
 
 void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries, std::string assetName) {
     sf::Sprite::setTexture(*texture);
+
+    entityWidth = getTexture()->getSize().x / 4;
+    entityHeight = getTexture()->getSize().y / 4;
 
     this->assetName = assetName;
     this->state = STATE_STANDING;
@@ -81,7 +84,7 @@ void NpcEntity::roundPosition() {
 
 void NpcEntity::setEntityPosition(const sf::Vector2f& position) {
     setPosition(position);
-    this->entityCollidable.setBoundingBox(sf::FloatRect(getPosition().x, getPosition().y, ENTITY_WIDTH, ENTITY_HEIGHT));
+    this->entityCollidable.setBoundingBox(sf::FloatRect(getPosition().x, getPosition().y, entityWidth, entityHeight));
     roundPosition();
 }
 
@@ -99,28 +102,28 @@ void NpcEntity::initializeAnimations() {
 
     //TODO: these constants are temporary until I figure out where I want to load this information from. Probably from a more specific derived NpcEntity class
     entityAnimation.walkingAnimationDown.setSpriteSheet(*this->getTexture());
-    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(0, 0, ENTITY_WIDTH, ENTITY_HEIGHT));
-    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(ENTITY_WIDTH, 0, ENTITY_WIDTH, ENTITY_HEIGHT));
-    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(ENTITY_WIDTH*2, 0, ENTITY_WIDTH, ENTITY_HEIGHT));
-    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(ENTITY_WIDTH*3, 0, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(0, 0, entityWidth, entityHeight));
+    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(entityWidth, 0, entityWidth, entityHeight));
+    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(entityWidth*2, 0, entityWidth, entityHeight));
+    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(entityWidth*3, 0, entityWidth, entityHeight));
 
     entityAnimation.walkingAnimationRight.setSpriteSheet(*this->getTexture());
-    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(0, ENTITY_HEIGHT, ENTITY_WIDTH, ENTITY_HEIGHT));
-    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(ENTITY_WIDTH, ENTITY_HEIGHT, ENTITY_WIDTH, ENTITY_HEIGHT));
-    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(ENTITY_WIDTH*2, ENTITY_HEIGHT, ENTITY_WIDTH, ENTITY_HEIGHT));
-    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(ENTITY_WIDTH*3, ENTITY_HEIGHT, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(0, entityHeight, entityWidth, entityHeight));
+    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(entityWidth, entityHeight, entityWidth, entityHeight));
+    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(entityWidth*2, entityHeight, entityWidth, entityHeight));
+    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(entityWidth*3, entityHeight, entityWidth, entityHeight));
 
     entityAnimation.walkingAnimationUp.setSpriteSheet(*this->getTexture());
-    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(0, ENTITY_HEIGHT*2, ENTITY_WIDTH, ENTITY_HEIGHT));
-    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(ENTITY_WIDTH, ENTITY_HEIGHT*2, ENTITY_WIDTH, ENTITY_HEIGHT));
-    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(ENTITY_WIDTH*2, ENTITY_HEIGHT*2, ENTITY_WIDTH, ENTITY_HEIGHT));
-    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(ENTITY_WIDTH*3, ENTITY_HEIGHT*2, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(0, entityHeight*2, entityWidth, entityHeight));
+    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(entityWidth, entityHeight*2, entityWidth, entityHeight));
+    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(entityWidth*2, entityHeight*2, entityWidth, entityHeight));
+    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(entityWidth*3, entityHeight*2, entityWidth, entityHeight));
 
     entityAnimation.walkingAnimationLeft.setSpriteSheet(*this->getTexture());
-    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(0, ENTITY_HEIGHT*3, ENTITY_WIDTH, ENTITY_HEIGHT));
-    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(ENTITY_WIDTH, ENTITY_HEIGHT*3, ENTITY_WIDTH, ENTITY_HEIGHT));
-    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(ENTITY_WIDTH*2, ENTITY_HEIGHT*3, ENTITY_WIDTH, ENTITY_HEIGHT));
-    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(ENTITY_WIDTH*3, ENTITY_HEIGHT*3, ENTITY_WIDTH, ENTITY_HEIGHT));
+    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(0, entityHeight*3, entityWidth, entityHeight));
+    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(entityWidth, entityHeight*3, entityWidth, entityHeight));
+    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(entityWidth*2, entityHeight*3, entityWidth, entityHeight));
+    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(entityWidth*3, entityHeight*3, entityWidth, entityHeight));
 
     entityAnimation.turnToFaceDirection(MoveDirection::DOWN);
 }
