@@ -20,7 +20,6 @@ public:
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font);
     void update(sf::RenderWindow* window, sf::View& view, sf::Time deltaTime);
     void drawToRenderTexture(sf::RenderTexture* renderTexture);
-    void drawToRenderTextureForDefaultView(sf::RenderTexture* renderTexture);
     void setEntityDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents);
 private:
     std::shared_ptr<EventBus> eventBus;

@@ -92,9 +92,6 @@ void SceneManager::drawSceneStateToRenderTexture(sf::RenderTexture* renderTextur
     renderTexture->draw(player);
     npcManager.drawToRenderTexture(renderTexture);
     textManager.drawToRenderTexture(renderTexture);
-
-    renderTexture->setView(renderTexture->getDefaultView());
-    textManager.drawToRenderTextureForDefaultView(renderTexture);
 }
 
 void SceneManager::loadScene(std::string previousSceneName, std::string sceneName) {

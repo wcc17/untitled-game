@@ -34,12 +34,12 @@ void TextManager::update(sf::RenderWindow* window, sf::View& view, sf::Time delt
 void TextManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
     if(dialogueIsActive) {
         renderTexture->draw(dialogueBoxSprite);
-    }
-}
 
-void TextManager::drawToRenderTextureForDefaultView(sf::RenderTexture* renderTexture) {
-    if(dialogueIsActive) {
+        //draw to default view and then switch back to whatever view renderTexture was using before
+        const sf::View& v = renderTexture->getView();
+        renderTexture->setView(renderTexture->getDefaultView());
         renderTexture->draw(dialogueText);
+        renderTexture->setView(v);
     }
 }
 

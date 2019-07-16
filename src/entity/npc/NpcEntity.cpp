@@ -14,7 +14,7 @@ void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, s
     this->assetName = assetName;
     this->state = STATE_STANDING;
     this->entityCollidable.initialize(collidable);
-    this->setPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
+    setEntityPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
 
     entityAnimation.setFrameTime(sf::seconds(ENTITY_FRAME_TIME));
     initializeAnimations();
