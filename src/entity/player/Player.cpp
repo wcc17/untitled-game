@@ -20,6 +20,7 @@ void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture
     eventBus->subscribe(this, &Player::onVicinityCollisionEvent);
     eventBus->subscribe(this, &Player::onCloseDialogueEvent);
     eventBus->subscribe(this, &Player::onCollisionEvent);
+    eventBus->subscribe(this, &Player::onDoorCollisionEvent);
 }
 
 void Player::initializeForScene(const Collidable& collidable) {
@@ -110,12 +111,12 @@ void Player::onCloseDialogueEvent(CloseDialogueEvent* event) {
 }
 
 void Player::onCollisionEvent(PlayerCollisionEvent* event) {
-    if(event->collidedWith.getType() == ObjectType::DOOR) {
-        eventBus->publish(new ChangeSceneEvent(event->collidedWith));
-    } else {
-        setPosition(entityCollidable.getFixedPositionAfterCollision(event->collidedWith, currentDirection));
-        adjustPlayerAndViewPositions();
-    }
+    setPosition(entityCollidable.getFixedPositionAfterCollision(event->collidedWith, currentDirection));
+    adjustPlayerAndViewPositions();
+}
+
+void Player::onDoorCollisionEvent(PlayerDoorCollisionEvent* event) {
+    eventBus->publish(new ChangeSceneEvent(event->collidedWith));
 }
 
 void Player::resetAfterFrame() {

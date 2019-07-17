@@ -96,6 +96,10 @@ std::string NpcEntity::getAssetName() {
     return this->assetName;
 }
 
+bool NpcEntity::isMoving() {
+    return (this->state == EntityState::STATE_MOVING);
+}
+
 //TODO: can this be moved to the header file?
 //TODO: EVERYTHING needs to be multiples of  tile size, including the character textures (its frames). There should be a check to ensure this is happening so that I don't forget
 void NpcEntity::initializeAnimations() {

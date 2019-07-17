@@ -9,6 +9,7 @@
 #include "../../events/event/ControllerActionEvent.h"
 #include "../../events/event/OpenDialogueEvent.h"
 #include "../../events/event/PlayerCollisionEvent.h"
+#include "../../events/event/PlayerDoorCollisionEvent.h"
 #include "../../events/event/PlayerPositionChangeEvent.h"
 #include "../../events/event/ChangeSceneEvent.h"
 #include "../character/EntityAnimation.h"
@@ -49,6 +50,7 @@ private:
     void onVicinityCollisionEvent(PlayerVicinityCollisionEvent* event);
     void onCloseDialogueEvent(CloseDialogueEvent* event);
     void onCollisionEvent(PlayerCollisionEvent* event);
+    void onDoorCollisionEvent(PlayerDoorCollisionEvent* event);
 };
 
 

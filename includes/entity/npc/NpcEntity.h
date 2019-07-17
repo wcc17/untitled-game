@@ -18,6 +18,7 @@ public:
     void onCollisionEvent(const Collidable& collidedWith);
     EntityCollidable getEntityCollidable();
     std::string getAssetName();
+    bool isMoving();
 private:
     EntityState state;
     EntityState stateBeforeInteraction;
