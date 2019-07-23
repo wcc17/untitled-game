@@ -1,8 +1,8 @@
 #include "../../includes/util/Logger.h"
 
-bool Logger::shouldPrintDebug = false;
+bool Logger::shouldPrintDebug = true;
 bool Logger::shouldPrintError = true;
-bool Logger::shouldOnlyPrintSpecifiedClasses = false;
+bool Logger::shouldOnlyPrintSpecifiedClasses = true;
 std::string Logger::classNamesToPrint[] = {"Game", "XmlManager", "CollisionManager"};
 
 Logger::Logger(std::string className) {

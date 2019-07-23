@@ -6,6 +6,7 @@ void CollisionManager::initialize(std::shared_ptr<EventBus> eventBus) {
     this->eventBus = eventBus;
 }
 
+//TODO: does it really make sense to only handle one collision per frame? Or is it doing a bunch of extra work?
 //TODO: consider referring to "collisions" as something else to differentiate it from vicinity collision
 void CollisionManager::handleCollisions(Player& player,
                                         const std::vector<std::shared_ptr<NpcEntity>>& entities,
@@ -18,24 +19,18 @@ void CollisionManager::handleCollisions(Player& player,
 void CollisionManager::handlePlayerCollisions(Player& player,
                                               const std::vector<std::shared_ptr<NpcEntity>>& entities,
                                               const std::vector<std::shared_ptr<Collidable>>& mapCollidables) {
-    bool playerCollisionOccurred = publishCollisionsWithPlayerAndEntities(player, entities);
-    if(!playerCollisionOccurred) {
-        publishCollisionsWithPlayerAndMap(player, mapCollidables);
-    }
+    publishCollisionsWithPlayerAndEntities(player, entities);
+    publishCollisionsWithPlayerAndMap(player, mapCollidables);
 }
 
-bool CollisionManager::publishCollisionsWithPlayerAndMap(Player& player, const std::vector<std::shared_ptr<Collidable>>& collidables) {
-    //NOTE: only want to track a single hard collision since player can only move in one direction, can have many vicinity collisions
-    bool collisionAlreadyOccurred = false;
+void CollisionManager::publishCollisionsWithPlayerAndMap(Player& player, const std::vector<std::shared_ptr<Collidable>>& collidables) {
 
     for(std::shared_ptr<Collidable> collidable : collidables) {
-        if(!collisionAlreadyOccurred && collisionOccurred(player.getEntityCollidable(), *collidable)) {
+        if(collisionOccurred(player.getEntityCollidable(), *collidable)) {
 
-            if(collidable->getType() == ObjectType::DOOR && playerDoorCollisionOccurred(player, *collidable)) {
-                collisionAlreadyOccurred = true;
-                eventBus->publish(new PlayerCollisionEvent(*collidable));
-            } else if (collidable->getType() != ObjectType::DOOR) {
-                collisionAlreadyOccurred = true;
+            if(playerDoorCollisionOccurred(player, *collidable)) {
+                eventBus->publish(new PlayerDoorCollisionEvent(*collidable));
+            } else if(collidable->getType() != ObjectType::DOOR){
                 eventBus->publish(new PlayerCollisionEvent(*collidable));
             }
         }
@@ -44,81 +39,46 @@ bool CollisionManager::publishCollisionsWithPlayerAndMap(Player& player, const s
             eventBus->publish(new PlayerVicinityCollisionEvent(collidable));
         }
     }
-
-    return collisionAlreadyOccurred;
 }
 
-bool CollisionManager::publishCollisionsWithPlayerAndEntities(Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities) {
-    bool collisionAlreadyOccurred = false;
+void CollisionManager::publishCollisionsWithPlayerAndEntities(Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities) {
 
     for(std::shared_ptr<NpcEntity> npc : entities) {
-        if(!collisionAlreadyOccurred && collisionOccurred(player.getEntityCollidable(), npc->getEntityCollidable())) {
-            collisionAlreadyOccurred = true;
-            eventBus->publish(new PlayerCollisionEvent(npc->getEntityCollidable()));
+        if(collisionOccurred(player.getEntityCollidable(), npc->getEntityCollidable())) {
+            handleCollisionWithPlayerAndNpcEntity(player, npc);
         }
 
         if(playerVicinityCollisionOccurred(player, npc->getEntityCollidable())) {
             eventBus->publish(new PlayerVicinityCollisionEvent(std::make_shared<Collidable>(npc->getEntityCollidable())));
         }
     }
-
-    return collisionAlreadyOccurred;
 }
 
 void CollisionManager::handleEntityCollisions(Player& player,
                                               const std::vector<std::shared_ptr<NpcEntity>>& entities,
                                               const std::vector<std::shared_ptr<Collidable>>& mapCollidables) {
-    std::map<std::string, bool> hasEntityCollidedMap;
-    initializeEntityCollidedMap(entities, hasEntityCollidedMap);
 
-    publishCollisionBetweenEntitiesAndPlayer(player, entities, hasEntityCollidedMap);
-//    publishCollisionsBetweenEntitiesAndEntity(entities, hasEntityCollidedMap); //TODO: this isn't working right now. Entities can push each other out of the map. May have to approach differently
-    publishCollisionsBetweenEntitiesAndMap(entities, mapCollidables, hasEntityCollidedMap);
+    publishCollisionsBetweenEntitiesAndEntity(entities);
+    publishCollisionsBetweenEntitiesAndMap(entities, mapCollidables);
 }
 
-void CollisionManager::initializeEntityCollidedMap(const std::vector<std::shared_ptr<NpcEntity>>& entities, std::map<std::string, bool>& hasEntityCollidedMap) {
-    for(std::shared_ptr<NpcEntity> npcEntity : entities) {
-        hasEntityCollidedMap.insert(std::make_pair(npcEntity->getEntityCollidable().getName(), false));
-    }
-}
-
-void CollisionManager::publishCollisionBetweenEntitiesAndPlayer(Player& player,
-        const std::vector<std::shared_ptr<NpcEntity>>& entities, std::map<std::string, bool>& hasEntityCollidedMap) {
-
-    for(std::shared_ptr<NpcEntity> npc : entities) {
-        if(!hasEntityCollidedMap[npc->getEntityCollidable().getName()] && collisionOccurred(npc->getEntityCollidable(), player.getEntityCollidable())) {
-            hasEntityCollidedMap[npc->getEntityCollidable().getName()] = true;
-            eventBus->publish(new NpcCollisionEvent(*npc, player.getEntityCollidable()));
-        }
-    }
-
-}
-
-void CollisionManager::publishCollisionsBetweenEntitiesAndEntity(const std::vector<std::shared_ptr<NpcEntity>>& entities, std::map<std::string, bool>& hasEntityCollidedMap) {
+void CollisionManager::publishCollisionsBetweenEntitiesAndEntity(const std::vector<std::shared_ptr<NpcEntity>>& entities) {
     for(std::shared_ptr<NpcEntity> npc1 : entities) {
-        if(!hasEntityCollidedMap[npc1->getEntityCollidable().getName()]) {
-
-            for(std::shared_ptr<NpcEntity> npc2 : entities) {
-                if(npc1->getEntityCollidable().getName() != npc2->getEntityCollidable().getName()
-                    && !hasEntityCollidedMap[npc2->getEntityCollidable().getName()]
-                    && collisionOccurred(npc1->getEntityCollidable(), npc2->getEntityCollidable())) {
-
-                    hasEntityCollidedMap[npc1->getEntityCollidable().getName()] = true;
-                    hasEntityCollidedMap[npc2->getEntityCollidable().getName()] = true;
-                    eventBus->publish(new NpcCollisionEvent(*npc1, npc2->getEntityCollidable()));
-                }
+        for(std::shared_ptr<NpcEntity> npc2 : entities) {
+            if(npc1->getEntityCollidable().getName() != npc2->getEntityCollidable().getName()
+                && collisionOccurred(npc1->getEntityCollidable(), npc2->getEntityCollidable())) {
+                handleCollisionWithNpcAndNpc(npc1, npc2);
             }
         }
     }
 }
 
 void CollisionManager::publishCollisionsBetweenEntitiesAndMap(const std::vector<std::shared_ptr<NpcEntity>>& entities,
-        const std::vector<std::shared_ptr<Collidable>>& collidables, std::map<std::string, bool>& hasEntityCollidedMap) {
+        const std::vector<std::shared_ptr<Collidable>>& collidables) {
 
     for(std::shared_ptr<NpcEntity> npc : entities) {
         for(std::shared_ptr<Collidable> collidable : collidables) {
-            if(!hasEntityCollidedMap[npc->getEntityCollidable().getName()] && collisionOccurred(npc->getEntityCollidable(), *collidable)) {
-                hasEntityCollidedMap[npc->getEntityCollidable().getName()] = true;
+            if(collisionOccurred(npc->getEntityCollidable(), *collidable)) {
                 eventBus->publish(new NpcCollisionEvent(*npc, *collidable));
             }
         }
@@ -137,28 +97,59 @@ bool CollisionManager::playerVicinityCollisionOccurred(Player& player, const Col
 
 //ensure player is actually inside the door
 bool CollisionManager::playerDoorCollisionOccurred(Player& player, const Collidable& collidable) {
-    const sf::FloatRect& playerBounds = player.getEntityCollidable().getBoundingBox();
-    const sf::FloatRect& doorBounds = collidable.getBoundingBox();
+    if(collidable.getType() == ObjectType::DOOR) {
+        const sf::FloatRect& playerBounds = player.getEntityCollidable().getBoundingBox();
+        const sf::FloatRect& doorBounds = collidable.getBoundingBox();
 
-    switch(player.getLastFacingDirection()) {
-        case MoveDirection::DOWN:
-        case MoveDirection::UP:
-            if( (playerBounds.left >= doorBounds.left)
-                && ((playerBounds.left + playerBounds.width) <= (doorBounds.left + doorBounds.width))) {
-                return true;
-            }
-            break;
-        case MoveDirection::RIGHT:
-        case MoveDirection::LEFT:
-            if( (playerBounds.top >= doorBounds.top)
-                && ((playerBounds.top + playerBounds.height) <= (doorBounds.top + doorBounds.height))) {
-                return true;
-            }
-            break;
-        default:
-            logger.logError("Should be looking at player's entityMovement's previous moving direction instead of its current direction.");
-            return false;
+        switch(player.getLastFacingDirection()) {
+            case MoveDirection::DOWN:
+            case MoveDirection::UP:
+                if( (playerBounds.left >= doorBounds.left)
+                    && ((playerBounds.left + playerBounds.width) <= (doorBounds.left + doorBounds.width))) {
+                    return true;
+                }
+                break;
+            case MoveDirection::RIGHT:
+            case MoveDirection::LEFT:
+                if( (playerBounds.top >= doorBounds.top)
+                    && ((playerBounds.top + playerBounds.height) <= (doorBounds.top + doorBounds.height))) {
+                    return true;
+                }
+                break;
+            default:
+                logger.logError("Should be looking at player's entityMovement's previous moving direction instead of its current direction.");
+                return false;
+        }
     }
 
     return false;
+}
+
+void CollisionManager::handleCollisionWithPlayerAndNpcEntity(Player& player, std::shared_ptr<NpcEntity> npc) {
+    if(player.isMoving()) {
+        eventBus->publish(new PlayerCollisionEvent(npc->getEntityCollidable()));
+    }
+    if(npc->isMoving()) {
+        eventBus->publish(new NpcCollisionEvent(*npc, player.getEntityCollidable()));
+    }
+
+    if(!player.isMoving() && !npc->isMoving()) {
+        logger.logDebug("Player and npc are colliding but neither is moving. Correcting player only. Is this an issue?");
+        eventBus->publish(new PlayerCollisionEvent(npc->getEntityCollidable()));
+    }
+}
+
+//TODO: should I not check npcs again in the calling function if they were a part of this collision?
+void CollisionManager::handleCollisionWithNpcAndNpc(std::shared_ptr<NpcEntity> npc1, std::shared_ptr<NpcEntity> npc2) {
+    if(npc1->isMoving()) {
+        eventBus->publish(new NpcCollisionEvent(*npc1, npc2->getEntityCollidable()));
+    }
+    if(npc2->isMoving()) {
+        eventBus->publish(new NpcCollisionEvent(*npc2, npc1->getEntityCollidable()));
+    }
+
+    if(!npc1->isMoving() && !npc2->isMoving()) {
+        logger.logDebug("Two npcs are colliding but neither is moving. Correcting first npc only. Is this an issue?");
+        eventBus->publish(new NpcCollisionEvent(*npc1, npc2->getEntityCollidable()));
+    }
 }

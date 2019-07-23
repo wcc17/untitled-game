@@ -9,6 +9,7 @@
 #include "../events/event/PlayerCollisionEvent.h"
 #include "../events/event/PlayerVicinityCollisionEvent.h"
 #include "../events/event/NpcCollisionEvent.h"
+#include "../../includes/events/event/PlayerDoorCollisionEvent.h"
 
 class CollisionManager {
 public:
@@ -22,14 +23,14 @@ private:
     static Logger logger;
 
     void handlePlayerCollisions(Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities, const std::vector<std::shared_ptr<Collidable>>& mapCollidables);
-    bool publishCollisionsWithPlayerAndMap(Player& player, const std::vector<std::shared_ptr<Collidable>>& collidables);
-    bool publishCollisionsWithPlayerAndEntities(Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities);
+    void publishCollisionsWithPlayerAndMap(Player& player, const std::vector<std::shared_ptr<Collidable>>& collidables);
+    void publishCollisionsWithPlayerAndEntities(Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities);
 
     void handleEntityCollisions(Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities, const std::vector<std::shared_ptr<Collidable>>& mapCollidables);
-    void initializeEntityCollidedMap(const std::vector<std::shared_ptr<NpcEntity>>& entities, std::map<std::string, bool>& hasEntityCollidedMap);
-    void publishCollisionBetweenEntitiesAndPlayer(Player& player, const std::vector<std::shared_ptr<NpcEntity>>& entities, std::map<std::string, bool>& hasEntityCollidedMap);
-    void publishCollisionsBetweenEntitiesAndEntity(const std::vector<std::shared_ptr<NpcEntity>>& entities, std::map<std::string, bool>& hasEntityCollidedMap);
-    void publishCollisionsBetweenEntitiesAndMap(const std::vector<std::shared_ptr<NpcEntity>>& entities, const std::vector<std::shared_ptr<Collidable>>& collidables, std::map<std::string, bool>& hasEntityCollidedMap);
+    void publishCollisionsBetweenEntitiesAndEntity(const std::vector<std::shared_ptr<NpcEntity>>& entities);
+    void publishCollisionsBetweenEntitiesAndMap(const std::vector<std::shared_ptr<NpcEntity>>& entities, const std::vector<std::shared_ptr<Collidable>>& collidables);
+    void handleCollisionWithPlayerAndNpcEntity(Player& player, std::shared_ptr<NpcEntity> npc);
+    void handleCollisionWithNpcAndNpc(std::shared_ptr<NpcEntity> npc1, std::shared_ptr<NpcEntity> npc2);
 
     static bool collisionOccurred(const Collidable& collidable1, const Collidable& collidable2);
     static bool playerVicinityCollisionOccurred(Player& player, const Collidable& collidable);

@@ -12,7 +12,7 @@
 class EntityCollidable : public Collidable {
 public:
     void initialize(const Collidable& collidable);
-    sf::Vector2f getFixedPositionAfterCollision(const Collidable& collidedWith, MoveDirection entityDirection);
+    sf::Vector2f getFixedPositionAfterCollision(const Collidable& collidedWith);
     sf::FloatRect getVicinityBounds() const;
     std::vector<std::shared_ptr<Collidable>> getCollidablesInVicinity();
     void setVicinityBoundsOffset(int vicinityBoundsOffset);
@@ -25,8 +25,10 @@ protected:
 
 private:
     int vicinityBoundsOffset;
-    static void adjustPositionsByOne(MoveDirection entityDirection, int& left, int& top);
     EntityLogger entityLogger;
+
+    static void setAdjustmentDirectionAndDifference(const sf::FloatRect& entityBounds, const sf::FloatRect& collidedWithBounds, float& difference, MoveDirection& adjustmentDirection);
+    sf::Vector2f getAdjustedPosition(float x, float y, float difference, MoveDirection adjustmentDirection);
 };
 
 

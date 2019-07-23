@@ -17,6 +17,7 @@ public:
     sf::Vector2f handleMoveAndReturnPosition(sf::Time deltaTime, sf::Vector2f currentPosition, EntityState& state);
     MoveDirection getCurrentDirection();
     void stopMovement(EntityState& state);
+    sf::Vector2f fixInvalidPosition(const sf::Vector2f& currentPosition, const sf::Vector2u& mapTileSize);
 private:
     sf::IntRect moveBoundaries;
     sf::Time moveDelay;
@@ -29,7 +30,7 @@ private:
 
     void setMoveDelayTimer();
     bool moveDelayTimerDone(sf::Time deltaTime);
-
+    float fixInvalidCoordinate(float coord, float tileSize);
     void move(sf::Time deltaTime, sf::Vector2f& currentPosition);
     void checkMovementGoal(sf::Vector2f& currentPosition, EntityState& state);
     void setupEntityMovement(const sf::Vector2u& mapTileSize, EntityState& state, const sf::Vector2f& currentPosition);

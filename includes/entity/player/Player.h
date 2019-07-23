@@ -9,6 +9,7 @@
 #include "../../events/event/ControllerActionEvent.h"
 #include "../../events/event/OpenDialogueEvent.h"
 #include "../../events/event/PlayerCollisionEvent.h"
+#include "../../events/event/PlayerDoorCollisionEvent.h"
 #include "../../events/event/PlayerPositionChangeEvent.h"
 #include "../../events/event/ChangeSceneEvent.h"
 #include "../character/EntityAnimation.h"
@@ -24,6 +25,7 @@ public:
     void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     EntityCollidable getEntityCollidable();
     MoveDirection getLastFacingDirection();
+    bool isMoving();
 private:
     EntityState state;
     EntityAnimation entityAnimation;
@@ -32,6 +34,7 @@ private:
     std::shared_ptr<EventBus> eventBus;
     bool actionButtonPressed = false;
     MoveDirection currentDirection;
+    static Logger logger;
 
     void initializeAnimations();
     void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
@@ -49,6 +52,7 @@ private:
     void onVicinityCollisionEvent(PlayerVicinityCollisionEvent* event);
     void onCloseDialogueEvent(CloseDialogueEvent* event);
     void onCollisionEvent(PlayerCollisionEvent* event);
+    void onDoorCollisionEvent(PlayerDoorCollisionEvent* event);
 };
 
 
