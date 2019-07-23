@@ -7,30 +7,82 @@ void EntityCollidable::initialize(const Collidable& collidable) {
     entityLogger.initialize("EntityCollidable", getName());
 }
 
-sf::Vector2f EntityCollidable::getFixedPositionAfterCollision(const Collidable& collidedWith, MoveDirection entityDirection) {
-    int left = getBoundingBox().left;
-    int top = getBoundingBox().top;
-    sf::FloatRect newBounds;
+sf::Vector2f EntityCollidable::getFixedPositionAfterCollision(const Collidable &collidedWith) {
+    sf::FloatRect entityBounds = getBoundingBox();
+    sf::FloatRect collidedWithBounds = collidedWith.getBoundingBox();
+    float difference = 0;
+    MoveDirection adjustmentDirection = MoveDirection::NONE;
 
-    //NOTE: assigning left and top to integers effectively rounds the number, so collision has to be checked here again
-    newBounds = sf::FloatRect(left, top, getBoundingBox().width, getBoundingBox().height);
-    bool isColliding = newBounds.intersects(collidedWith.getBoundingBox());
+    setAdjustmentDirectionAndDifference(entityBounds, collidedWithBounds, difference, adjustmentDirection);
 
-    while(isColliding) {
-        if(entityDirection == MoveDirection::NONE) {
-            //NOTE: If an entity is moving into this one while its standing still, the entity will handle the collision. Otherwise this should never happen
-            entityLogger.logError("getFixedPositionAfterCollision(): possible error with %s collision - the entity didn't move into this collision so theres no way to move him out", getName().c_str());
+    float x = entityBounds.left;
+    float y = entityBounds.top;
+    sf::Vector2f newPosition = getAdjustedPosition(x, y, difference, adjustmentDirection);
+
+    setBoundingBox(sf::FloatRect(newPosition.x, newPosition.y, getBoundingBox().width, getBoundingBox().height));
+    return newPosition;
+}
+
+void EntityCollidable::setAdjustmentDirectionAndDifference(const sf::FloatRect& entityBounds,
+                                                           const sf::FloatRect& collidedWithBounds,
+                                                           float& difference,
+                                                           MoveDirection& adjustmentDirection) {
+    float left1 = entityBounds.left;
+    float right1 = entityBounds.left + entityBounds.width;
+    float top1 = entityBounds.top;
+    float bottom1 = entityBounds.top + entityBounds.height;
+
+    float left2 = collidedWithBounds.left;
+    float right2 = collidedWithBounds.left + collidedWithBounds.width;
+    float top2 = collidedWithBounds.top;
+    float bottom2 = collidedWithBounds.top + collidedWithBounds.height;
+
+    if(right1 > left2 && left1 < left2 && right1-left2 < bottom1-top2 && right1-left2 < bottom2-top1)
+    {
+        //entity's right side collided with something, so move it back to the left
+        adjustmentDirection = MoveDirection::LEFT;
+        difference = right1-left2;
+    }
+    else if(left1 < right2 && right1 > right2 && right2-left1 < bottom1-top2 && right2-left1 < bottom2-top1)
+    {
+        //entity's left side collided with something, so move it back to the right
+        adjustmentDirection = MoveDirection::RIGHT;
+        difference = right2-left1;
+    }
+    else if(bottom1 > top2 && top1 < top2)
+    {
+        //bottom of entity collided with something, so move it back up
+        adjustmentDirection = MoveDirection::UP;
+        difference = bottom1-top2;
+    }
+    else if(top1 < bottom2 && bottom1 > bottom2)
+    {
+        //top of entity collided with something, so move it back down
+        adjustmentDirection = MoveDirection::DOWN;
+        difference = bottom2-top1;
+    }
+}
+
+sf::Vector2f EntityCollidable::getAdjustedPosition(float x, float y, float difference, MoveDirection adjustmentDirection) {
+    switch(adjustmentDirection) {
+        case MoveDirection::RIGHT:
+            x += difference;
             break;
-        }
-
-        adjustPositionsByOne(entityDirection, left, top);
-
-        newBounds = sf::FloatRect(left, top, getBoundingBox().width, getBoundingBox().height);
-        isColliding = newBounds.intersects(collidedWith.getBoundingBox());
+        case MoveDirection::LEFT:
+            x -= difference;
+            break;
+        case MoveDirection::UP:
+            y -= difference;
+            break;
+        case MoveDirection::DOWN:
+            y += difference;
+            break;
+        case MoveDirection::NONE:
+            entityLogger.logError("AdjustmentDirection is set to NONE. How did this happen?");
+            break;
     }
 
-    setBoundingBox(newBounds);
-    return sf::Vector2f(left, top);
+    return sf::Vector2f(x, y);
 }
 
 bool EntityCollidable::isFacingCollidableInVicinity(MoveDirection facingDirection, Collidable& collidableInVicinity) {
@@ -57,20 +109,6 @@ bool EntityCollidable::isFacingCollidableInVicinity(MoveDirection facingDirectio
         default:
             entityLogger.logError("isEntityRectAlignedWithCollidableRect() should not be passed anything other than up, down, left, right");
             return false;
-    }
-}
-
-void EntityCollidable::adjustPositionsByOne(MoveDirection entityDirection, int& left, int& top) {
-    if(entityDirection == MoveDirection::RIGHT) {
-        left -= 1;
-    } else if(entityDirection == MoveDirection::LEFT) {
-        left += 1;
-    }
-
-    if(entityDirection == MoveDirection::DOWN) {
-        top -= 1;
-    } else if(entityDirection == MoveDirection::UP) {
-        top += 1;
     }
 }
 

@@ -65,6 +65,28 @@ void EntityAutonomousMovement::stopMovement(EntityState& state) {
     currentDirection = MoveDirection::NONE;
 }
 
+sf::Vector2f EntityAutonomousMovement::fixInvalidPosition(const sf::Vector2f& currentPosition, const sf::Vector2u& mapTileSize) {
+    float x = currentPosition.x;
+    float y = currentPosition.y;
+
+    x = fixInvalidCoordinate(x, mapTileSize.x);
+    y = fixInvalidCoordinate(y, mapTileSize.y);
+
+    return sf::Vector2f(x, y);
+}
+
+float EntityAutonomousMovement::fixInvalidCoordinate(float coord, float tileSize) {
+    if(fmod(coord, tileSize) != 0) {
+        int nextSmallest = coord - (fmod(coord, tileSize));
+        int nextLargest = nextSmallest + tileSize;
+
+        // Return of closest of two
+        coord = (coord - nextSmallest > nextLargest - coord)? nextLargest : nextSmallest;
+    }
+
+    return coord;
+}
+
 sf::Vector2f EntityAutonomousMovement::getRegularMovement(float speed) {
     sf::Vector2f movement;
 

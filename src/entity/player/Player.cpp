@@ -5,6 +5,7 @@ const float PLAYER_HEIGHT = 16.f;
 const float PLAYER_FRAME_TIME =  0.16f;
 const float MOVEMENT_SPEED = 80.f;
 const int VICINITY_BOUNDS_OFFSET = 4;
+Logger Player::logger("Player");
 
 void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture) {
     sf::Sprite::setTexture(*texture);
@@ -51,6 +52,10 @@ void Player::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTile
     setPosition(newPosition);
 
     handleState(deltaTime);
+
+    if((fmod(getPosition().x, mapTileSize.x) != 0 || fmod(getPosition().y,mapTileSize.y) != 0) && state == STATE_STANDING) {
+        logger.logError("handleStandingState(). Player has invalid position not divisible by mapTileSize");
+    }
 }
 
 void Player::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
@@ -111,7 +116,7 @@ void Player::onCloseDialogueEvent(CloseDialogueEvent* event) {
 }
 
 void Player::onCollisionEvent(PlayerCollisionEvent* event) {
-    setPosition(entityCollidable.getFixedPositionAfterCollision(event->collidedWith, currentDirection));
+    setPosition(entityCollidable.getFixedPositionAfterCollision(event->collidedWith));
     adjustPlayerAndViewPositions();
 }
 
@@ -134,6 +139,10 @@ EntityCollidable Player::getEntityCollidable() {
 
 MoveDirection Player::getLastFacingDirection() {
     return entityMovement.getLastFacingDirection();
+}
+
+bool Player::isMoving() {
+    return state == STATE_MOVING;
 }
 
 void Player::initializeAnimations() {

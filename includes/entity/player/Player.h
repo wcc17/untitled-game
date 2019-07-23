@@ -25,6 +25,7 @@ public:
     void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     EntityCollidable getEntityCollidable();
     MoveDirection getLastFacingDirection();
+    bool isMoving();
 private:
     EntityState state;
     EntityAnimation entityAnimation;
@@ -33,6 +34,7 @@ private:
     std::shared_ptr<EventBus> eventBus;
     bool actionButtonPressed = false;
     MoveDirection currentDirection;
+    static Logger logger;
 
     void initializeAnimations();
     void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);

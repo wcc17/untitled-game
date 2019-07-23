@@ -44,7 +44,8 @@ void NpcEntity::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapT
     entityAutonomousMovement.handleStanding(deltaTime, mapTileSize, state, getPosition());
 
     if(fmod(getPosition().x, mapTileSize.x) != 0 || fmod(getPosition().y,mapTileSize.y) != 0) {
-        entityLogger.logError("handleStandingState(). NpcEntity has invalid position not divisible by mapTileSize"); //TODO: delete this soon
+        entityLogger.logError("handleStandingState(). NpcEntity has invalid position not divisible by mapTileSize");
+        setEntityPosition(entityAutonomousMovement.fixInvalidPosition(getPosition(), mapTileSize));
     }
 }
 
@@ -73,7 +74,7 @@ void NpcEntity::onPlayerInteractionFinish() {
 
 void NpcEntity::onCollisionEvent(const Collidable& collidedWith) {
     entityLogger.logDebug("npc is colliding with something in onCollisionEvent()");
-    sf::Vector2f newPosition = entityCollidable.getFixedPositionAfterCollision(collidedWith, entityAutonomousMovement.getCurrentDirection());
+    sf::Vector2f newPosition = entityCollidable.getFixedPositionAfterCollision(collidedWith);
     setEntityPosition(newPosition);
     entityAutonomousMovement.stopMovement(state);
 }

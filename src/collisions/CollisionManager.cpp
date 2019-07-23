@@ -45,7 +45,7 @@ void CollisionManager::publishCollisionsWithPlayerAndEntities(Player& player, co
 
     for(std::shared_ptr<NpcEntity> npc : entities) {
         if(collisionOccurred(player.getEntityCollidable(), npc->getEntityCollidable())) {
-            eventBus->publish(new PlayerCollisionEvent(npc->getEntityCollidable()));
+            handleCollisionWithPlayerAndNpcEntity(player, npc);
         }
 
         if(playerVicinityCollisionOccurred(player, npc->getEntityCollidable())) {
@@ -58,39 +58,20 @@ void CollisionManager::handleEntityCollisions(Player& player,
                                               const std::vector<std::shared_ptr<NpcEntity>>& entities,
                                               const std::vector<std::shared_ptr<Collidable>>& mapCollidables) {
 
-    publishCollisionBetweenEntitiesAndPlayer(player, entities);
-//    publishCollisionsBetweenEntitiesAndEntity(entities, hasEntityCollidedMap); //TODO: this isn't working right now. Entities can push each other out of the map. May have to approach differently
+    publishCollisionsBetweenEntitiesAndEntity(entities);
     publishCollisionsBetweenEntitiesAndMap(entities, mapCollidables);
 }
 
-void CollisionManager::publishCollisionBetweenEntitiesAndPlayer(Player& player,
-        const std::vector<std::shared_ptr<NpcEntity>>& entities) {
-
-    for(std::shared_ptr<NpcEntity> npc : entities) {
-        if(collisionOccurred(npc->getEntityCollidable(), player.getEntityCollidable())) {
-            eventBus->publish(new NpcCollisionEvent(*npc, player.getEntityCollidable()));
+void CollisionManager::publishCollisionsBetweenEntitiesAndEntity(const std::vector<std::shared_ptr<NpcEntity>>& entities) {
+    for(std::shared_ptr<NpcEntity> npc1 : entities) {
+        for(std::shared_ptr<NpcEntity> npc2 : entities) {
+            if(npc1->getEntityCollidable().getName() != npc2->getEntityCollidable().getName()
+                && collisionOccurred(npc1->getEntityCollidable(), npc2->getEntityCollidable())) {
+                handleCollisionWithNpcAndNpc(npc1, npc2);
+            }
         }
     }
-
 }
-
-//void CollisionManager::publishCollisionsBetweenEntitiesAndEntity(const std::vector<std::shared_ptr<NpcEntity>>& entities, std::map<std::string, bool>& hasEntityCollidedMap) {
-//    for(std::shared_ptr<NpcEntity> npc1 : entities) {
-//        if(!hasEntityCollidedMap[npc1->getEntityCollidable().getName()]) {
-//
-//            for(std::shared_ptr<NpcEntity> npc2 : entities) {
-//                if(npc1->getEntityCollidable().getName() != npc2->getEntityCollidable().getName()
-//                    && !hasEntityCollidedMap[npc2->getEntityCollidable().getName()]
-//                    && collisionOccurred(npc1->getEntityCollidable(), npc2->getEntityCollidable())) {
-//
-//                    hasEntityCollidedMap[npc1->getEntityCollidable().getName()] = true;
-//                    hasEntityCollidedMap[npc2->getEntityCollidable().getName()] = true;
-//                    eventBus->publish(new NpcCollisionEvent(*npc1, npc2->getEntityCollidable()));
-//                }
-//            }
-//        }
-//    }
-//}
 
 void CollisionManager::publishCollisionsBetweenEntitiesAndMap(const std::vector<std::shared_ptr<NpcEntity>>& entities,
         const std::vector<std::shared_ptr<Collidable>>& collidables) {
@@ -142,4 +123,33 @@ bool CollisionManager::playerDoorCollisionOccurred(Player& player, const Collida
     }
 
     return false;
+}
+
+void CollisionManager::handleCollisionWithPlayerAndNpcEntity(Player& player, std::shared_ptr<NpcEntity> npc) {
+    if(player.isMoving()) {
+        eventBus->publish(new PlayerCollisionEvent(npc->getEntityCollidable()));
+    }
+    if(npc->isMoving()) {
+        eventBus->publish(new NpcCollisionEvent(*npc, player.getEntityCollidable()));
+    }
+
+    if(!player.isMoving() && !npc->isMoving()) {
+        logger.logDebug("Player and npc are colliding but neither is moving. Correcting player only. Is this an issue?");
+        eventBus->publish(new PlayerCollisionEvent(npc->getEntityCollidable()));
+    }
+}
+
+//TODO: should I not check npcs again in the calling function if they were a part of this collision?
+void CollisionManager::handleCollisionWithNpcAndNpc(std::shared_ptr<NpcEntity> npc1, std::shared_ptr<NpcEntity> npc2) {
+    if(npc1->isMoving()) {
+        eventBus->publish(new NpcCollisionEvent(*npc1, npc2->getEntityCollidable()));
+    }
+    if(npc2->isMoving()) {
+        eventBus->publish(new NpcCollisionEvent(*npc2, npc1->getEntityCollidable()));
+    }
+
+    if(!npc1->isMoving() && !npc2->isMoving()) {
+        logger.logDebug("Two npcs are colliding but neither is moving. Correcting first npc only. Is this an issue?");
+        eventBus->publish(new NpcCollisionEvent(*npc1, npc2->getEntityCollidable()));
+    }
 }
