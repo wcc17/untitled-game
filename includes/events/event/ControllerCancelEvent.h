@@ -1,11 +1,11 @@
-#ifndef NEWNEW_CONTROLLERESCAPEEVENT_H
-#define NEWNEW_CONTROLLERESCAPEEVENT_H
+#ifndef NEWNEW_CONTROLLERCANCELEVENT_H
+#define NEWNEW_CONTROLLERCANCELEVENT_H
 
 #include "../Event.h"
 
-class ControllerEscapeEvent : public Event {
+class ControllerCancelEvent : public Event {
 public:
-    ControllerEscapeEvent() {};
+    ControllerCancelEvent() {};
 };
 
-#endif //NEWNEW_CONTROLLERESCAPEEVENT_H
+#endif //NEWNEW_CONTROLLERCANCELEVENT_H

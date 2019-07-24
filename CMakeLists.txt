@@ -97,7 +97,8 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/PlayerDoorCollisionEvent.h
         includes/events/event/ControllerMenuEvent.h
         includes/events/event/ControllerCancelEvent.h
-        includes/events/event/OpenMenuEvent.h)
+        includes/events/event/OpenMenuEvent.h
+        includes/events/event/CloseMenuEvent.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 

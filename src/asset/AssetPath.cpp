@@ -17,3 +17,7 @@ std::string AssetPath::getSceneMapPath(std::string sceneName) {
 std::string AssetPath::getNpcAssetPath(std::string npcName) {
     return "assets/gfx/entity/" + npcName + ".png";
 }
+
+std::string AssetPath::getUIComponentAssetPath(std::string componentName) {
+    return "assets/gfx/ui/" + componentName + ".png";
+}

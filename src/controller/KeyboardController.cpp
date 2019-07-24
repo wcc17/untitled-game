@@ -25,13 +25,19 @@ void KeyboardController::handleInput(std::vector<sf::Event> sfEvents) {
 
 void KeyboardController::handleKeyPressedEvent(sf::Keyboard::Key key) {
     switch(key) {
+        //TODO: do I want to limit how many times/how often the player can hit these keys? Otherwise we will spam playerManager with events
         case sf::Keyboard::Enter:
             logger.logDebug("enter pressed");
+            eventBus->publish(new ControllerMenuEvent());
             break;
         case sf::Keyboard::Space:
-            //TODO: do I want to limit how many times/how often the player can hit this key? Otherwise we will spam playerManager with events
             logger.logDebug("space pressed");
             eventBus->publish(new ControllerActionEvent());
+            break;
+        case sf::Keyboard::Escape:
+            logger.logDebug("escape pressed");
+            eventBus->publish(new ControllerCancelEvent());
+            break;
         default:
             break;
     }

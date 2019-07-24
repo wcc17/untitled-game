@@ -29,13 +29,19 @@ public:
     void release(TextureManager& textureManager);
 
 private:
+    enum DialogueState {
+        STATE_READY,
+        STATE_ACTIVE,
+        STATE_INACTIVE
+    };
+
+    DialogueState dialogueState = STATE_INACTIVE;
+
     std::shared_ptr<EventBus> eventBus;
     sf::Sprite dialogueBoxSprite;
     sf::Text dialogueText;
     std::string stringBeingDrawn;
     sf::Time stringDrawTimer;
-    bool dialoguePositionSet = false;
-    bool dialogueIsActive = false;
     Collidable entityPlayerInteractedWith;
     float windowScale; //TODO: better name? If default window size is 1920x1080 and actual is 960x540, then scale should be .5f
 

@@ -1,11 +1,11 @@
-#ifndef NEWNEW_OPENMENUEVENT_H
-#define NEWNEW_OPENMENUEVENT_H
+#ifndef NEWNEW_CLOSEMENUEVENT_H
+#define NEWNEW_CLOSEMENUEVENT_H
 
 #include "../Event.h"
 
-class OpenMenuEvent : public Event {
+class CloseMenuEvent : public Event {
 public:
-    OpenMenuEvent() {};
+    CloseMenuEvent() {};
 };
 
-#endif //NEWNEW_OPENMENUEVENT_H
+#endif //NEWNEW_CLOSEMENUEVENT_H

@@ -7,12 +7,12 @@ void UIManager::initialize(std::shared_ptr<EventBus> eventBus, TextureManager& t
     textureManager.loadTexture(AssetPath::DIALOGUE_BOX_TEXTURE);
 
     dialogueManager.initialize(eventBus, textureManager.getTexture(AssetPath::DIALOGUE_BOX_TEXTURE), font, windowScale);
-    uiComponentManager.initialize(textureManager);
+    uiComponentManager.initialize(eventBus, textureManager);
 
     eventBus->subscribe(this, &UIManager::onControllerMenuEvent);
     eventBus->subscribe(this, &UIManager::onControllerActionEvent);
     eventBus->subscribe(this, &UIManager::onOpenDialogueEvent);
-    eventBus->subscribe(this, &UIManager::onControllerEscapeEvent);
+    eventBus->subscribe(this, &UIManager::onControllerCancelEvent);
 }
 
 void UIManager::update(sf::RenderWindow* window, sf::View& view, sf::Time deltaTime) {
@@ -25,8 +25,13 @@ void UIManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
     dialogueManager.drawToRenderTexture(renderTexture);
 }
 
-void UIManager::loadDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents) {
+void UIManager::resetOnNewScene(std::vector<DialogueEvent> entityDialogueEvents) {
     dialogueManager.setEntityDialogueEvents(entityDialogueEvents);
+    resetMenu();
+}
+
+void UIManager::resetMenu() {
+    uiComponentManager.resetForNewScene();
 }
 
 void UIManager::onControllerMenuEvent(ControllerMenuEvent* event) {
@@ -39,8 +44,8 @@ void UIManager::onControllerActionEvent(ControllerActionEvent* event) {
     dialogueManager.onControllerActionEvent();
 }
 
-void UIManager::onControllerEscapeEvent(ControllerEscapeEvent* event) {
-    uiComponentManager.onControllerEscapeEvent();
+void UIManager::onControllerCancelEvent(ControllerCancelEvent* event) {
+    uiComponentManager.onControllerCancelEvent();
 }
 
 void UIManager::onOpenDialogueEvent(OpenDialogueEvent* event) {

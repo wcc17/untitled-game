@@ -8,7 +8,7 @@
 class FramerateCounter {
 
 public:
-    void initialize(sf::Font* font);
+    void initialize(sf::Font* font, sf::Vector2u windowSize, sf::Vector2f defaultWindowSize);
     sf::Time update();
     sf::Text getFpsText();
 private:

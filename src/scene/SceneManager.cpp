@@ -2,7 +2,7 @@
 
 const float SCENE_TRANSITION_SPEED = 1850.f;
 
-void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font) {
+void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font, sf::Vector2u windowSize, sf::Vector2f defaultWindowSize) {
     this->eventBus = eventBus;
 
     collisionManager.initialize(eventBus);
@@ -11,11 +11,11 @@ void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font
     textureManager.loadTexture(AssetPath::PLAYER_TEXTURE);
     player.initialize(eventBus, textureManager.getTexture(AssetPath::PLAYER_TEXTURE));
 
-    textureManager.loadTexture(AssetPath::DIALOGUE_BOX_TEXTURE);
-    textManager.initialize(eventBus, textureManager.getTexture(AssetPath::DIALOGUE_BOX_TEXTURE), font);
+    uiManager.initialize(eventBus, textureManager, font, windowSize, defaultWindowSize);
 
     eventBus->subscribe(this, &SceneManager::onChangeSceneEvent);
-
+    eventBus->subscribe(this, &SceneManager::onOpenMenuEvent);
+    eventBus->subscribe(this, &SceneManager::onCloseMenuEvent);
     loadScene("", "scene1");
 }
 
@@ -35,6 +35,8 @@ void SceneManager::update(sf::Time elapsedTime, sf::RenderWindow* window) {
         case SceneState::STATE_SKIP_FRAME:
             //skip a frame so that everything can catch up after loading a new scene
             setNextScene();
+        case SceneState::STATE_PAUSE:
+            updatePauseState(elapsedTime, window);
             break;
     }
 }
@@ -43,7 +45,7 @@ void SceneManager::updateSceneState(sf::Time elapsedTime, sf::RenderWindow* wind
     player.update(elapsedTime, scene->getMapTileSize());
     npcManager.update(elapsedTime, scene->getMapTileSize());
     collisionManager.handleCollisions(player, npcManager.getNpcEntities(), scene->getMapCollidables());
-    textManager.update(window, viewManager.getView(), elapsedTime);
+    uiManager.update(window, viewManager.getView(), elapsedTime);
 }
 
 void SceneManager::updateSceneTransition(sf::Time elapsedTime) {
@@ -72,11 +74,16 @@ void SceneManager::updateChangeSceneState() {
     setNextScene();
 }
 
+void SceneManager::updatePauseState(sf::Time elapsedTime, sf::RenderWindow* window) {
+    uiManager.update(window, viewManager.getView(), elapsedTime);
+}
+
 void SceneManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
     switch(state) {
         case SceneState::STATE_SCENE:
         case SceneState::STATE_TRANSITION_SCENE_IN:
         case SceneState::STATE_TRANSITION_SCENE_OUT:
+        case SceneState::STATE_PAUSE:
             drawSceneStateToRenderTexture(renderTexture);
             break;
         case SceneState::STATE_CHANGING_SCENE:
@@ -91,7 +98,7 @@ void SceneManager::drawSceneStateToRenderTexture(sf::RenderTexture* renderTextur
     renderTexture->draw(*scene);
     renderTexture->draw(player);
     npcManager.drawToRenderTexture(renderTexture);
-    textManager.drawToRenderTexture(renderTexture);
+    uiManager.drawToRenderTexture(renderTexture);
 }
 
 void SceneManager::loadScene(std::string previousSceneName, std::string sceneName) {
@@ -105,7 +112,7 @@ void SceneManager::loadScene(std::string previousSceneName, std::string sceneNam
                           scene->getNpcNameToNpcAssetNameMap(), textureManager);
 
     std::vector<DialogueEvent> entityDialogueEvents = xmlManager.loadEntityDialogueForScene(sceneName);
-    textManager.setEntityDialogueEvents(entityDialogueEvents);
+    uiManager.resetOnNewScene(entityDialogueEvents);
 }
 
 void SceneManager::setNextScene() {
@@ -126,6 +133,8 @@ void SceneManager::setNextScene() {
         case STATE_TRANSITION_SCENE_IN:
             state = STATE_SCENE;
             break;
+        default:
+            break;
     }
 }
 
@@ -133,6 +142,20 @@ void SceneManager::onChangeSceneEvent(ChangeSceneEvent* event) {
     if(state == STATE_SCENE) {
         this->nextSceneName = event->door.getName();
         setNextScene();
+    }
+}
+
+void SceneManager::onOpenMenuEvent(OpenMenuEvent* event) {
+    if(state == STATE_SCENE) {
+        state = STATE_PAUSE;
+    } else {
+        uiManager.resetMenu(); //TODO: this is sort of a hack because KeyboardController is in Game.cpp and I can't keep the user from pressing menu button during scene transitions
+    }
+}
+
+void SceneManager::onCloseMenuEvent(CloseMenuEvent* event) {
+    if(state == STATE_PAUSE) {
+        state = STATE_SCENE;
     }
 }
 
@@ -145,7 +168,7 @@ void SceneManager::release() {
     //TODO: don't forget to unsubscribe things from eventBus!
 
     textureManager.releaseTexture(AssetPath::PLAYER_TEXTURE);
-    textureManager.releaseTexture(AssetPath::DIALOGUE_BOX_TEXTURE);
+    uiManager.release(textureManager);
     releaseScene();
 }
 

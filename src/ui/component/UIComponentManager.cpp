@@ -1,6 +1,8 @@
 #include "../../../includes/ui/component/UIComponentManager.h"
 
-void UIComponentManager::initialize(TextureManager& textureManager) {
+void UIComponentManager::initialize(std::shared_ptr<EventBus> eventBus, TextureManager& textureManager) {
+    this->eventBus = eventBus;
+
     std::string textureFileName = AssetPath::getUIComponentAssetPath("player_menu");
     textureManager.loadTexture(textureFileName);
     playerMenuComponent.initialize("player_menu", textureManager.getTexture(textureFileName));
@@ -8,21 +10,21 @@ void UIComponentManager::initialize(TextureManager& textureManager) {
 }
 
 void UIComponentManager::update(sf::RenderWindow* window, sf::View& view, sf::Time deltaTime) {
-    if(menuIsActive) {
-        if(!positionsSet) {
+    switch(state) {
+        case STATE_INACTIVE:
+            break;
+        case STATE_READY:
             updateComponentPositions(window, view);
-        }
+            break;
+        case STATE_ACTIVE:
+            break;
     }
 }
 
 void UIComponentManager::drawToRenderTexture(sf::RenderTexture *renderTexture) {
-    if(menuIsActive) {
+    if(state == STATE_ACTIVE) {
         renderTexture->draw(playerMenuComponent);
     }
-}
-
-bool UIComponentManager::isMenuActive() {
-    return menuIsActive;
 }
 
 void UIComponentManager::updateComponentPositions(sf::RenderWindow* window, sf::View& view) {
@@ -30,20 +32,38 @@ void UIComponentManager::updateComponentPositions(sf::RenderWindow* window, sf::
     float y = view.getCenter().y - (view.getSize().y / 2) + ((view.getSize().y - playerMenuComponent.getGlobalBounds().height) / 2); //TODO: magic numbers
     playerMenuComponent.setPosition(x, y);
 
-    positionsSet = true;
+    state = STATE_ACTIVE;
 }
 
 void UIComponentManager::onControllerMenuEvent() {
-    menuIsActive = true;
+    if(state == STATE_INACTIVE) {
+        state = STATE_READY;
+        eventBus->publish(new OpenMenuEvent());
+    }
 }
 
-void UIComponentManager::onControllerEscapeEvent() {
-    menuIsActive = false;
-    positionsSet = false;
+void UIComponentManager::onControllerCancelEvent() {
+    closeMenu();
+}
+
+void UIComponentManager::closeMenu() {
+    if(state == STATE_ACTIVE || state == STATE_READY) {
+        state = STATE_INACTIVE;
+        eventBus->publish(new CloseMenuEvent());
+    }
 }
 
 void UIComponentManager::onControllerActionEvent() {
     //select something in the menu if this is active
+}
+
+bool UIComponentManager::isMenuActive() {
+    return !(state == STATE_INACTIVE);
+}
+
+void UIComponentManager::resetForNewScene() {
+    closeMenu();
+
 }
 
 void UIComponentManager::release(TextureManager& textureManager) {

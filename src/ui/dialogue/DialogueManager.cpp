@@ -23,17 +23,20 @@ void DialogueManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture
 }
 
 void DialogueManager::update(sf::RenderWindow* window, sf::View& view, sf::Time deltaTime) {
-    if(dialogueIsActive) {
-        if(!dialoguePositionSet) {
+    switch(dialogueState) {
+        case DialogueState::STATE_READY:
             setPositionsOnDialogueIsActive(window, view);
-        }
-
-        updateText(deltaTime);
+            break;
+        case DialogueState::STATE_ACTIVE:
+            updateText(deltaTime);
+            break;
+        case DialogueState::STATE_INACTIVE:
+            break;
     }
 }
 
 void DialogueManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
-    if(dialogueIsActive) {
+    if(dialogueState == STATE_ACTIVE) {
         renderTexture->draw(dialogueBoxSprite);
 
         //draw to default view and then switch back to whatever view renderTexture was using before
@@ -47,7 +50,7 @@ void DialogueManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
 void DialogueManager::setPositionsOnDialogueIsActive(sf::RenderWindow* window, sf::View& view) {
     updateDialogueBoxPosition(view.getCenter(), view.getSize());
     updateDialogueTextPosition(window, view);
-    dialoguePositionSet = true;
+    dialogueState = STATE_ACTIVE;
 }
 
 void DialogueManager::updateDialogueBoxPosition(const sf::Vector2f& viewCenter, const sf::Vector2f& viewSize) {
@@ -64,7 +67,7 @@ void DialogueManager::updateDialogueTextPosition(sf::RenderWindow* window, sf::V
 }
 
 void DialogueManager::onControllerActionEvent() {
-    if(dialogueIsActive) {
+    if(dialogueState == STATE_ACTIVE) {
         if(currentDialogueEvent->shouldStartNextDialogue()) {
             startNextDialogue();
         } else if(!currentDialogueEvent->currentDialogueDone()) {
@@ -77,15 +80,14 @@ void DialogueManager::onControllerActionEvent() {
 }
 
 void DialogueManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
-    dialogueIsActive = true;
     logger.logDebug("ready to handle the dialogue box in DialogueManager");
     entityPlayerInteractedWith = event->interactedWith;
     initializeText();
+    dialogueState = STATE_READY;
 }
 
 void DialogueManager::closeDialogue() {
-    dialogueIsActive = false;
-    dialoguePositionSet = false;
+    dialogueState = STATE_INACTIVE;
     this->stringBeingDrawn = "";
     this->dialogueText.setString("");
     this->currentDialogueEvent.reset();
@@ -150,7 +152,7 @@ void DialogueManager::setEntityDialogueEvents(std::vector<DialogueEvent> entityD
 }
 
 bool DialogueManager::isDialogueActive() {
-    return dialogueIsActive;
+    return !(dialogueState == STATE_INACTIVE); //dialogue is active as long as state != STATE_INACTIVE
 }
 
 void DialogueManager::release(TextureManager &textureManager) {

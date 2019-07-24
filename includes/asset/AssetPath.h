@@ -20,6 +20,7 @@ public:
 
     static std::string getSceneMapPath(std::string sceneName);
     static std::string getNpcAssetPath(std::string npcName);
+    static std::string getUIComponentAssetPath(std::string componentName);
 };
 
 #endif //NEWNEW_ASSETPATH_H

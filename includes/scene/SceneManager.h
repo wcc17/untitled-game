@@ -9,14 +9,17 @@
 #include "../collisions/CollisionManager.h"
 #include "SFML/Graphics/RenderTexture.hpp"
 #include "../npc/NpcManager.h"
-#include "../text/TextManager.h"
+#include "../ui/dialogue/DialogueManager.h"
 #include "ViewManager.h"
 #include "../util/XmlManager.h"
 #include "SceneState.h"
+#include "../ui/UIManager.h"
+#include "../events/event/OpenMenuEvent.h"
+#include "../events/event/CloseMenuEvent.h"
 
 class SceneManager {
 public:
-    void initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font);
+    void initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font, sf::Vector2u windowSize, sf::Vector2f defaultWindowSize);
     void update(sf::Time elapsedTime, sf::RenderWindow* window);
     void drawToRenderTexture(sf::RenderTexture* renderTexture);
     void release();
@@ -25,12 +28,15 @@ private:
     void loadScene(std::string previousSceneName, std::string sceneName);
     void setNextScene();
     void releaseScene();
-    void onChangeSceneEvent(ChangeSceneEvent* event);
     void updateSceneState(sf::Time elapsedTime, sf::RenderWindow* window);
     void updateSceneTransition(sf::Time elapsedTime);
     void updateChangeSceneState();
+    void updatePauseState(sf::Time elapsedTime, sf::RenderWindow* window);
     void drawSceneStateToRenderTexture(sf::RenderTexture* renderTexture);
     void drawChangeSceneStateToRenderTexture(sf::RenderTexture* renderTexture);
+    void onChangeSceneEvent(ChangeSceneEvent* event);
+    void onOpenMenuEvent(OpenMenuEvent* event);
+    void onCloseMenuEvent(CloseMenuEvent* event);
     float sceneAlpha = 255.f;
 
     std::unique_ptr<Scene> scene;
@@ -42,10 +48,10 @@ private:
     TextureManager textureManager;
     CollisionManager collisionManager;
     NpcManager npcManager;
-    TextManager textManager;
     ViewManager viewManager;
     XmlManager xmlManager;
     Player player;
+    UIManager uiManager;
 };
 
 

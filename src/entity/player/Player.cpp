@@ -40,7 +40,7 @@ void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
         case STATE_MOVING:
             handleMovingState(deltaTime, mapTileSize);
             break;
-        case STATE_INTERACTING:
+        case STATE_PLAYER_INTERACTING_WITH_UI:
             handleInteractingState();
             break;
     }
@@ -72,7 +72,6 @@ void Player::handleInteractingState() {
 
 void Player::handleState(sf::Time deltaTime) {
     entityAnimation.update(deltaTime, currentDirection);
-    handleActionButtonPressed();
     resetAfterFrame();
     adjustPlayerAndViewPositions();
     sf::Sprite::setTextureRect(entityAnimation.getTextureRect());
@@ -85,16 +84,14 @@ void Player::adjustPlayerAndViewPositions() {
 }
 
 void Player::handleActionButtonPressed() {
-    if(actionButtonPressed) {
-        MoveDirection currentlyFacingDirection = entityMovement.getLastFacingDirection();
+    MoveDirection currentlyFacingDirection = entityMovement.getLastFacingDirection();
 
-        for(std::shared_ptr<Collidable> collidable : entityCollidable.getCollidablesInVicinity()) {
-            if(entityCollidable.isFacingCollidableInVicinity(currentlyFacingDirection, *collidable)) {
-                state = STATE_INTERACTING;
-                entityAnimation.stop();
-                eventBus->publish(new OpenDialogueEvent(getGlobalBounds(), *collidable, currentlyFacingDirection));
-                break;
-            }
+    for(std::shared_ptr<Collidable> collidable : entityCollidable.getCollidablesInVicinity()) {
+        if(entityCollidable.isFacingCollidableInVicinity(currentlyFacingDirection, *collidable)) {
+            state = STATE_PLAYER_INTERACTING_WITH_UI;
+            entityAnimation.stop();
+            eventBus->publish(new OpenDialogueEvent(getGlobalBounds(), *collidable, currentlyFacingDirection));
+            break;
         }
     }
 }
@@ -104,7 +101,9 @@ void Player::onControllerMoveEvent(ControllerMoveEvent* event) {
 }
 
 void Player::onControllerActionEvent(ControllerActionEvent* event) {
-    this->actionButtonPressed = (state != STATE_INTERACTING);
+    if(state != STATE_PLAYER_INTERACTING_WITH_UI) {
+        handleActionButtonPressed();
+    }
 }
 
 void Player::onVicinityCollisionEvent(PlayerVicinityCollisionEvent* event) {
@@ -126,7 +125,6 @@ void Player::onDoorCollisionEvent(PlayerDoorCollisionEvent* event) {
 
 void Player::resetAfterFrame() {
     entityCollidable.clearCollidablesInVicinity();
-    actionButtonPressed = false;
 }
 
 void Player::roundPosition() {

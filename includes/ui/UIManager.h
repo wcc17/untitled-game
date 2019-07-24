@@ -10,7 +10,7 @@
 #include "../events/event/ControllerMenuEvent.h"
 #include "dialogue/DialogueManager.h"
 #include "component/UIComponentManager.h"
-#include "../events/event/ControllerEscapeEvent.h"
+#include "../events/event/ControllerCancelEvent.h"
 
 class UIManager {
 
@@ -19,7 +19,8 @@ public:
     void update(sf::RenderWindow* window, sf::View& view, sf::Time deltaTime);
     void drawToRenderTexture(sf::RenderTexture* renderTexture);
     void release(TextureManager& textureManager);
-    void loadDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents);
+    void resetMenu();
+    void resetOnNewScene(std::vector<DialogueEvent> entityDialogueEvents);
 
 private:
     std::shared_ptr<EventBus> eventBus;
@@ -29,7 +30,7 @@ private:
 
     void onControllerMenuEvent(ControllerMenuEvent* event);
     void onControllerActionEvent(ControllerActionEvent* event);
-    void onControllerEscapeEvent(ControllerEscapeEvent* event);
+    void onControllerCancelEvent(ControllerCancelEvent* event);
     void onOpenDialogueEvent(OpenDialogueEvent* event);
 };
 

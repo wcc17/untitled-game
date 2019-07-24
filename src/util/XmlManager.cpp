@@ -1,5 +1,4 @@
 #include "../../includes/util/XmlManager.h"
-#include "../../includes/text/dialogue/DialogueEvent.h"
 
 Logger XmlManager::logger("XmlManager");
 
