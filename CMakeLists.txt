@@ -18,7 +18,7 @@ set(SOURCE_FILES src/main.cpp
         src/entity/character/EntityAnimation.cpp
         src/collisions/Collidable.cpp
         src/scene/SceneManager.cpp
-        src/text/TextManager.cpp
+        src/ui/dialogue/DialogueManager.cpp
         src/events/HandlerFunctionBase.cpp
         src/events/Event.cpp
         src/collisions/CollisionManager.cpp
@@ -29,13 +29,16 @@ set(SOURCE_FILES src/main.cpp
         src/entity/character/EntityMovement.cpp
         src/entity/character/EntityCollidable.cpp
         src/scene/ViewManager.cpp
-        src/text/dialogue/DialogueEvent.cpp
-        src/text/dialogue/Dialogue.cpp
-        src/text/dialogue/DialoguePiece.cpp
+        src/ui/dialogue/DialogueEvent.cpp
+        src/ui/dialogue/Dialogue.cpp
+        src/ui/dialogue/DialoguePiece.cpp
         src/entity/npc/EntityAutonomousMovement.cpp
         src/util/Logger.cpp
         src/entity/character/EntityLogger.cpp
-        src/util/XmlManager.cpp)
+        src/util/XmlManager.cpp
+        src/ui/component/UIComponent.cpp
+        src/ui/UIManager.cpp
+        src/ui/component/UIComponentManager.cpp)
 
 set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/asset/FontManager.h
@@ -51,7 +54,7 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/entity/character/EntityAnimation.h
         includes/collisions/Collidable.h
         includes/scene/SceneManager.h
-        includes/text/TextManager.h
+        includes/ui/dialogue/DialogueManager.h
         includes/events/Event.h
         includes/collisions/CollisionManager.h
         includes/npc/NpcManager.h
@@ -61,13 +64,16 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/entity/character/EntityMovement.h
         includes/entity/character/EntityCollidable.h
         includes/scene/ViewManager.h
-        includes/text/dialogue/DialogueEvent.h
-        includes/text/dialogue/Dialogue.h
-        includes/text/dialogue/DialoguePiece.h
+        includes/ui/dialogue/DialogueEvent.h
+        includes/ui/dialogue/Dialogue.h
+        includes/ui/dialogue/DialoguePiece.h
         includes/entity/npc/EntityAutonomousMovement.h
         includes/util/Logger.h
         includes/entity/character/EntityLogger.h
-        includes/util/XmlManager.h)
+        includes/util/XmlManager.h
+        includes/ui/component/UIComponent.h
+        includes/ui/UIManager.h
+        includes/ui/component/UIComponentManager.h)
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/EntityCollisionEvent.h
@@ -87,7 +93,11 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/ExitGameEvent.h
         includes/events/event/NpcCollisionEvent.h
         includes/events/event/ChangeSceneEvent.h
-        includes/scene/SceneState.h includes/events/event/PlayerDoorCollisionEvent.h)
+        includes/scene/SceneState.h
+        includes/events/event/PlayerDoorCollisionEvent.h
+        includes/events/event/ControllerMenuEvent.h
+        includes/events/event/ControllerCancelEvent.h
+        includes/events/event/OpenMenuEvent.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 
