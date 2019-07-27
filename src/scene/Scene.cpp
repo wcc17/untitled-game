@@ -30,10 +30,8 @@ void Scene::loadTileMap(TextureManager& textureManager) {
     const auto& layers = map.getLayers();
     for(const auto& layer : layers) {
         if(layer->getType() == tmx::Layer::Type::Tile) {
-            tileMap.loadTileLayer(layer->getLayerAs<tmx::TileLayer>(), tileset, map.getTileCount(), map.getTileSize());
-
-            std::vector<sf::VertexArray> tileMapVertices = tileMap.getVertices();
-            addTileMapVerticesToVertices(tileMapVertices);
+            sf::VertexArray layerVertexArray = tileMap.loadTileLayer(layer->getLayerAs<tmx::TileLayer>(), tileset, map.getTileCount(), map.getTileSize());
+            this->vertices.push_back(layerVertexArray);
         } else if(layer->getType() == tmx::Layer::Type::Object) {
             sceneObjectMap.loadObjectLayer(layer->getLayerAs<tmx::ObjectGroup>());
         } else {
@@ -50,12 +48,6 @@ void Scene::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
     for(sf::VertexArray vertexArray : vertices) {
         target.draw(vertexArray, states);
-    }
-}
-
-void Scene::addTileMapVerticesToVertices(std::vector<sf::VertexArray>& vertices) {
-    for(sf::VertexArray vertexArray : vertices) {
-        this->vertices.push_back(vertexArray);
     }
 }
 

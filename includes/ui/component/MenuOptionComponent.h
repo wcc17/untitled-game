@@ -8,7 +8,7 @@
 class MenuOptionComponent : public UIComponent, public sf::Text {
 
 public:
-    void initialize(std::string assetName, ObjectType type, sf::Vector2f initialPosition, int index);
+    void initialize(std::string name, ObjectType type, sf::FloatRect boundingBox, int index);
 
     bool operator< (const MenuOptionComponent &other) const {
         return index < other.index;

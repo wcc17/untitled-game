@@ -4,7 +4,7 @@
 
 #include <SFML/System.hpp>
 #include <SFML/Graphics/Rect.hpp>
-#include "../scene/ObjectType.h"
+#include "../map/ObjectType.h"
 #include "../controller/MoveDirection.h"
 
 class Collidable {

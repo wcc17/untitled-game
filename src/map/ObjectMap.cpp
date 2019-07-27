@@ -1,4 +1,4 @@
-#include "../../includes/scene/ObjectMap.h"
+#include "../../includes/map/ObjectMap.h"
 
 const static std::string NOTYPE_OBJECT_TYPE = "notype";
 const static std::string DOOR_OBJECT_TYPE = "door";

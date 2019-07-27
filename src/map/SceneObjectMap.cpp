@@ -1,4 +1,4 @@
-#include "../../includes/scene/SceneObjectMap.h"
+#include "../../includes/map/SceneObjectMap.h"
 
 const static std::string DEFAULT_SPAWN_NAME = "default_spawn";
 

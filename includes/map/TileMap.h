@@ -9,12 +9,10 @@
 
 class TileMap {
 public:
-    void loadTileLayer(const tmx::TileLayer& layer, const tmx::Tileset& tileset, const tmx::Vector2u& mapSizeInTiles,
+    sf::VertexArray loadTileLayer(const tmx::TileLayer& layer, const tmx::Tileset& tileset, const tmx::Vector2u& mapSizeInTiles,
                        const tmx::Vector2u& tileSize);
-    std::vector<sf::VertexArray> getVertices();
 
 protected:
-    std::vector<sf::VertexArray> vertices;
     static bool isTileIdTransparent(uint32_t layerTileId);
     static void setVertexPositionForTile(sf::Vertex* quad, int x, int y, tmx::Vector2u tilesetTileImageSize);
     static void setVertexTextureCoordsForTile(sf::Vertex* quad, int x, int y, tmx::Vector2u tilesetTileImagePosition,

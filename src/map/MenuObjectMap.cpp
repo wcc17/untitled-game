@@ -1,4 +1,4 @@
-#include "../../includes/scene/MenuObjectMap.h"
+#include "../../includes/map/MenuObjectMap.h"
 
 MenuObjectMap::MenuObjectMap() : logger("MenuObjectMap") {}
 
@@ -15,18 +15,17 @@ void MenuObjectMap::loadPlayerMenu(const std::vector<tmx::Object> &objects) {
         ObjectType type = determineObjectType(object.getType());
 
         std::string objectName = object.getName();
-        tmx::FloatRect boundingBox = object.getAABB();
-        sf::Vector2f position(boundingBox.left, boundingBox.top);
+        sf::FloatRect boundingBox = sf::FloatRect(object.getAABB().left, object.getAABB().top, object.getAABB().width, object.getAABB().height);
 
         switch(type) {
             case ObjectType::MENU: {
-                playerMenu.initialize(object.getName(), type, position);
+                playerMenu.initialize(object.getName(), type, boundingBox);
                 break;
             }
             case ObjectType::MENU_OPTION: {
                 MenuOptionComponent playerMenuOption;
                 int index = std::stoi(object.getName()); //TODO: error handling if name is wrong
-                playerMenuOption.initialize(object.getName(), type, position, index);
+                playerMenuOption.initialize(object.getName(), type, boundingBox, index);
                 playerMenu.addMenuOption(playerMenuOption);
                 break;
             }

@@ -8,11 +8,11 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <tmxlite/Map.hpp>
 #include <cmath>
-#include "TileMap.h"
+#include "../map/TileMap.h"
 #include "../util/Logger.h"
 #include "../asset/AssetPath.h"
 #include "../asset/TextureManager.h"
-#include "SceneObjectMap.h"
+#include "../map/SceneObjectMap.h"
 
 class Scene : public sf::Drawable, public sf::Transformable {
 public:
@@ -42,7 +42,6 @@ private:
     std::vector<sf::VertexArray> vertices;
 
     void loadTileMap(TextureManager& textureManager);
-    void addTileMapVerticesToVertices(std::vector<sf::VertexArray>& vertices);
     static Logger logger;
 };
 

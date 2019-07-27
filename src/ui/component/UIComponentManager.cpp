@@ -22,7 +22,6 @@ void UIComponentManager::loadMenuMap(TextureManager& textureManager) {
     textureManager.loadTexture(tilesetImagePath);
     this->tileMapTexture = textureManager.getTexture(tilesetImagePath);
 
-    //load object layers first to get the menus initialized
     const auto& layers = map.getLayers();
     for(const auto& layer : layers) {
         if(layer->getType() == tmx::Layer::Type::Object) {
@@ -30,19 +29,16 @@ void UIComponentManager::loadMenuMap(TextureManager& textureManager) {
         }
     }
 
-    playerMenuComponent = menuObjectMap.getPlayerMenuComponent();
+    MenuComponent playerMenuComponent = menuObjectMap.getPlayerMenuComponent();
+    playerMenuLayer.addMenuComponent(playerMenuComponent.getName(), playerMenuComponent); //TODO: can this be added in the for loop instead?
+    playerMenuLayer.setTexture(*tileMapTexture);
 
-    //load tile layers and assign the vertices to each menu where appropriate
-    std::map<std::string, std::vector<sf::VertexArray>> vertexArrayMap;
     for(const auto& layer : layers) {
         if(layer->getType() == tmx::Layer::Type::Tile) {
-            tileMap.loadTileLayer(layer->getLayerAs<tmx::TileLayer>(), tileset, map.getTileCount(), map.getTileSize());
-            vertexArrayMap.insert(std::make_pair(layer->getName(), tileMap.getVertices()));
+            sf::VertexArray layerVertexArray = tileMap.loadTileLayer(layer->getLayerAs<tmx::TileLayer>(), tileset, map.getTileCount(), map.getTileSize());
+            playerMenuLayer.addLayerVertices(layer->getName(), layerVertexArray);
         }
     }
-
-
-    playerMenuComponent.setComponentTexture(tileMapTexture, vertexArrayMap.at(playerMenuComponent.getName()));
 }
 
 void UIComponentManager::update(sf::RenderWindow* window, sf::View& view, sf::Time deltaTime) {
@@ -59,7 +55,7 @@ void UIComponentManager::update(sf::RenderWindow* window, sf::View& view, sf::Ti
 
 void UIComponentManager::drawToRenderTexture(sf::RenderTexture *renderTexture) {
     if(state == STATE_ACTIVE) {
-        renderTexture->draw(playerMenuComponent);
+        renderTexture->draw(playerMenuLayer);
     }
 }
 
@@ -70,8 +66,8 @@ void UIComponentManager::updateComponentPositions(sf::RenderWindow* window, sf::
     //The menu maps are basically 320 x 180 textures, where everything is transparent EXCEPT for the menus that I drew
     //So within the "texture" the menu is placed in the right position, but the texture itself needs to be drawn like its a big 320x180 box
     //I don't know if I like this, but I don't think theres a way to color the tiles without doing this. The concern is, will it be easy to put text in?
-    sf::Vector2f whyDoesThisWork = sf::Vector2f(viewCenter.x - viewSize.x/2, viewCenter.y - viewSize.y/2);
-    playerMenuComponent.setPosition(whyDoesThisWork);
+    sf::Vector2f position = sf::Vector2f(viewCenter.x - (viewSize.x/2), viewCenter.y - (viewSize.y/2));
+    playerMenuLayer.setPosition(position);
 
     state = STATE_ACTIVE;
 }
@@ -109,5 +105,4 @@ void UIComponentManager::resetForNewScene() {
 
 void UIComponentManager::release(TextureManager& textureManager) {
     textureManager.releaseTexture(tilesetImagePath);
-    textureManager.releaseTexture(AssetPath::getUIComponentAssetPath(playerMenuComponent.getName()));
 }

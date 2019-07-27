@@ -1,9 +1,9 @@
 #include "../../../includes/ui/component/UIComponent.h"
 
-void UIComponent::initialize(std::string name, ObjectType type, sf::Vector2f initialPosition) {
+void UIComponent::initialize(std::string name, ObjectType type, sf::FloatRect boundingBox) {
     this->name = name;
     this->type = type;
-    this->initialPosition = initialPosition;
+    this->boundingBox = boundingBox;
 }
 
 std::string UIComponent::getName() {
@@ -14,6 +14,6 @@ ObjectType UIComponent::getType() {
     return this->type;
 }
 
-sf::Vector2f UIComponent::getInitialPosition() {
-    return this->initialPosition;
+sf::FloatRect UIComponent::getBoundingBox() {
+    return this->boundingBox;
 }

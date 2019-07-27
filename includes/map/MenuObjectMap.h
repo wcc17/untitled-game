@@ -4,7 +4,7 @@
 
 #include <tmxlite/Map.hpp>
 #include "ObjectMap.h"
-#include "../../includes/asset/AssetPath.h"
+#include "../asset/AssetPath.h"
 #include "../ui/component/MenuComponent.h"
 #include "../ui/component/MenuOptionComponent.h"
 

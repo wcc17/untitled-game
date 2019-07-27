@@ -9,8 +9,9 @@
 #include "../../events/EventBus.h"
 #include "../../events/event/OpenMenuEvent.h"
 #include "../../events/event/CloseMenuEvent.h"
-#include "../../scene/MenuObjectMap.h"
-#include "../../scene/TileMap.h"
+#include "../../map/MenuObjectMap.h"
+#include "../../map/TileMap.h"
+#include "MenuLayer.h"
 
 class UIComponentManager {
 
@@ -36,8 +37,8 @@ private:
     std::shared_ptr<EventBus> eventBus;
     sf::Texture* tileMapTexture;
     ComponentState state = STATE_INACTIVE;
-    MenuComponent playerMenuComponent;
     MenuObjectMap menuObjectMap;
+    MenuLayer playerMenuLayer;
     TileMap tileMap;
     std::string tilesetImagePath;
 
