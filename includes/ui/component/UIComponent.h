@@ -5,16 +5,21 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <map>
 #include "../../asset/TextureManager.h"
+#include "../../scene/ObjectType.h"
+#include "../../asset/AssetPath.h"
 
-class UIComponent : public sf::Sprite {
+class UIComponent {
 
 public:
-    void initialize(std::string textureFileName, sf::Texture* texture);
-    std::string getAssetName();
-private:
-    std::string assetName;
-    std::map<std::string, UIComponent> nestedComponents;
+    void initialize(std::string name, ObjectType type, sf::Vector2f initialPosition);
+    std::string getName();
+    ObjectType getType();
+    sf::Vector2f getInitialPosition();
 
+private:
+    std::string name;
+    ObjectType type;
+    sf::Vector2f initialPosition;
 
     /**
      * what kind of menus are needed?

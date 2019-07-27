@@ -27,13 +27,15 @@ void Scene::loadTileMap(TextureManager& textureManager) {
     tileSize = sf::Vector2u(map.getTileSize().x, map.getTileSize().y);
     mapSizeInPixels = sf::Vector2u(mapSizeInTiles.x * tileSize.x, mapSizeInTiles.y * tileSize.y);
 
-
     const auto& layers = map.getLayers();
     for(const auto& layer : layers) {
         if(layer->getType() == tmx::Layer::Type::Tile) {
-            loadTileLayer(layer->getLayerAs<tmx::TileLayer>(), tileset, map.getTileCount(), map.getTileSize());
+            tileMap.loadTileLayer(layer->getLayerAs<tmx::TileLayer>(), tileset, map.getTileCount(), map.getTileSize());
+
+            std::vector<sf::VertexArray> tileMapVertices = tileMap.getVertices();
+            addTileMapVerticesToVertices(tileMapVertices);
         } else if(layer->getType() == tmx::Layer::Type::Object) {
-            loadObjectLayer(layer->getLayerAs<tmx::ObjectGroup>());
+            sceneObjectMap.loadObjectLayer(layer->getLayerAs<tmx::ObjectGroup>());
         } else {
             logger.logError("not supporting this type of layer yet");
         }
@@ -48,6 +50,12 @@ void Scene::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
     for(sf::VertexArray vertexArray : vertices) {
         target.draw(vertexArray, states);
+    }
+}
+
+void Scene::addTileMapVerticesToVertices(std::vector<sf::VertexArray>& vertices) {
+    for(sf::VertexArray vertexArray : vertices) {
+        this->vertices.push_back(vertexArray);
     }
 }
 
@@ -67,8 +75,32 @@ std::string Scene::getSceneName() {
     return this->sceneName;
 }
 
+std::vector<std::shared_ptr<Collidable>>& Scene::getMapCollidables() {
+    return sceneObjectMap.getMapCollidables();
+}
+
+std::vector<Collidable> Scene::getNpcCollidables() {
+    return sceneObjectMap.getNpcCollidables();
+}
+
+std::map<std::string, sf::IntRect> Scene::getNpcMoveBoundariesMap() {
+    return sceneObjectMap.getNpcMoveBoundariesMap();
+}
+
+Collidable Scene::getPlayerCollidable(std::string spawnName) {
+    return sceneObjectMap.getPlayerCollidable(spawnName);
+}
+
+std::map<std::string, std::string> Scene::getNpcNameToNpcAssetNameMap() {
+    return sceneObjectMap.getNpcNameToNpcAssetNameMap();
+}
+
+std::string Scene::getPlayerSpawnPointName(std::string sceneName) {
+    return sceneObjectMap.getPlayerSpawnPointName(sceneName);
+}
+
+
 void Scene::release(TextureManager& textureManager) {
     textureManager.releaseTexture(tilesetImagePath);
-    ObjectMap::release();
-//    TileMap::release(); not actually needed right now
+    sceneObjectMap.release();
 }

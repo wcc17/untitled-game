@@ -9,6 +9,8 @@
 #include "../../events/EventBus.h"
 #include "../../events/event/OpenMenuEvent.h"
 #include "../../events/event/CloseMenuEvent.h"
+#include "../../scene/MenuObjectMap.h"
+#include "../../scene/TileMap.h"
 
 class UIComponentManager {
 
@@ -30,10 +32,16 @@ private:
         STATE_ACTIVE
     };
 
+    static Logger logger;
     std::shared_ptr<EventBus> eventBus;
+    sf::Texture* tileMapTexture;
     ComponentState state = STATE_INACTIVE;
-    UIComponent playerMenuComponent;
+    MenuComponent playerMenuComponent;
+    MenuObjectMap menuObjectMap;
+    TileMap tileMap;
+    std::string tilesetImagePath;
 
+    void loadMenuMap(TextureManager& textureManager);
     void updateComponentPositions(sf::RenderWindow* window, sf::View& view);
     void closeMenu();
 };

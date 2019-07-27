@@ -73,7 +73,7 @@ void Player::handleInteractingState() {
 void Player::handleState(sf::Time deltaTime) {
     entityAnimation.update(deltaTime, currentDirection);
     resetAfterFrame();
-    adjustPlayerAndViewPositions();
+    adjustPlayerAndViewPositions(); //TODO: this does not need to run every single frame
     sf::Sprite::setTextureRect(entityAnimation.getTextureRect());
     this->entityCollidable.setBoundingBox(sf::FloatRect(getPosition().x, getPosition().y, PLAYER_WIDTH, PLAYER_HEIGHT));
 }

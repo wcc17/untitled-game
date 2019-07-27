@@ -1,8 +1,8 @@
 #include "../../includes/util/Logger.h"
 
-bool Logger::shouldPrintDebug = true;
+bool Logger::shouldPrintDebug = false;
 bool Logger::shouldPrintError = true;
-bool Logger::shouldOnlyPrintSpecifiedClasses = true;
+bool Logger::shouldOnlyPrintSpecifiedClasses = false;
 std::string Logger::classNamesToPrint[] = {"Game", "XmlManager", "CollisionManager"};
 
 Logger::Logger(std::string className) {
@@ -60,7 +60,6 @@ void Logger::log(LogLevel logLevel, bool printPrepend, std::string prepend, cons
     auto timestamp = std::chrono::system_clock::now();
     std::time_t time = std::chrono::system_clock::to_time_t(timestamp);
 
-    //TODO: should be printing the log level (error, debug, info)
     char buff[20];
     strftime(buff, 20, "%Y-%m-%d %H:%M:%S", std::localtime(&time));
     printf("[%s][%s][%s] ", buff, className.c_str(), logLevelStr.c_str());

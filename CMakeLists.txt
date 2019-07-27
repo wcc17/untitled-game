@@ -38,7 +38,10 @@ set(SOURCE_FILES src/main.cpp
         src/util/XmlManager.cpp
         src/ui/component/UIComponent.cpp
         src/ui/UIManager.cpp
-        src/ui/component/UIComponentManager.cpp)
+        src/ui/component/UIComponentManager.cpp
+        src/scene/MenuObjectMap.cpp
+        src/scene/SceneObjectMap.cpp
+        src/ui/component/MenuComponent.cpp includes/ui/component/MenuComponent.h src/ui/component/MenuOptionComponent.cpp includes/ui/component/MenuOptionComponent.h)
 
 set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/asset/FontManager.h
@@ -73,7 +76,10 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/util/XmlManager.h
         includes/ui/component/UIComponent.h
         includes/ui/UIManager.h
-        includes/ui/component/UIComponentManager.h)
+        includes/ui/component/UIComponentManager.h
+        includes/scene/MenuObjectMap.h
+        includes/scene/SceneObjectMap.h
+        src/ui/component/MenuComponent.cpp includes/ui/component/MenuComponent.h src/ui/component/MenuOptionComponent.cpp includes/ui/component/MenuOptionComponent.h)
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/EntityCollisionEvent.h
