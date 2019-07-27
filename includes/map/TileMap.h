@@ -9,7 +9,7 @@
 
 class TileMap {
 public:
-    sf::VertexArray loadTileLayer(const tmx::TileLayer& layer, const tmx::Tileset& tileset, const tmx::Vector2u& mapSizeInTiles,
+    static sf::VertexArray loadTileLayer(const tmx::TileLayer& layer, const tmx::Tileset& tileset, const tmx::Vector2u& mapSizeInTiles,
                        const tmx::Vector2u& tileSize);
 
 protected:

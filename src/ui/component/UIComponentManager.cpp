@@ -5,40 +5,8 @@ Logger UIComponentManager::logger("UIComponentManager");
 
 void UIComponentManager::initialize(std::shared_ptr<EventBus> eventBus, TextureManager& textureManager) {
     this->eventBus = eventBus;
-    loadMenuMap(textureManager);
-}
-
-void UIComponentManager::loadMenuMap(TextureManager& textureManager) {
-    tmx::Map map;
-
-    std::string sceneMapPath = AssetPath::getSceneMapPath(SCENE_NAME);
-    if(!map.load(sceneMapPath)) {
-        //TODO: exit the application after printing the error that the file couldn't be loaded
-    }
-
-    tmx::Tileset tileset = map.getTilesets()[0];
-
-    this->tilesetImagePath = tileset.getImagePath();
-    textureManager.loadTexture(tilesetImagePath);
-    this->tileMapTexture = textureManager.getTexture(tilesetImagePath);
-
-    const auto& layers = map.getLayers();
-    for(const auto& layer : layers) {
-        if(layer->getType() == tmx::Layer::Type::Object) {
-            menuObjectMap.loadObjectLayer(layer->getLayerAs<tmx::ObjectGroup>());
-        }
-    }
-
-    MenuComponent playerMenuComponent = menuObjectMap.getPlayerMenuComponent();
-    playerMenuLayer.addMenuComponent(playerMenuComponent.getName(), playerMenuComponent); //TODO: can this be added in the for loop instead?
-    playerMenuLayer.setTexture(*tileMapTexture);
-
-    for(const auto& layer : layers) {
-        if(layer->getType() == tmx::Layer::Type::Tile) {
-            sf::VertexArray layerVertexArray = tileMap.loadTileLayer(layer->getLayerAs<tmx::TileLayer>(), tileset, map.getTileCount(), map.getTileSize());
-            playerMenuLayer.addLayerVertices(layer->getName(), layerVertexArray);
-        }
-    }
+    this->menuMap = mapLoader.loadMenuMap(textureManager, SCENE_NAME); //TODO: do i need to keep the menuMap around here? Not as necessary as in Scene
+    this->playerMenuLayer = menuMap.getPlayerMenuLayer();
 }
 
 void UIComponentManager::update(sf::RenderWindow* window, sf::View& view, sf::Time deltaTime) {
@@ -104,5 +72,5 @@ void UIComponentManager::resetForNewScene() {
 }
 
 void UIComponentManager::release(TextureManager& textureManager) {
-    textureManager.releaseTexture(tilesetImagePath);
+    menuMap.release(textureManager);
 }

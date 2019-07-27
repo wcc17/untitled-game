@@ -12,6 +12,8 @@
 #include "../../map/MenuObjectMap.h"
 #include "../../map/TileMap.h"
 #include "MenuLayer.h"
+#include "../../map/MapLoader.h"
+#include "../../map/MenuMap.h"
 
 class UIComponentManager {
 
@@ -35,14 +37,11 @@ private:
 
     static Logger logger;
     std::shared_ptr<EventBus> eventBus;
-    sf::Texture* tileMapTexture;
     ComponentState state = STATE_INACTIVE;
-    MenuObjectMap menuObjectMap;
+    MenuMap menuMap;
+    MapLoader mapLoader;
     MenuLayer playerMenuLayer;
-    TileMap tileMap;
-    std::string tilesetImagePath;
 
-    void loadMenuMap(TextureManager& textureManager);
     void updateComponentPositions(sf::RenderWindow* window, sf::View& view);
     void closeMenu();
 };

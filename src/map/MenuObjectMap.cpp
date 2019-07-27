@@ -10,6 +10,7 @@ void MenuObjectMap::loadObjectLayer(const tmx::ObjectGroup& layer) {
     }
 }
 
+//TODO: can this be more dynamic? static? instead of hardcoding loading the player menu
 void MenuObjectMap::loadPlayerMenu(const std::vector<tmx::Object> &objects) {
     for(tmx::Object object : objects) {
         ObjectType type = determineObjectType(object.getType());

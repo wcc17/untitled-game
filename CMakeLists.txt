@@ -44,7 +44,10 @@ set(SOURCE_FILES src/main.cpp
         src/ui/component/MenuComponent.cpp
         src/ui/component/MenuOptionComponent.cpp
         src/ui/component/MenuLayer.cpp
-        src/map/MapLoader.cpp)
+        src/map/MapLoader.cpp
+        src/map/SceneMap.cpp
+        src/map/MenuMap.cpp
+        src/map/Map.cpp)
 
 set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/asset/FontManager.h
@@ -85,7 +88,10 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/ui/component/MenuComponent.h
         includes/ui/component/MenuOptionComponent.h
         includes/ui/component/MenuLayer.h
-        includes/map/MapLoader.h)
+        includes/map/MapLoader.h
+        includes/map/SceneMap.h
+        includes/map/MenuMap.h
+        includes/map/Map.h)
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/EntityCollisionEvent.h
