@@ -7,17 +7,18 @@ void UIManager::initialize(std::shared_ptr<EventBus> eventBus, TextureManager& t
     textureManager.loadTexture(AssetPath::DIALOGUE_BOX_TEXTURE);
 
     dialogueManager.initialize(eventBus, textureManager.getTexture(AssetPath::DIALOGUE_BOX_TEXTURE), font, windowScale);
-    uiComponentManager.initialize(eventBus, textureManager);
+    uiComponentManager.initialize(eventBus, textureManager, font, windowScale);
 
     eventBus->subscribe(this, &UIManager::onControllerMenuEvent);
     eventBus->subscribe(this, &UIManager::onControllerActionEvent);
     eventBus->subscribe(this, &UIManager::onOpenDialogueEvent);
     eventBus->subscribe(this, &UIManager::onControllerCancelEvent);
+    eventBus->subscribe(this, &UIManager::onControllerMenuMoveEvent);
 }
 
-void UIManager::update(sf::RenderWindow* window, sf::View& view, sf::Time deltaTime) {
-    uiComponentManager.update(window, view, deltaTime);
-    dialogueManager.update(window, view, deltaTime);
+void UIManager::update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime) {
+    uiComponentManager.update(renderTexture, view, deltaTime);
+    dialogueManager.update(renderTexture, view, deltaTime);
 }
 
 void UIManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
@@ -51,6 +52,12 @@ void UIManager::onControllerCancelEvent(ControllerCancelEvent* event) {
 void UIManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
     if(!uiComponentManager.isMenuActive()) {
         dialogueManager.onOpenDialogueEvent(event);
+    }
+}
+
+void UIManager::onControllerMenuMoveEvent(ControllerMenuMoveEvent* event) {
+    if(uiComponentManager.isMenuActive()) {
+        uiComponentManager.onControllerMenuMoveEvent(event->direction);
     }
 }
 

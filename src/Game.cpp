@@ -44,7 +44,7 @@ void Game::run() {
 void Game::update(std::vector<sf::Event> events) {
     sf::Time deltaTime = framerateCounter.update();
     keyboardController.handleInput(events);
-    sceneManager.update(deltaTime, window.get());
+    sceneManager.update(deltaTime, renderTexture);
 }
 
 void Game::draw() {
@@ -55,6 +55,7 @@ void Game::draw() {
     sceneManager.drawToRenderTexture(&renderTexture);
 
     //draw to renderTexture with default view for text
+    sf::View view = renderTexture.getView();
     renderTexture.setView(renderTexture.getDefaultView());
     renderTexture.draw(framerateCounter.getFpsText());
 
@@ -66,6 +67,8 @@ void Game::draw() {
     //draw renderTexture to window and display
     window->draw(renderSprite);
     window->display();
+
+    renderTexture.setView(view);
 }
 
 void Game::exit() {

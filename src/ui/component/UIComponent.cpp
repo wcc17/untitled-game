@@ -4,6 +4,7 @@ void UIComponent::initialize(std::string name, ObjectType type, sf::FloatRect bo
     this->name = name;
     this->type = type;
     this->boundingBox = boundingBox;
+    this->initialPosition = sf::Vector2f(boundingBox.left, boundingBox.top);
 }
 
 std::string UIComponent::getName() {

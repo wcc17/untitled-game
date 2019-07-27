@@ -38,6 +38,14 @@ void KeyboardController::handleKeyPressedEvent(sf::Keyboard::Key key) {
             logger.logDebug("escape pressed");
             eventBus->publish(new ControllerCancelEvent());
             break;
+        case sf::Keyboard::W:
+            logger.logDebug("w pressed");
+            eventBus->publish(new ControllerMenuMoveEvent(MoveDirection::UP));
+            break;
+        case sf::Keyboard::S:
+            logger.logDebug("s pressed");
+            eventBus->publish(new ControllerMenuMoveEvent(MoveDirection::DOWN));
+            break;
         default:
             break;
     }

@@ -3,7 +3,7 @@
 
 Logger MapLoader::logger("MapLoader");
 
-MenuMap MapLoader::loadMenuMap(TextureManager& textureManager, std::string sceneName) {
+MenuMap MapLoader::loadMenuMap(TextureManager& textureManager, std::string sceneName, sf::Font* font, float windowScale) {
     MenuMap menuMap;
     tmx::Map map;
 
@@ -16,7 +16,6 @@ MenuMap MapLoader::loadMenuMap(TextureManager& textureManager, std::string scene
 
     menuMap.setTilesetImagePath(tileset.getImagePath());
     textureManager.loadTexture(menuMap.getTilesetImagePath());
-//    menuMap.setTileMapTexture(textureManager.getTexture(menuMap.getTilesetImagePath()));
 
     const auto& layers = map.getLayers();
     for(const auto& layer : layers) {
@@ -27,7 +26,9 @@ MenuMap MapLoader::loadMenuMap(TextureManager& textureManager, std::string scene
 
     //TODO: can this be added in the for loop instead without having playerMenuComponent in MenuObjectMap?
     MenuLayer playerMenuLayer;
-    MenuComponent playerMenuComponent = menuMap.getMenuObjectMap().getPlayerMenuComponent();
+    MenuComponent playerMenuComponent = menuMap.getPlayerMenuComponent();
+    playerMenuComponent.initializeMenuOptionFont(font, windowScale);
+
     playerMenuLayer.addMenuComponent(playerMenuComponent.getName(), playerMenuComponent);
     playerMenuLayer.setTexture(*textureManager.getTexture(menuMap.getTilesetImagePath())); //TODO: shouldn't be setting this texture directly in playerMenuLayer. all the menus should be looking at the same tilemap texture
 

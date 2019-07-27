@@ -20,7 +20,7 @@ class DialogueManager {
 public:
     DialogueManager();
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font, float windowScale);
-    void update(sf::RenderWindow* window, sf::View& view, sf::Time deltaTime);
+    void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime);
     void drawToRenderTexture(sf::RenderTexture* renderTexture);
     void setEntityDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents);
     void onControllerActionEvent();
@@ -52,9 +52,9 @@ private:
     DialogueEvent defaultDialogueEvent;
 
     void closeDialogue();
-    void setPositionsOnDialogueIsActive(sf::RenderWindow* window, sf::View& view);
+    void setPositionsOnDialogueIsActive(sf::RenderTexture& renderTexture, sf::View& view);
     void updateDialogueBoxPosition(const sf::Vector2f& viewCenter, const sf::Vector2f& viewSize);
-    void updateDialogueTextPosition(sf::RenderWindow* window, sf::View& view);
+    void updateDialogueTextPosition(sf::RenderTexture& renderTexture, sf::View& view);
     void initializeText();
     void updateText(sf::Time deltaTime);
     void drawMoreText();

@@ -18,8 +18,8 @@
 class UIComponentManager {
 
 public:
-    void initialize(std::shared_ptr<EventBus> eventBus, TextureManager& textureManager);
-    void update(sf::RenderWindow* window, sf::View& view, sf::Time deltaTime);
+    void initialize(std::shared_ptr<EventBus> eventBus, TextureManager& textureManager, sf::Font* font, float windowScale);
+    void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime);
     void drawToRenderTexture(sf::RenderTexture* renderTexture);
     void release(TextureManager& textureManager);
     bool isMenuActive();
@@ -27,6 +27,7 @@ public:
     void onControllerMenuEvent();
     void onControllerCancelEvent();
     void onControllerActionEvent();
+    void onControllerMenuMoveEvent(MoveDirection direction);
 
 private:
     enum ComponentState {
@@ -42,7 +43,7 @@ private:
     MapLoader mapLoader;
     MenuLayer playerMenuLayer;
 
-    void updateComponentPositions(sf::RenderWindow* window, sf::View& view);
+    void updateComponentPositions(sf::RenderTexture& renderTexture, sf::View& view);
     void closeMenu();
 };
 

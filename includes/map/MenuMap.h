@@ -10,7 +10,7 @@ class MenuMap : public Map {
 
 public:
     void loadObjectLayer(const tmx::ObjectGroup& layer) override;
-    MenuObjectMap getMenuObjectMap();
+    MenuComponent getPlayerMenuComponent();
     MenuLayer getPlayerMenuLayer();
     void setPlayerMenuLayer(MenuLayer playerMenuLayer);
 

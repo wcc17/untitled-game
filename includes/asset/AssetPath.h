@@ -17,6 +17,7 @@ public:
     static const std::string MUNRO_REGULAR;
     static const std::string PLAYER_TEXTURE;
     static const std::string DIALOGUE_BOX_TEXTURE;
+    static const std::string MENU_SELECTOR_TEXTURE;
 
     static std::string getSceneMapPath(std::string sceneName);
     static std::string getNpcAssetPath(std::string npcName);

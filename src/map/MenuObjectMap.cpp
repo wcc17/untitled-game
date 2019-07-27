@@ -26,7 +26,9 @@ void MenuObjectMap::loadPlayerMenu(const std::vector<tmx::Object> &objects) {
             case ObjectType::MENU_OPTION: {
                 MenuOptionComponent playerMenuOption;
                 int index = std::stoi(object.getName()); //TODO: error handling if name is wrong
-                playerMenuOption.initialize(object.getName(), type, boundingBox, index);
+                std::string displayText = getObjectPropertyValue("displayText", object.getProperties());
+
+                playerMenuOption.initialize(object.getName(), type, boundingBox, index, displayText);
                 playerMenu.addMenuOption(playerMenuOption);
                 break;
             }

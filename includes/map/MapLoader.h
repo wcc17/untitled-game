@@ -15,7 +15,7 @@
 class MapLoader {
 
 public:
-    MenuMap loadMenuMap(TextureManager& textureManager, std::string sceneName);
+    MenuMap loadMenuMap(TextureManager& textureManager, std::string sceneName, sf::Font* font, float windowScale);
     SceneMap loadSceneMap(TextureManager& textureManager, std::string sceneName);
 private:
     static Logger logger;

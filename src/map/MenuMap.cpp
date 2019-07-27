@@ -4,8 +4,8 @@ void MenuMap::loadObjectLayer(const tmx::ObjectGroup& layer) {
     menuObjectMap.loadObjectLayer(layer);
 }
 
-MenuObjectMap MenuMap::getMenuObjectMap() {
-    return menuObjectMap;
+MenuComponent MenuMap::getPlayerMenuComponent() {
+    return menuObjectMap.getPlayerMenuComponent();
 }
 
 MenuLayer MenuMap::getPlayerMenuLayer() {

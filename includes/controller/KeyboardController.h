@@ -7,6 +7,7 @@
 #include "../events/event/ControllerMoveEvent.h"
 #include "../events/event/ControllerMenuEvent.h"
 #include "../events/event/ControllerCancelEvent.h"
+#include "../events/event/ControllerMenuMoveEvent.h"
 
 class KeyboardController : public BaseController {
 

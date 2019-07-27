@@ -11,6 +11,7 @@ void DialogueManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture
 
     this->windowScale = windowScale;
 
+    //TODO: the dialogueBox sprite should probably be loaded from a tile map. Would be a difficult change to make though
     this->dialogueBoxSprite.setTexture(*texture);
     this->dialogueBoxSprite.scale(0.33f, 0.33f); //TODO: this shouldn't be done this way. Dialog box should just be drawn at the right size for the view
     this->dialogueText.setFillColor(sf::Color::Black);
@@ -22,10 +23,10 @@ void DialogueManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture
     defaultDialogueEvent.addDialogue(defaultDialogue);
 }
 
-void DialogueManager::update(sf::RenderWindow* window, sf::View& view, sf::Time deltaTime) {
+void DialogueManager::update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime) {
     switch(dialogueState) {
         case DialogueState::STATE_READY:
-            setPositionsOnDialogueIsActive(window, view);
+            setPositionsOnDialogueIsActive(renderTexture, view);
             break;
         case DialogueState::STATE_ACTIVE:
             updateText(deltaTime);
@@ -47,9 +48,9 @@ void DialogueManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
     }
 }
 
-void DialogueManager::setPositionsOnDialogueIsActive(sf::RenderWindow* window, sf::View& view) {
+void DialogueManager::setPositionsOnDialogueIsActive(sf::RenderTexture& renderTexture, sf::View& view) {
     updateDialogueBoxPosition(view.getCenter(), view.getSize());
-    updateDialogueTextPosition(window, view);
+    updateDialogueTextPosition(renderTexture, view);
     dialogueState = STATE_ACTIVE;
 }
 
@@ -59,8 +60,8 @@ void DialogueManager::updateDialogueBoxPosition(const sf::Vector2f& viewCenter, 
     dialogueBoxSprite.setPosition(dialogueBoxX, dialogueBoxY);
 }
 
-void DialogueManager::updateDialogueTextPosition(sf::RenderWindow* window, sf::View& view) {
-    sf::Vector2i coordsToPixel = window->mapCoordsToPixel(dialogueBoxSprite.getPosition(), view);
+void DialogueManager::updateDialogueTextPosition(sf::RenderTexture& renderTexture, sf::View& view) {
+    sf::Vector2i coordsToPixel = renderTexture.mapCoordsToPixel(dialogueBoxSprite.getPosition(), view);
     coordsToPixel.x = coordsToPixel.x + (dialogueBoxSprite.getTextureRect().width / (DIALOGUE_TEXT_WIDTH_DIVISOR/windowScale));
     coordsToPixel.y = coordsToPixel.y + (dialogueBoxSprite.getTextureRect().height / (DIALOGUE_TEXT_HEIGHT_DIVISOR/windowScale));
     dialogueText.setPosition(coordsToPixel.x, coordsToPixel.y);

@@ -19,14 +19,14 @@ void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font
     loadScene("", "scene1");
 }
 
-void SceneManager::update(sf::Time elapsedTime, sf::RenderWindow* window) {
+void SceneManager::update(sf::Time elapsedTime, sf::RenderTexture& renderTexture) {
     switch(state) {
         case SceneState::STATE_SCENE:
-            updateSceneState(elapsedTime, window);
+            updateSceneState(elapsedTime, renderTexture);
             break;
         case SceneState::STATE_TRANSITION_SCENE_IN:
         case SceneState::STATE_TRANSITION_SCENE_OUT:
-            updateSceneState(elapsedTime, window);
+            updateSceneState(elapsedTime, renderTexture);
             updateSceneTransition(elapsedTime);
             break;
         case SceneState::STATE_CHANGING_SCENE:
@@ -36,16 +36,16 @@ void SceneManager::update(sf::Time elapsedTime, sf::RenderWindow* window) {
             //skip a frame so that everything can catch up after loading a new scene
             setNextScene();
         case SceneState::STATE_PAUSE:
-            updatePauseState(elapsedTime, window);
+            updatePauseState(elapsedTime, renderTexture);
             break;
     }
 }
 
-void SceneManager::updateSceneState(sf::Time elapsedTime, sf::RenderWindow* window) {
+void SceneManager::updateSceneState(sf::Time elapsedTime, sf::RenderTexture& renderTexture) {
     player.update(elapsedTime, scene->getMapTileSize());
     npcManager.update(elapsedTime, scene->getMapTileSize());
     collisionManager.handleCollisions(player, npcManager.getNpcEntities(), scene->getMapCollidables());
-    uiManager.update(window, viewManager.getView(), elapsedTime);
+    uiManager.update(renderTexture, viewManager.getView(), elapsedTime);
 }
 
 void SceneManager::updateSceneTransition(sf::Time elapsedTime) {
@@ -74,8 +74,8 @@ void SceneManager::updateChangeSceneState() {
     setNextScene();
 }
 
-void SceneManager::updatePauseState(sf::Time elapsedTime, sf::RenderWindow* window) {
-    uiManager.update(window, viewManager.getView(), elapsedTime);
+void SceneManager::updatePauseState(sf::Time elapsedTime, sf::RenderTexture& renderTexture) {
+    uiManager.update(renderTexture, viewManager.getView(), elapsedTime);
 }
 
 void SceneManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {

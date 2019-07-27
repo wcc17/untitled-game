@@ -20,7 +20,7 @@
 class SceneManager {
 public:
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font, sf::Vector2u windowSize, sf::Vector2f defaultWindowSize);
-    void update(sf::Time elapsedTime, sf::RenderWindow* window);
+    void update(sf::Time elapsedTime, sf::RenderTexture& renderTexture);
     void drawToRenderTexture(sf::RenderTexture* renderTexture);
     void release();
     sf::Color getSceneTransparency(sf::Color currentColor);
@@ -28,10 +28,10 @@ private:
     void loadScene(std::string previousSceneName, std::string sceneName);
     void setNextScene();
     void releaseScene();
-    void updateSceneState(sf::Time elapsedTime, sf::RenderWindow* window);
+    void updateSceneState(sf::Time elapsedTime, sf::RenderTexture& renderTexture);
     void updateSceneTransition(sf::Time elapsedTime);
     void updateChangeSceneState();
-    void updatePauseState(sf::Time elapsedTime, sf::RenderWindow* window);
+    void updatePauseState(sf::Time elapsedTime, sf::RenderTexture& renderTexture);
     void drawSceneStateToRenderTexture(sf::RenderTexture* renderTexture);
     void drawChangeSceneStateToRenderTexture(sf::RenderTexture* renderTexture);
     void onChangeSceneEvent(ChangeSceneEvent* event);
