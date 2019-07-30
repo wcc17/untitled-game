@@ -2,21 +2,19 @@
 #define NEWNEW_MENUMAP_H
 
 
+#include <tmxlite/Map.hpp>
+#include "../asset/AssetPath.h"
+#include "../ui/component/MenuComponent.h"
+#include "../ui/component/MenuOptionComponent.h"
 #include "Map.h"
-#include "MenuObjectMap.h"
-#include "../ui/component/MenuLayer.h"
 
 class MenuMap : public Map {
-
 public:
-    void loadObjectLayer(const tmx::ObjectGroup& layer) override;
-    MenuComponent getPlayerMenuComponent();
-    MenuLayer getPlayerMenuLayer();
-    void setPlayerMenuLayer(MenuLayer playerMenuLayer);
+    MenuMap();
+    MenuComponent loadMenu(const std::vector<tmx::Object> &objects);
 
 private:
-    MenuObjectMap menuObjectMap;
-    MenuLayer playerMenuLayer;
+    Logger logger;
 };
 
 

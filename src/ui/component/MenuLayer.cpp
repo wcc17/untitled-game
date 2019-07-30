@@ -1,7 +1,21 @@
 #include "../../../includes/ui/component/MenuLayer.h"
 
-void MenuLayer::initializeMenuSelector(sf::Texture* texture) {
-    menuSelector.setTexture(*texture);
+//TODO: should this class be a part of UIComponentManager instead?
+
+void MenuLayer::initialize(sf::Texture* menuSelectorTexture, sf::Font* font, float windowScale) {
+    menuSelector.setTexture(*menuSelectorTexture);
+    initializeMenuOptionsFont(font, windowScale);
+
+    activeMenuComponent = menuComponentMap.at("player_menu"); //TODO: not the correct way to do this once I want to show/hide certain menus
+    activeVertexArrays.push_back(vertexArrayMap.at("player_menu")); //TODO: not the correct way to do this once I want to show/hide certain menus
+}
+
+void MenuLayer::initializeMenuOptionsFont(sf::Font* font, float windowScale) {
+    std::map<std::string, MenuComponent>::iterator it = menuComponentMap.begin();
+    while (it != menuComponentMap.end()) {
+        it->second.initializeMenuOptionFont(font, windowScale);
+        it++;
+    }
 }
 
 void MenuLayer::update(sf::RenderTexture& texture) {
@@ -46,10 +60,8 @@ void MenuLayer::moveSelector(MoveDirection direction) {
 
 void MenuLayer::addMenuComponent(std::string name, MenuComponent menuComponent) {
     menuComponentMap.insert(std::make_pair(name, menuComponent));
-    activeMenuComponent = menuComponentMap.at("player_menu"); //TODO: not the correct way to do this once I want to show/hide certain menus
 }
 
 void MenuLayer::addLayerVertices(std::string name, sf::VertexArray vertices) {
     vertexArrayMap.insert(std::make_pair(name, vertices));
-    activeVertexArrays.push_back(vertices); //TODO: not the correct way to do this once I want to show/hide certain menus
 }

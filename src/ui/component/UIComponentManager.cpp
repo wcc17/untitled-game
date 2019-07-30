@@ -1,15 +1,14 @@
 #include "../../../includes/ui/component/UIComponentManager.h"
 
-const std::string SCENE_NAME = "menu";
+const std::string PLAYER_MENU_NAME = "player_menu";
 Logger UIComponentManager::logger("UIComponentManager");
 
 void UIComponentManager::initialize(std::shared_ptr<EventBus> eventBus, TextureManager& textureManager, sf::Font* font, float windowScale) {
     this->eventBus = eventBus;
-    this->menuMap = mapLoader.loadMenuMap(textureManager, SCENE_NAME, font, windowScale); //TODO: do i need to keep the menuMap around here? Not as necessary as in Scene
-    this->playerMenuLayer = menuMap.getPlayerMenuLayer();
 
     textureManager.loadTexture(AssetPath::MENU_SELECTOR_TEXTURE);
-    this->playerMenuLayer.initializeMenuSelector(textureManager.getTexture(AssetPath::MENU_SELECTOR_TEXTURE));
+    this->playerMenuLayer = mapLoader.loadMenuLayerMap(textureManager, PLAYER_MENU_NAME);
+    this->playerMenuLayer.initialize(textureManager.getTexture(AssetPath::MENU_SELECTOR_TEXTURE), font, windowScale);
 }
 
 void UIComponentManager::update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime) {
@@ -80,5 +79,6 @@ void UIComponentManager::onControllerActionEvent() {
 
 void UIComponentManager::release(TextureManager& textureManager) {
     textureManager.releaseTexture(AssetPath::MENU_SELECTOR_TEXTURE);
-    menuMap.release(textureManager);
+//    menuMap.release(textureManager); //TODO: need to release the MenuLayer and make sure the texture its using is released with it
+    //TODO: should probably release the menu selector texture in MenuLayer too
 }

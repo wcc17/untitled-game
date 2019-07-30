@@ -1,23 +1,30 @@
 #ifndef NEWNEW_SCENEMAP_H
 #define NEWNEW_SCENEMAP_H
 
-
-#include "SceneObjectMap.h"
 #include "Map.h"
-#include "../asset/TextureManager.h"
+#include "../collisions/Collidable.h"
 
 class SceneMap : public Map {
+
 public:
-    void loadObjectLayer(const tmx::ObjectGroup& layer) override;
+    SceneMap();
+    void loadObjectLayer(const tmx::ObjectGroup& layer);
+    virtual void release(TextureManager& textureManager) override;
     std::vector<std::shared_ptr<Collidable>>& getMapCollidables();
     std::vector<Collidable> getNpcCollidables();
     std::map<std::string, sf::IntRect> getNpcMoveBoundariesMap();
-    Collidable getPlayerCollidable(std::string spawnName);
     std::map<std::string, std::string> getNpcNameToNpcAssetNameMap();
+    Collidable getPlayerCollidable(std::string spawnName);
     std::string getPlayerSpawnPointName(std::string sceneName);
-    void release(TextureManager& textureManager) override;
+protected:
+    void loadRectangleObjects(const tmx::Object& object) override;
 private:
-    SceneObjectMap sceneObjectMap;
+    std::map<std::string, sf::IntRect> npcMoveBoundaries;
+    std::vector<Collidable> npcCollidables;
+    std::map<std::string, std::string> npcNameToNpcAssetNameMap;
+    std::vector<std::shared_ptr<Collidable>> mapCollidables;
+    std::map<std::string, Collidable> playerCollidables;
+    Logger logger;
 };
 
 

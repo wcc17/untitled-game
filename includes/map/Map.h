@@ -5,14 +5,16 @@
 #include <tmxlite/Map.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include "../asset/TextureManager.h"
+#include "ObjectType.h"
+#include "../util/Logger.h"
 
 class Map {
 
 public:
-    virtual void loadObjectLayer(const tmx::ObjectGroup& layer) {};
-    virtual void release(TextureManager& textureManager) {
-        textureManager.releaseTexture(tilesetImagePath);
-    };
+    Map();
+    ObjectType determineObjectType(std::string typeName);
+    std::string getObjectPropertyValue(std::string propertyName, const std::vector<tmx::Property> objectProperties);
+    virtual void loadRectangleObjects(const tmx::Object& object);
 
     void addVertices(sf::VertexArray vertexArray);
     std::vector<sf::VertexArray> getVertices();
@@ -27,13 +29,17 @@ public:
     void setTileSize(sf::Vector2u tileSize);
     void setMapSizeInPixels(sf::Vector2u mapSizeInPixels);
 
+    virtual void release(TextureManager& textureManager);
+
 private:
+    //TODO: are all of these being used for MenuMap or should some of it be moved to SceneMap?
     std::string tilesetImagePath;
     sf::Texture* tileMapTexture;
     sf::Vector2u mapSizeInTiles;
     sf::Vector2u tileSize;
     sf::Vector2u mapSizeInPixels;
     std::vector<sf::VertexArray> vertices;
+    Logger logger;
 
 };
 

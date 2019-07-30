@@ -3,19 +3,18 @@
 
 
 #include <tmxlite/Map.hpp>
-#include "MenuObjectMap.h"
+#include "MenuMap.h"
 #include "../asset/TextureManager.h"
 #include "../asset/AssetPath.h"
 #include "../map/TileMap.h"
 #include "../ui/component/MenuLayer.h"
 #include "../ui/component/MenuComponent.h"
 #include "SceneMap.h"
-#include "MenuMap.h"
 
 class MapLoader {
 
 public:
-    MenuMap loadMenuMap(TextureManager& textureManager, std::string sceneName, sf::Font* font, float windowScale);
+    MenuLayer loadMenuLayerMap(TextureManager& textureManager, std::string menuName);
     SceneMap loadSceneMap(TextureManager& textureManager, std::string sceneName);
 private:
     static Logger logger;

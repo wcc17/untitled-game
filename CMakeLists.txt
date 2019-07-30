@@ -24,7 +24,6 @@ set(SOURCE_FILES src/main.cpp
         src/collisions/CollisionManager.cpp
         src/npc/NpcManager.cpp
         src/entity/npc/NpcEntity.cpp
-        src/map/ObjectMap.cpp
         src/map/TileMap.cpp
         src/entity/character/EntityMovement.cpp
         src/entity/character/EntityCollidable.cpp
@@ -39,14 +38,12 @@ set(SOURCE_FILES src/main.cpp
         src/ui/component/UIComponent.cpp
         src/ui/UIManager.cpp
         src/ui/component/UIComponentManager.cpp
-        src/map/MenuObjectMap.cpp
-        src/map/SceneObjectMap.cpp
+        src/map/MenuMap.cpp
+        src/map/SceneMap.cpp
         src/ui/component/MenuComponent.cpp
         src/ui/component/MenuOptionComponent.cpp
         src/ui/component/MenuLayer.cpp
         src/map/MapLoader.cpp
-        src/map/SceneMap.cpp
-        src/map/MenuMap.cpp
         src/map/Map.cpp)
 
 set(INCLUDE_FILES includes/util/FramerateCounter.h
@@ -68,7 +65,6 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/collisions/CollisionManager.h
         includes/npc/NpcManager.h
         includes/entity/npc/NpcEntity.h
-        includes/map/ObjectMap.h
         includes/map/TileMap.h
         includes/entity/character/EntityMovement.h
         includes/entity/character/EntityCollidable.h
@@ -83,14 +79,12 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/ui/component/UIComponent.h
         includes/ui/UIManager.h
         includes/ui/component/UIComponentManager.h
-        includes/map/MenuObjectMap.h
-        includes/map/SceneObjectMap.h
+        includes/map/MenuMap.h
+        includes/map/SceneMap.h
         includes/ui/component/MenuComponent.h
         includes/ui/component/MenuOptionComponent.h
         includes/ui/component/MenuLayer.h
         includes/map/MapLoader.h
-        includes/map/SceneMap.h
-        includes/map/MenuMap.h
         includes/map/Map.h)
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h

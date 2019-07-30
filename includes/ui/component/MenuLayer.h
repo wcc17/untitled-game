@@ -11,7 +11,7 @@
 
 class MenuLayer : public sf::Sprite {
 public:
-    void initializeMenuSelector(sf::Texture* texture);
+    void initialize(sf::Texture* menuSelectorTexture, sf::Font* font, float windowScale);
     void update(sf::RenderTexture& texture);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
     void setMenuLayerPosition(sf::Vector2f& position, sf::RenderTexture& renderTexture);
@@ -20,6 +20,7 @@ public:
     void moveSelector(MoveDirection direction);
 
 private:
+    void initializeMenuOptionsFont(sf::Font* font, float windowScale);
     void setSelectorPosition(sf::RenderTexture& renderTexture);
 
     std::map<std::string, sf::VertexArray> vertexArrayMap;

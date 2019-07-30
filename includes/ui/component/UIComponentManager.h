@@ -9,7 +9,7 @@
 #include "../../events/EventBus.h"
 #include "../../events/event/OpenMenuEvent.h"
 #include "../../events/event/CloseMenuEvent.h"
-#include "../../map/MenuObjectMap.h"
+#include "../../map/MenuMap.h"
 #include "../../map/TileMap.h"
 #include "MenuLayer.h"
 #include "../../map/MapLoader.h"
@@ -39,7 +39,6 @@ private:
     static Logger logger;
     std::shared_ptr<EventBus> eventBus;
     ComponentState state = STATE_INACTIVE;
-    MenuMap menuMap;
     MapLoader mapLoader;
     MenuLayer playerMenuLayer;
 

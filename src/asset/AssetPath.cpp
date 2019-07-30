@@ -13,10 +13,10 @@ std::string AssetPath::getSceneMapPath(std::string sceneName) {
     return "assets/gfx/tileset/" + sceneName + "_map.tmx";
 }
 
-std::string AssetPath::getNpcAssetPath(std::string npcName) {
-    return "assets/gfx/entity/" + npcName + ".png";
+std::string AssetPath::getMenuLayerMapPath(std::string menuName) {
+    return "assets/gfx/tileset/" + menuName + "_layer_map.tmx";
 }
 
-std::string AssetPath::getUIComponentAssetPath(std::string componentName) {
-    return "assets/gfx/ui/" + componentName + ".png";
+std::string AssetPath::getNpcAssetPath(std::string npcName) {
+    return "assets/gfx/entity/" + npcName + ".png";
 }

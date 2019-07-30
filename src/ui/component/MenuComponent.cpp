@@ -1,7 +1,6 @@
 #include "../../../includes/ui/component/MenuComponent.h"
 
 void MenuComponent::initializeMenuOptionFont(sf::Font* font, float windowScale) {
-
     //TODO: constants
     for(MenuOptionComponent& menuOption : menuOptions) {
         menuOption.setFillColor(sf::Color::Black);
