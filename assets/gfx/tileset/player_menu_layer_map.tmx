@@ -33,6 +33,7 @@
   <object id="3" name="1" type="menu_option" x="240" y="20" width="64" height="16">
    <properties>
     <property name="displayText" value="Party"/>
+    <property name="opensTo" value="party_menu"/>
    </properties>
   </object>
   <object id="5" name="2" type="menu_option" x="240" y="36" width="64" height="16">
@@ -89,6 +90,10 @@
 </data>
  </layer>
  <objectgroup id="10" name="party_menu">
-  <object id="12" name="party_menu" type="menu" x="8" y="16" width="208" height="152"/>
+  <object id="12" name="party_menu" type="menu" x="8" y="16" width="208" height="152">
+   <properties>
+    <property name="exitsTo" value="player_menu"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
