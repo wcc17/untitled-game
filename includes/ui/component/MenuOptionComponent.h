@@ -8,8 +8,10 @@
 class MenuOptionComponent : public UIComponent, public sf::Text {
 
 public:
-    void initialize(std::string name, ObjectType type, sf::FloatRect boundingBox, int index, std::string displayText);
+    void initialize(std::string name, ObjectType type, sf::FloatRect boundingBox, int index,
+            std::string displayText, std::string opensToMenu);
     void setPositionRelativeToNewPosition(sf::Vector2f& newPosition, sf::RenderTexture& renderTexture);
+    std::string getOpensToMenu();
 
     bool operator< (const MenuOptionComponent &other) const {
         return index < other.index;
@@ -17,6 +19,7 @@ public:
 
 private:
     int index;
+    std::string opensToMenu;
 
 };
 

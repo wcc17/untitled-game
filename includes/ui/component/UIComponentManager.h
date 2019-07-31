@@ -42,7 +42,7 @@ private:
     MapLoader mapLoader;
     MenuLayer playerMenuLayer;
 
-    void updateComponentPositions(sf::RenderTexture& renderTexture, sf::View& view);
+    void updateComponentOriginPosition(sf::RenderTexture& renderTexture, sf::View& view);
     void closeMenu();
 };
 

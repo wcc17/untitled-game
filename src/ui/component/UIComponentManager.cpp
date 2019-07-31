@@ -16,7 +16,7 @@ void UIComponentManager::update(sf::RenderTexture& renderTexture, sf::View& view
         case STATE_INACTIVE:
             break;
         case STATE_READY:
-            updateComponentPositions(renderTexture, view);
+            updateComponentOriginPosition(renderTexture, view);
             break;
         case STATE_ACTIVE:
             playerMenuLayer.update(renderTexture);
@@ -30,16 +30,15 @@ void UIComponentManager::drawToRenderTexture(sf::RenderTexture *renderTexture) {
     }
 }
 
-void UIComponentManager::updateComponentPositions(sf::RenderTexture& renderTexture, sf::View& view) {
+void UIComponentManager::updateComponentOriginPosition(sf::RenderTexture& renderTexture, sf::View& view) {
     sf::Vector2f viewCenter = view.getCenter();
     sf::Vector2f viewSize = view.getSize();
 
     //The menu maps are basically 320 x 180 textures, where everything is transparent EXCEPT for the menus that I drew
     //So within the "texture" the menu is placed in the right position, but the texture itself needs to be drawn like its a big 320x180 box
-    //I don't know if I like this, but I don't think theres a way to color the tiles without doing this. The concern is, will it be easy to put text in?
     sf::Vector2f position = sf::Vector2f(viewCenter.x - (viewSize.x/2), viewCenter.y - (viewSize.y/2));
-    playerMenuLayer.setMenuLayerPosition(position, renderTexture);
 
+    playerMenuLayer.updateMenuPositionsWithNewOriginPosition(renderTexture, position);
     state = STATE_ACTIVE;
 }
 
@@ -66,19 +65,28 @@ void UIComponentManager::onControllerMenuEvent() {
 }
 
 void UIComponentManager::onControllerCancelEvent() {
-    closeMenu();
+    if(playerMenuLayer.doesRootMenuHaveFocus()) {
+        playerMenuLayer.closeRootMenu();
+        closeMenu();
+    } else {
+        playerMenuLayer.closeCurrentMenuWithFocus();
+    }
 }
 
 void UIComponentManager::onControllerMenuMoveEvent(MoveDirection direction) {
-    playerMenuLayer.moveSelector(direction);
+    if(state == STATE_ACTIVE) {
+        playerMenuLayer.moveSelector(direction);
+    }
 }
 
 void UIComponentManager::onControllerActionEvent() {
-    //select something in the menu if this is active
+    if(state == STATE_ACTIVE) {
+        //select something in the menu if this is active
+        playerMenuLayer.selectMenuOption();
+    }
 }
 
 void UIComponentManager::release(TextureManager& textureManager) {
     textureManager.releaseTexture(AssetPath::MENU_SELECTOR_TEXTURE);
-//    menuMap.release(textureManager); //TODO: need to release the MenuLayer and make sure the texture its using is released with it
-    //TODO: should probably release the menu selector texture in MenuLayer too
+    playerMenuLayer.release(textureManager); //NOTE: only needs to happen once, all menuLayers will share the same texture
 }

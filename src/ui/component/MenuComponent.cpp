@@ -45,8 +45,18 @@ void MenuComponent::changeActiveMenuOption(MoveDirection direction) {
     }
 }
 
+std::string MenuComponent::getActiveMenuOptionNextMenu() {
+    if(menuOptions.size() > 0) {
+        return menuOptions[selectedMenuOptionIndex].getOpensToMenu();
+    }
+}
+
 sf::Vector2f MenuComponent::getSelectorPositionBasedOnSelectedMenuOption() {
     return menuOptions[selectedMenuOptionIndex].getPosition();
+}
+
+void MenuComponent::resetSelectedMenuOptionIndex() {
+    selectedMenuOptionIndex = 0;
 }
 
 void MenuComponent::draw(sf::RenderTarget& renderTarget) const {

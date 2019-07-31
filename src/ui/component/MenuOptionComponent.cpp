@@ -1,8 +1,10 @@
 #include "../../../includes/ui/component/MenuOptionComponent.h"
 
-void MenuOptionComponent::initialize(std::string name, ObjectType type, sf::FloatRect boundingBox, int index, std::string displayText) {
+void MenuOptionComponent::initialize(std::string name, ObjectType type, sf::FloatRect boundingBox,
+        int index, std::string displayText, std::string opensToMenu) {
     UIComponent::initialize(name, type, boundingBox);
     this->index = index;
+    this->opensToMenu = opensToMenu;
     setString(displayText);
 }
 
@@ -21,4 +23,8 @@ void MenuOptionComponent::setPositionRelativeToNewPosition(sf::Vector2f &newPosi
     sf::Text::setPosition(componentPosition);
     boundingBox.left = newPosition.x;
     boundingBox.top = newPosition.y;
+}
+
+std::string MenuOptionComponent::getOpensToMenu() {
+    return this->opensToMenu;
 }

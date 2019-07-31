@@ -19,8 +19,9 @@ MenuComponent MenuMap::loadMenu(const std::vector<tmx::Object> &objects) {
                 MenuOptionComponent menuOption;
                 int index = std::stoi(object.getName()); //TODO: error handling if name is wrong
                 std::string displayText = getObjectPropertyValue("displayText", object.getProperties());
+                std::string opensToMenu = getObjectPropertyValue("opensToMenu", object.getProperties());
 
-                menuOption.initialize(object.getName(), type, boundingBox, index, displayText);
+                menuOption.initialize(object.getName(), type, boundingBox, index, displayText, opensToMenu);
                 menu.addMenuOption(menuOption);
                 break;
             }

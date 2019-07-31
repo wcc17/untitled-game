@@ -43,6 +43,7 @@ void UIManager::onControllerMenuEvent(ControllerMenuEvent* event) {
 
 void UIManager::onControllerActionEvent(ControllerActionEvent* event) {
     dialogueManager.onControllerActionEvent();
+    uiComponentManager.onControllerActionEvent();
 }
 
 void UIManager::onControllerCancelEvent(ControllerCancelEvent* event) {
@@ -56,9 +57,7 @@ void UIManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
 }
 
 void UIManager::onControllerMenuMoveEvent(ControllerMenuMoveEvent* event) {
-    if(uiComponentManager.isMenuActive()) {
-        uiComponentManager.onControllerMenuMoveEvent(event->direction);
-    }
+    uiComponentManager.onControllerMenuMoveEvent(event->direction);
 }
 
 void UIManager::release(TextureManager& textureManager) {

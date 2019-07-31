@@ -36,6 +36,7 @@ ObjectType Map::determineObjectType(std::string typeName) {
     return ObjectType::NO_TYPE;
 }
 
+//TODO: need to change this behavior. Throw exception that something else can handle
 std::string Map::getObjectPropertyValue(std::string propertyName, const std::vector<tmx::Property> objectProperties) {
     for(const tmx::Property property : objectProperties) {
         if(property.getType() == tmx::Property::Type::String && property.getName() == propertyName) {
@@ -43,8 +44,8 @@ std::string Map::getObjectPropertyValue(std::string propertyName, const std::vec
         }
     }
 
-    logger.logError("Object property value not found, letting game crash");
-    return nullptr;
+    logger.logError("Object property value not found. Returning a value that will be invalid somewhere else");
+    return "";
 }
 
 void Map::addVertices(sf::VertexArray vertexArray) {

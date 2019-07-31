@@ -15,8 +15,9 @@ MenuLayer MapLoader::loadMenuLayerMap(TextureManager& textureManager, std::strin
 
     tmx::Tileset tileset = map.getTilesets()[0];
 
-    menuMap.setTilesetImagePath(tileset.getImagePath());
-    textureManager.loadTexture(menuMap.getTilesetImagePath());
+    menuLayer.setTilesetImagePath(tileset.getImagePath());
+    textureManager.loadTexture(tileset.getImagePath());
+    menuLayer.setTexture(*textureManager.getTexture(tileset.getImagePath()));
 
     const auto& layers = map.getLayers();
     for(const auto& layer : layers) {
@@ -25,9 +26,6 @@ MenuLayer MapLoader::loadMenuLayerMap(TextureManager& textureManager, std::strin
             menuLayer.addMenuComponent(objectLayer.getName(), menuMap.loadMenu(objectLayer.getObjects()));
         }
     }
-
-    //TODO: needs to be done somewhere through the menuLayer
-    menuLayer.setTexture(*textureManager.getTexture(menuMap.getTilesetImagePath())); //TODO: shouldn't be setting this texture directly in playerMenuLayer. all the menus should be looking at the same tilemap texture
 
     for(const auto& layer : layers) {
         if(layer->getType() == tmx::Layer::Type::Tile) {

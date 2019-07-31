@@ -16,6 +16,8 @@ public:
     void draw(sf::RenderTarget& renderTarget) const;
     void changeActiveMenuOption(MoveDirection direction);
     sf::Vector2f getSelectorPositionBasedOnSelectedMenuOption();
+    std::string getActiveMenuOptionNextMenu();
+    void resetSelectedMenuOptionIndex();
 
 private:
     std::vector<MenuOptionComponent> menuOptions;
