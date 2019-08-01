@@ -1,10 +1,13 @@
 #include "../../includes/util/FramerateCounter.h"
 
-void FramerateCounter::initialize(sf::Font* font) {
+void FramerateCounter::initialize(sf::Font* font, sf::Vector2u windowSize, sf::Vector2f defaultWindowSize) {
     frames = 0;
     fpsText.setString(std::to_string(0));
     fpsText.setFont(*font);
-    fpsText.setCharacterSize(36);
+
+    float windowScale = windowSize.x / defaultWindowSize.x;
+    fpsText.setCharacterSize(36 * windowScale);
+    fpsText.setFillColor(sf::Color::White);
     fpsText.setPosition(fpsText.getGlobalBounds().width/2, fpsText.getGlobalBounds().height/2);
 }
 

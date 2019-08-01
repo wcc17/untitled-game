@@ -8,7 +8,9 @@ enum ObjectType {
     WALL,
     PLAYER,
     NPC,
-    NPC_MOVE_BOUNDARY
+    NPC_MOVE_BOUNDARY,
+    MENU,
+    MENU_OPTION
 };
 
 #endif //NEWNEW_OBJECTTYPE_H

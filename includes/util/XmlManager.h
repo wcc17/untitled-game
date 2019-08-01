@@ -3,7 +3,7 @@
 
 #include <tinyxml2.h>
 #include "Logger.h"
-#include "../text/dialogue/DialogueEvent.h"
+#include "../ui/dialogue/DialogueEvent.h"
 
 class XmlManager {
 public:

@@ -32,7 +32,6 @@ private:
     EntityCollidable entityCollidable;
     EntityMovement entityMovement;
     std::shared_ptr<EventBus> eventBus;
-    bool actionButtonPressed = false;
     MoveDirection currentDirection;
     static Logger logger;
 

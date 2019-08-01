@@ -1,17 +1,11 @@
-#include "../../includes/scene/ObjectMap.h"
+#include "../../includes/map/SceneMap.h"
 
-const static std::string NOTYPE_OBJECT_TYPE = "notype";
-const static std::string DOOR_OBJECT_TYPE = "door";
-const static std::string SIGN_OBJECT_TYPE = "sign";
-const static std::string WALL_OBJECT_TYPE = "wall";
-const static std::string NPC_OBJECT_TYPE = "npc";
-const static std::string NPC_MOVE_BOUNDARY_OBJECT_TYPE = "npc_move_boundary";
-const static std::string PLAYER_OBJECT_TYPE = "player";
 const static std::string DEFAULT_SPAWN_NAME = "default_spawn";
 
-Logger ObjectMap::logger("ObjectMap");
+SceneMap::SceneMap() : logger("SceneMap") {}
 
-void ObjectMap::loadObjectLayer(const tmx::ObjectGroup& layer) {
+//TODO: should this return an object with all of the collidables instead of having a bunch of getter methods for them? This would better match MenuMap
+void SceneMap::loadObjectLayer(const tmx::ObjectGroup& layer) {
     std::string layerName = layer.getName();
     for(int i = 0; i < layer.getObjects().size(); i++) {
         tmx::Object object = layer.getObjects()[i];
@@ -26,7 +20,7 @@ void ObjectMap::loadObjectLayer(const tmx::ObjectGroup& layer) {
     }
 }
 
-void ObjectMap::loadRectangleObjects(const tmx::Object& object) {
+void SceneMap::loadRectangleObjects(const tmx::Object &object) {
     tmx::FloatRect boundingBox = object.getAABB();
     std::string objectName = object.getName();
 
@@ -36,7 +30,7 @@ void ObjectMap::loadRectangleObjects(const tmx::Object& object) {
     ObjectType type = determineObjectType(object.getType());
     Collidable collidable = Collidable(objectName, type, position, size);
     if(type == ObjectType::NPC) {
-        npcNameToNpcAssetNameMap.insert(std::make_pair(collidable.getName(), getObjectPropertyValue("assetName", object.getProperties())));
+        npcNameToNpcAssetNameMap.insert(std::make_pair(collidable.getName(), getObjectPropertyStringValue("assetName", object.getProperties())));
         npcCollidables.push_back(collidable);
     } else if(type == ObjectType::PLAYER) {
         std::string spawnName = collidable.getName(); //using spawnName as object name makes tiled map easier to read
@@ -50,50 +44,19 @@ void ObjectMap::loadRectangleObjects(const tmx::Object& object) {
     }
 }
 
-ObjectType ObjectMap::determineObjectType(std::string typeName) {
-
-    if(typeName == DOOR_OBJECT_TYPE) {
-        return ObjectType::DOOR;
-    } else if(typeName == SIGN_OBJECT_TYPE) {
-        return ObjectType::SIGN;
-    } else if(typeName == WALL_OBJECT_TYPE) {
-        return ObjectType::WALL;
-    } else if(typeName == NPC_OBJECT_TYPE) {
-        return ObjectType::NPC;
-    } else if(typeName == PLAYER_OBJECT_TYPE) {
-        return ObjectType::PLAYER;
-    } else if(typeName == NPC_MOVE_BOUNDARY_OBJECT_TYPE) {
-        return ObjectType::NPC_MOVE_BOUNDARY;
-    }
-
-    logger.logError("this type not yet supported");
-    return ObjectType::NO_TYPE;
-}
-
-std::string ObjectMap::getObjectPropertyValue(std::string propertyName, const std::vector<tmx::Property> objectProperties) {
-    for(const tmx::Property property : objectProperties) {
-        if(property.getType() == tmx::Property::Type::String && property.getName() == propertyName) {
-            return property.getStringValue();
-        }
-    }
-
-    logger.logError("Object property value not found, letting game crash");
-    return nullptr;
-}
-
-std::vector<std::shared_ptr<Collidable>>& ObjectMap::getMapCollidables() {
+std::vector<std::shared_ptr<Collidable>>& SceneMap::getMapCollidables() {
     return this->mapCollidables;
 }
 
-std::vector<Collidable> ObjectMap::getNpcCollidables() {
+std::vector<Collidable> SceneMap::getNpcCollidables() {
     return this->npcCollidables;
 }
 
-std::map<std::string, sf::IntRect> ObjectMap::getNpcMoveBoundariesMap() {
+std::map<std::string, sf::IntRect> SceneMap::getNpcMoveBoundariesMap() {
     return this->npcMoveBoundaries;
 }
 
-Collidable ObjectMap::getPlayerCollidable(std::string spawnName) {
+Collidable SceneMap::getPlayerCollidable(std::string spawnName) {
     try {
         return this->playerCollidables.at(spawnName);
     } catch (const std::out_of_range& e) {
@@ -102,11 +65,11 @@ Collidable ObjectMap::getPlayerCollidable(std::string spawnName) {
     }
 }
 
-std::map<std::string, std::string> ObjectMap::getNpcNameToNpcAssetNameMap() {
+std::map<std::string, std::string> SceneMap::getNpcNameToNpcAssetNameMap() {
     return this->npcNameToNpcAssetNameMap;
 }
 
-std::string ObjectMap::getPlayerSpawnPointName(std::string sceneName) {
+std::string SceneMap::getPlayerSpawnPointName(std::string sceneName) {
     std::string spawnPointName = DEFAULT_SPAWN_NAME;
 
     if(sceneName != "") {
@@ -121,7 +84,8 @@ std::string ObjectMap::getPlayerSpawnPointName(std::string sceneName) {
     return spawnPointName;
 }
 
-void ObjectMap::release() {
+void SceneMap::release(TextureManager& textureManager) {
+    Map::release(textureManager);
     mapCollidables.clear();
     npcCollidables.clear();
 }

@@ -1,6 +1,6 @@
-#include "TileMap.h"
+#include "../../includes/map/TileMap.h"
 
-void TileMap::loadTileLayer(const tmx::TileLayer& layer, const tmx::Tileset& tileset, const tmx::Vector2u& mapSizeInTiles,
+sf::VertexArray TileMap::loadTileLayer(const tmx::TileLayer& layer, const tmx::Tileset& tileset, const tmx::Vector2u& mapSizeInTiles,
                             const tmx::Vector2u& tileSize) {
     sf::VertexArray layerVertices;
     layerVertices.setPrimitiveType(sf::Quads);
@@ -25,7 +25,7 @@ void TileMap::loadTileLayer(const tmx::TileLayer& layer, const tmx::Tileset& til
     }
 
     //TODO: do i want support for a "foreground layer" that should be draw ABOVE the player
-    vertices.push_back(layerVertices);
+    return layerVertices;
 }
 
 bool TileMap::isTileIdTransparent(uint32_t layerTileId) {

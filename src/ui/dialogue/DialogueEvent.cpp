@@ -1,4 +1,4 @@
-#include "../../../includes/text/dialogue/DialogueEvent.h"
+#include "../../../includes/ui/dialogue/DialogueEvent.h"
 
 DialogueEvent::DialogueEvent(std::string entityName) : currentDialogue(Dialogue("", "")) {
     this->entityName = entityName;

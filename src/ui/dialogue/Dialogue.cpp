@@ -1,4 +1,4 @@
-#include "../../../includes/text/dialogue/Dialogue.h"
+#include "../../../includes/ui/dialogue/Dialogue.h"
 
 Dialogue::Dialogue(std::string first, std::string second): first(first), second(second) {
     this->first += "\n";

@@ -4,8 +4,10 @@
 #include <SFML/Window/Keyboard.hpp>
 #include "BaseController.h"
 #include "../entity/player/Player.h"
-#include "../scene/SceneManager.h"
 #include "../events/event/ControllerMoveEvent.h"
+#include "../events/event/ControllerMenuEvent.h"
+#include "../events/event/ControllerCancelEvent.h"
+#include "../events/event/ControllerMenuMoveEvent.h"
 
 class KeyboardController : public BaseController {
 
