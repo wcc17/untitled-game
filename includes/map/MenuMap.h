@@ -5,13 +5,14 @@
 #include <tmxlite/Map.hpp>
 #include "../asset/AssetPath.h"
 #include "../ui/component/MenuComponent.h"
+#include "../ui/component/menu_component/PartyMenuComponent.h"
 #include "../ui/component/MenuOptionComponent.h"
 #include "Map.h"
 
 class MenuMap : public Map {
 public:
     MenuMap();
-    MenuComponent loadMenu(const std::vector<tmx::Object> &objects);
+    std::shared_ptr<MenuComponent> loadMenu(std::string menuName, const std::vector<tmx::Object> &objects);
 
 private:
     Logger logger;

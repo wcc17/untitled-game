@@ -6,11 +6,15 @@
 #include "UIComponent.h"
 #include "MenuOptionComponent.h"
 #include "../../controller/MoveDirection.h"
+#include "../../util/Logger.h"
 
 class MenuComponent : public UIComponent {
 
 public:
-    void initializeMenuOptionFont(sf::Font* font, float windowScale);
+    MenuComponent();
+
+    virtual void initializeMenuComponent(sf::Font* font, float windowScale);
+
     void addMenuOption(MenuOptionComponent menuOption);
     void setPositionRelativeToNewPosition(sf::Vector2f &newPosition, sf::RenderTexture& renderTexture);
     void draw(sf::RenderTarget& renderTarget) const;
@@ -19,8 +23,13 @@ public:
     std::string getActiveMenuOptionNextMenu();
     void resetSelectedMenuOptionIndex();
 
-private:
+protected:
     std::vector<MenuOptionComponent> menuOptions;
+    MenuOptionComponent getBaseMenuOption();
+
+private:
+    Logger logger;
+
     void sortMenuOptions();
     int selectedMenuOptionIndex = 0;
 };

@@ -36,16 +36,24 @@ ObjectType Map::determineObjectType(std::string typeName) {
     return ObjectType::NO_TYPE;
 }
 
-//TODO: need to change this behavior. Throw exception that something else can handle
-std::string Map::getObjectPropertyValue(std::string propertyName, const std::vector<tmx::Property> objectProperties) {
+std::string Map::getObjectPropertyStringValue(std::string propertyName, const std::vector<tmx::Property> objectProperties) {
     for(const tmx::Property property : objectProperties) {
         if(property.getType() == tmx::Property::Type::String && property.getName() == propertyName) {
             return property.getStringValue();
         }
     }
 
-    logger.logError("Object property value not found. Returning a value that will be invalid somewhere else");
     return "";
+}
+
+bool Map::getObjectPropertyBoolValue(std::string propertyName, const std::vector<tmx::Property> objectProperties) {
+    for(const tmx::Property property : objectProperties) {
+        if(property.getType() == tmx::Property::Type::Boolean && property.getName() == propertyName) {
+            return property.getBoolValue();
+        }
+    }
+
+    return false;
 }
 
 void Map::addVertices(sf::VertexArray vertexArray) {

@@ -91,9 +91,9 @@
  </layer>
  <objectgroup id="10" name="party_menu">
   <object id="12" name="party_menu" type="menu" x="8" y="16" width="208" height="152"/>
-  <object id="3" name="1" type="base_menu_option" x="24" y="24" width="176" height="16">
+  <object id="3" name="1" type="menu_option" x="24" y="24" width="176" height="16">
    <properties>
-    <property name="verticalSpaceBetweenOptions" value="8"/>
+    <property name="isBaseMenuOption" type="bool" value="true"/>
    </properties>
   </object>
  </objectgroup>

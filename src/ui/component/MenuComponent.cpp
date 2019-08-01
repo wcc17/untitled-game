@@ -1,6 +1,8 @@
 #include "../../../includes/ui/component/MenuComponent.h"
 
-void MenuComponent::initializeMenuOptionFont(sf::Font* font, float windowScale) {
+MenuComponent::MenuComponent() : logger("MenuComponent") {};
+
+void MenuComponent::initializeMenuComponent(sf::Font* font, float windowScale) {
     //TODO: constants
     for(MenuOptionComponent& menuOption : menuOptions) {
         menuOption.setFillColor(sf::Color::Black);
@@ -57,6 +59,18 @@ sf::Vector2f MenuComponent::getSelectorPositionBasedOnSelectedMenuOption() {
 
 void MenuComponent::resetSelectedMenuOptionIndex() {
     selectedMenuOptionIndex = 0;
+}
+
+MenuOptionComponent MenuComponent::getBaseMenuOption() {
+    for(MenuOptionComponent menuOption : menuOptions) {
+        if(menuOption.getIsBaseMenuOption()) {
+            return menuOption;
+        }
+    }
+
+    logger.logError("baseMenuOption component not found when we were expecting one to be there");
+    MenuOptionComponent nullComponent;
+    return nullComponent;
 }
 
 void MenuComponent::draw(sf::RenderTarget& renderTarget) const {

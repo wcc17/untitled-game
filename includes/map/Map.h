@@ -13,7 +13,8 @@ class Map {
 public:
     Map();
     ObjectType determineObjectType(std::string typeName);
-    std::string getObjectPropertyValue(std::string propertyName, const std::vector<tmx::Property> objectProperties);
+    std::string getObjectPropertyStringValue(std::string propertyName, const std::vector<tmx::Property> objectProperties);
+    bool getObjectPropertyBoolValue(std::string propertyName, const std::vector<tmx::Property> objectProperties);
     virtual void loadRectangleObjects(const tmx::Object& object);
 
     void addVertices(sf::VertexArray vertexArray);

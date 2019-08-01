@@ -23,7 +23,7 @@ MenuLayer MapLoader::loadMenuLayerMap(TextureManager& textureManager, std::strin
     for(const auto& layer : layers) {
         if(layer->getType() == tmx::Layer::Type::Object) {
             const tmx::ObjectGroup& objectLayer = layer->getLayerAs<tmx::ObjectGroup>();
-            menuLayer.addMenuComponent(objectLayer.getName(), menuMap.loadMenu(objectLayer.getObjects()));
+            menuLayer.addMenuComponent(objectLayer.getName(), menuMap.loadMenu(objectLayer.getName(), objectLayer.getObjects()));
         }
     }
 

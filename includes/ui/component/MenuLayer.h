@@ -18,7 +18,7 @@ public:
     void updateMenuPositionsWithNewOriginPosition(sf::RenderTexture& renderTexture, sf::Vector2f newOriginPosition);
     void updateMenuPositions(sf::RenderTexture& renderTexture);
     void addLayerVertices(std::string name, sf::VertexArray vertices);
-    void addMenuComponent(std::string name, MenuComponent menuComponent);
+    void addMenuComponent(std::string name, std::shared_ptr<MenuComponent> menuComponent);
     void moveSelector(MoveDirection direction);
     void selectMenuOption();
     bool doesRootMenuHaveFocus();

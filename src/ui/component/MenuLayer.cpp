@@ -12,7 +12,7 @@ void MenuLayer::initialize(sf::Texture* menuSelectorTexture, sf::Font* font, flo
 void MenuLayer::initializeMenuOptionsFont(sf::Font* font, float windowScale) {
     std::map<std::string, std::shared_ptr<MenuComponent>>::iterator it = menuComponentMap.begin();
     while (it != menuComponentMap.end()) {
-        it->second->initializeMenuOptionFont(font, windowScale);
+        it->second->initializeMenuComponent(font, windowScale);
         it++;
     }
 }
@@ -129,8 +129,8 @@ void MenuLayer::closeRootMenu() {
     menuComponentWithFocus->resetSelectedMenuOptionIndex();
 }
 
-void MenuLayer::addMenuComponent(std::string name, MenuComponent menuComponent) {
-    menuComponentMap.insert(std::make_pair(name, std::make_shared<MenuComponent>(menuComponent)));
+void MenuLayer::addMenuComponent(std::string name, std::shared_ptr<MenuComponent> menuComponent) {
+    menuComponentMap.insert(std::make_pair(name, menuComponent));
 }
 
 void MenuLayer::addLayerVertices(std::string name, sf::VertexArray vertices) {
