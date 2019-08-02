@@ -1,8 +1,8 @@
 #include "../../../includes/ui/dialogue/DialogueManager.h"
 
 Logger DialogueManager::logger("DialogueManager");
-const float DIALOGUE_TEXT_WIDTH_DIVISOR = 14;
-const float DIALOGUE_TEXT_HEIGHT_DIVISOR = 3;
+const float DIALOGUE_TEXT_WIDTH_DIVISOR = 8;
+const float DIALOGUE_TEXT_HEIGHT_DIVISOR = 2;
 
 DialogueManager::DialogueManager() : defaultDialogueEvent("default") { }
 
@@ -14,10 +14,7 @@ void DialogueManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture
 
     Dialogue defaultDialogue("Nothing to see here.", "");
     defaultDialogueEvent.addDialogue(defaultDialogue);
-
-    //TODO: the dialogueBox sprite should probably be loaded from a tile map. Would be a difficult change to make though
     this->dialogueBoxSprite.setTexture(*texture);
-    this->dialogueBoxSprite.scale(0.33f, 0.33f); //TODO: this shouldn't be done this way. Dialog box should just be drawn at the right size for the view
 }
 
 void DialogueManager::update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime) {
