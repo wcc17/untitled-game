@@ -10,17 +10,14 @@ void DialogueManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture
     this->eventBus = eventBus;
 
     this->windowScale = windowScale;
+    this->printableDialogueText.initialize(font, windowScale);
+
+    Dialogue defaultDialogue("Nothing to see here.", "");
+    defaultDialogueEvent.addDialogue(defaultDialogue);
 
     //TODO: the dialogueBox sprite should probably be loaded from a tile map. Would be a difficult change to make though
     this->dialogueBoxSprite.setTexture(*texture);
     this->dialogueBoxSprite.scale(0.33f, 0.33f); //TODO: this shouldn't be done this way. Dialog box should just be drawn at the right size for the view
-    this->dialogueText.setFillColor(sf::Color::Black);
-    this->dialogueText.setLineSpacing(1.2f);
-    this->dialogueText.setFont(*font);
-    this->dialogueText.setCharacterSize(64 * windowScale);
-
-    Dialogue defaultDialogue("Nothing to see here.", "");
-    defaultDialogueEvent.addDialogue(defaultDialogue);
 }
 
 void DialogueManager::update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime) {
@@ -29,7 +26,7 @@ void DialogueManager::update(sf::RenderTexture& renderTexture, sf::View& view, s
             setPositionsOnDialogueIsActive(renderTexture, view);
             break;
         case DialogueState::STATE_ACTIVE:
-            updateText(deltaTime);
+            printableDialogueText.update(deltaTime);
             break;
         case DialogueState::STATE_INACTIVE:
             break;
@@ -43,7 +40,7 @@ void DialogueManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
         //draw to default view and then switch back to whatever view renderTexture was using before
         const sf::View& v = renderTexture->getView();
         renderTexture->setView(renderTexture->getDefaultView());
-        renderTexture->draw(dialogueText);
+        renderTexture->draw(printableDialogueText); //TODO: who should know that text should be drawn to the default view? The manager or the text itself?
         renderTexture->setView(v);
     }
 }
@@ -64,88 +61,44 @@ void DialogueManager::updateDialogueTextPosition(sf::RenderTexture& renderTextur
     sf::Vector2i coordsToPixel = renderTexture.mapCoordsToPixel(dialogueBoxSprite.getPosition(), view);
     coordsToPixel.x = coordsToPixel.x + (dialogueBoxSprite.getTextureRect().width / (DIALOGUE_TEXT_WIDTH_DIVISOR/windowScale));
     coordsToPixel.y = coordsToPixel.y + (dialogueBoxSprite.getTextureRect().height / (DIALOGUE_TEXT_HEIGHT_DIVISOR/windowScale));
-    dialogueText.setPosition(coordsToPixel.x, coordsToPixel.y);
+    printableDialogueText.setPosition(coordsToPixel.x, coordsToPixel.y);
 }
 
 void DialogueManager::onControllerActionEvent() {
     if(dialogueState == STATE_ACTIVE) {
-        if(currentDialogueEvent->shouldStartNextDialogue()) {
-            startNextDialogue();
-        } else if(!currentDialogueEvent->currentDialogueDone()) {
-            //player wants to rush the dialogue by mashing action button
-            rushDrawText();
-        } else if(currentDialogueEvent->isDialogueEventDone()) {
+        if(!printableDialogueText.isDialogueFinishedPrinting()) {
+            printableDialogueText.onControllerEvent();
+        } else {
             closeDialogue();
         }
+
     }
 }
 
 void DialogueManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
     logger.logDebug("ready to handle the dialogue box in DialogueManager");
     entityPlayerInteractedWith = event->interactedWith;
-    initializeText();
+
+    DialogueEvent dialogueEvent = getDialogueEventForEntityWithName(entityPlayerInteractedWith.getName());
+    printableDialogueText.startNewDialogueEvent(dialogueEvent);
+
     dialogueState = STATE_READY;
 }
 
 void DialogueManager::closeDialogue() {
     dialogueState = STATE_INACTIVE;
-    this->stringBeingDrawn = "";
-    this->dialogueText.setString("");
-    this->currentDialogueEvent.reset();
+    printableDialogueText.reset();
     eventBus->publish(new CloseDialogueEvent(entityPlayerInteractedWith));
 }
 
-void DialogueManager::initializeText() {
-    std::string entityName = entityPlayerInteractedWith.getName();
-
-    currentDialogueEvent = nullptr;
+DialogueEvent DialogueManager::getDialogueEventForEntityWithName(std::string entityName) {
     for(int i = 0; i < entityDialogueEvents.size(); i++) {
         if(entityDialogueEvents[i].getName() == entityName) {
-            currentDialogueEvent = std::make_unique<DialogueEvent>(entityDialogueEvents[i]);
-            break;
+            return entityDialogueEvents[i];
         }
     }
 
-    if(currentDialogueEvent == nullptr) {
-        currentDialogueEvent = std::make_unique<DialogueEvent>(defaultDialogueEvent);
-    }
-
-    currentDialogueEvent->startNextDialogue();
-    this->stringBeingDrawn = "";
-}
-
-void DialogueManager::updateText(sf::Time deltaTime) {
-    if(!currentDialogueEvent->currentDialogueDone()) {
-        stringDrawTimer += deltaTime;
-        if(stringDrawTimer.asMilliseconds() > 20) {
-            drawMoreText();
-        }
-    }
-}
-
-void DialogueManager::drawMoreText() {
-    std::string& dialoguePiece = currentDialogueEvent->getCurrentDialoguePiece();
-
-    this->stringBeingDrawn += dialoguePiece[0];
-    this->dialogueText.setString(stringBeingDrawn);
-
-    dialoguePiece = dialoguePiece.erase(0, 1); //changing the reference to currentDialoguePiece
-    stringDrawTimer = stringDrawTimer.Zero;
-}
-
-void DialogueManager::rushDrawText() {
-    std::string& dialoguePiece = currentDialogueEvent->getCurrentDialoguePiece();
-
-    this->stringBeingDrawn += dialoguePiece;
-    this->dialogueText.setString(stringBeingDrawn);
-
-    dialoguePiece = dialoguePiece.erase(0, dialoguePiece.length()); //changing the reference to currentDialoguePiece
-    stringDrawTimer = stringDrawTimer.Zero;
-}
-
-void DialogueManager::startNextDialogue() {
-    this->stringBeingDrawn = "";
-    currentDialogueEvent->startNextDialogue();
+    return defaultDialogueEvent;
 }
 
 void DialogueManager::setEntityDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents) {
@@ -157,5 +110,6 @@ bool DialogueManager::isDialogueActive() {
 }
 
 void DialogueManager::release(TextureManager &textureManager) {
+    //TODO: need to release PrintableDialogueText?
     textureManager.releaseTexture(AssetPath::DIALOGUE_BOX_TEXTURE);
 }

@@ -6,7 +6,6 @@ void CollisionManager::initialize(std::shared_ptr<EventBus> eventBus) {
     this->eventBus = eventBus;
 }
 
-//TODO: does it really make sense to only handle one collision per frame? Or is it doing a bunch of extra work?
 //TODO: consider referring to "collisions" as something else to differentiate it from vicinity collision
 void CollisionManager::handleCollisions(Player& player,
                                         const std::vector<std::shared_ptr<NpcEntity>>& entities,
