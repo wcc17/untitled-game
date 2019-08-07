@@ -8,12 +8,13 @@
 #include <SFML/Graphics/VertexArray.hpp>
 #include "MenuComponent.h"
 #include "../../controller/MoveDirection.h"
+#include "../../events/EventBus.h"
 #include <stack>
 
 class MenuLayer : public sf::Sprite {
 public:
-    void initialize(sf::Texture* menuSelectorTexture, sf::Font* font, float windowScale);
-    void update(sf::RenderTexture& texture);
+    void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* menuSelectorTexture, sf::Font* font, float windowScale);
+    void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
     void updateMenuPositionsWithNewOriginPosition(sf::RenderTexture& renderTexture, sf::Vector2f newOriginPosition);
     void updateMenuPositions(sf::RenderTexture& renderTexture);
@@ -28,7 +29,12 @@ public:
     void release(TextureManager& textureManager);
 
 private:
+    std::shared_ptr<EventBus> eventBus;
+
     enum MenuLayerState {
+        ACTIVE,
+        INACTIVE,
+        READY,
         SELECTOR_POSITION_CHANGED,
         OPTION_SELECTED,
         NESTED_MENU_CLOSED,

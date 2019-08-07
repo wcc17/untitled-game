@@ -18,8 +18,6 @@
 class UIComponentManager {
 
 public:
-    void initialize(std::shared_ptr<EventBus> eventBus, TextureManager& textureManager, sf::Font* font, float windowScale);
-    void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime);
     void drawToRenderTexture(sf::RenderTexture* renderTexture);
     void release(TextureManager& textureManager);
     bool isMenuActive();
@@ -39,7 +37,6 @@ private:
     static Logger logger;
     std::shared_ptr<EventBus> eventBus;
     ComponentState state = STATE_INACTIVE;
-    MapLoader mapLoader;
     MenuLayer playerMenuLayer;
 
     void updateComponentOriginPosition(sf::RenderTexture& renderTexture, sf::View& view);

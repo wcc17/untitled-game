@@ -1,13 +1,20 @@
 #include "../../includes/ui/UIManager.h"
 
+const std::string OVERWORLD_MENU_NAME = "player_menu"; //TODO: need to change the actual asset name to overworld_menu as well as all of its objects and layers
+
 void UIManager::initialize(std::shared_ptr<EventBus> eventBus, TextureManager& textureManager, sf::Font* font, sf::Vector2u windowSize, sf::Vector2f defaultWindowSize) {
     this->eventBus = eventBus;
 
     float windowScale = (windowSize.x / defaultWindowSize.x); //assuming aspect ratio is 16:9 I think
     textureManager.loadTexture(AssetPath::DIALOGUE_BOX_TEXTURE);
 
+    MapLoader mapLoader;
+    textureManager.loadTexture(AssetPath::MENU_SELECTOR_TEXTURE);
+    this->overworldMenuLayer = mapLoader.loadMenuLayerMap(textureManager, OVERWORLD_MENU_NAME);
+    this->overworldMenuLayer.initialize(eventBus, textureManager.getTexture(AssetPath::MENU_SELECTOR_TEXTURE), font, windowScale);
+
     dialogueManager.initialize(eventBus, textureManager.getTexture(AssetPath::DIALOGUE_BOX_TEXTURE), font, windowScale);
-    uiComponentManager.initialize(eventBus, textureManager, font, windowScale);
+//    uiComponentManager.initialize(eventBus, textureManager.getTexture(AssetPath::MENU_SELECTOR_TEXTURE), textureManager, font, windowScale);
 
     eventBus->subscribe(this, &UIManager::onControllerMenuEvent);
     eventBus->subscribe(this, &UIManager::onControllerActionEvent);
@@ -17,7 +24,7 @@ void UIManager::initialize(std::shared_ptr<EventBus> eventBus, TextureManager& t
 }
 
 void UIManager::update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime) {
-    uiComponentManager.update(renderTexture, view, deltaTime);
+    overworldMenuLayer.update(renderTexture, view, deltaTime);
     dialogueManager.update(renderTexture, view, deltaTime);
 }
 
@@ -64,4 +71,5 @@ void UIManager::release(TextureManager& textureManager) {
     //TODO: unsubscribe from eventBus
     dialogueManager.release(textureManager);
     uiComponentManager.release(textureManager);
+    textureManager.releaseTexture(AssetPath::MENU_SELECTOR_TEXTURE);
 }

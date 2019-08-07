@@ -28,7 +28,9 @@ private:
     std::shared_ptr<EventBus> eventBus;
 
     DialogueManager dialogueManager;
-    UIComponentManager uiComponentManager;
+//    UIComponentManager uiComponentManager;
+    MenuLayer overworldMenuLayer;
+    //TODO: currentMenuLayer -> will point to whatever menuLayer is appropriate for screen (overworld or battle, etc.)
 
     void onControllerMenuEvent(ControllerMenuEvent* event);
     void onControllerActionEvent(ControllerActionEvent* event);

@@ -1,28 +1,6 @@
 #include "../../../includes/ui/component/UIComponentManager.h"
 
-const std::string PLAYER_MENU_NAME = "player_menu";
 Logger UIComponentManager::logger("UIComponentManager");
-
-void UIComponentManager::initialize(std::shared_ptr<EventBus> eventBus, TextureManager& textureManager, sf::Font* font, float windowScale) {
-    this->eventBus = eventBus;
-
-    textureManager.loadTexture(AssetPath::MENU_SELECTOR_TEXTURE);
-    this->playerMenuLayer = mapLoader.loadMenuLayerMap(textureManager, PLAYER_MENU_NAME);
-    this->playerMenuLayer.initialize(textureManager.getTexture(AssetPath::MENU_SELECTOR_TEXTURE), font, windowScale);
-}
-
-void UIComponentManager::update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime) {
-    switch(state) {
-        case STATE_INACTIVE:
-            break;
-        case STATE_READY:
-            updateComponentOriginPosition(renderTexture, view);
-            break;
-        case STATE_ACTIVE:
-            playerMenuLayer.update(renderTexture);
-            break;
-    }
-}
 
 void UIComponentManager::drawToRenderTexture(sf::RenderTexture *renderTexture) {
     if(state == STATE_ACTIVE) {
@@ -87,6 +65,5 @@ void UIComponentManager::onControllerActionEvent() {
 }
 
 void UIComponentManager::release(TextureManager& textureManager) {
-    textureManager.releaseTexture(AssetPath::MENU_SELECTOR_TEXTURE);
     playerMenuLayer.release(textureManager); //NOTE: only needs to happen once, all menuLayers will share the same texture
 }

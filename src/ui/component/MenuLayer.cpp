@@ -2,7 +2,9 @@
 
 //TODO: should this class be a part of UIComponentManager instead?
 
-void MenuLayer::initialize(sf::Texture* menuSelectorTexture, sf::Font* font, float windowScale) {
+void MenuLayer::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* menuSelectorTexture, sf::Font* font, float windowScale) {
+    this->eventBus = eventBus;
+
     menuSelector.setTexture(*menuSelectorTexture);
     initializeMenuOptionsFont(font, windowScale);
 
@@ -17,22 +19,29 @@ void MenuLayer::initializeMenuOptionsFont(sf::Font* font, float windowScale) {
     }
 }
 
-void MenuLayer::update(sf::RenderTexture& texture) {
+void MenuLayer::update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime) {
     switch(state) {
-        case MenuLayerState::SELECTOR_POSITION_CHANGED:
-            updateSelectorPosition(texture);
+        case ACTIVE:
             break;
-        case MenuLayerState::OPTION_SELECTED:
-            updateMenuPositions(texture);
+        case INACTIVE:
             break;
-        case MenuLayerState::NESTED_MENU_CLOSED:
-            updateSelectorPosition(texture);
+        case READY:
+            updateComponentOriginPosition(renderTexture, view);
             break;
-        case MenuLayerState::DEFAULT:
+        case SELECTOR_POSITION_CHANGED:
+            updateSelectorPosition(renderTexture);
+            break;
+        case OPTION_SELECTED:
+            updateMenuPositions(renderTexture);
+            break;
+        case NESTED_MENU_CLOSED:
+            updateSelectorPosition(renderTexture);
+            break;
+        case DEFAULT:
             break;
     }
 
-    state = MenuLayerState::DEFAULT;
+//    state = DEFAULT; //TODO: why was this needed? is it still needed?
 }
 
 void MenuLayer::draw(sf::RenderTarget &target, sf::RenderStates states) const {
