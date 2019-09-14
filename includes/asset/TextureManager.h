@@ -4,6 +4,7 @@
 
 #include <SFML/Graphics/Texture.hpp>
 #include "BaseAssetManager.h"
+#include <memory>
 
 class TextureManager : public BaseAssetManager {
 

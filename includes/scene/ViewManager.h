@@ -5,6 +5,7 @@
 #include "../events/EventBus.h"
 #include "../events/event/PlayerPositionChangeEvent.h"
 #include <cmath>
+#include <memory>
 
 class ViewManager {
 public:
