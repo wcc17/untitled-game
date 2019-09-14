@@ -3,6 +3,7 @@
 
 #include <string>
 #include "../../util/Logger.h"
+#include <memory>
 
 class EntityLogger {
 public:

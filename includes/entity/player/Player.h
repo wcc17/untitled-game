@@ -16,6 +16,7 @@
 #include "../character/EntityCollidable.h"
 #include "../character/EntityState.h"
 #include "../character/EntityMovement.h"
+#include <memory>
 
 class Player : public sf::Sprite {
 

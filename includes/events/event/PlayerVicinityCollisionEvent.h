@@ -3,6 +3,7 @@
 
 #include "../Event.h"
 #include "../../collisions/Collidable.h"
+#include <memory>
 
 class PlayerVicinityCollisionEvent : public Event {
 public:

@@ -9,8 +9,8 @@ const int SCREEN_HEIGHT = DEFAULT_SCREEN_HEIGHT;
 
 Game::Game() {
     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,32),"newnew", sf::Style::Titlebar | sf::Style::Close);
-     window->setFramerateLimit(60);
-//    window->setVerticalSyncEnabled(true);
+//     window->setFramerateLimit(60);
+    window->setVerticalSyncEnabled(true);
 
     initialize();
 

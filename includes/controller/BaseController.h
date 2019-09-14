@@ -6,6 +6,7 @@
 #include <SFML/Window/Event.hpp>
 #include <vector>
 #include "../events/EventBus.h"
+#include <memory>
 
 class BaseController {
 
