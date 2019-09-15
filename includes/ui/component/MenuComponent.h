@@ -7,7 +7,7 @@
 #include "MenuOptionComponent.h"
 #include "../../controller/MoveDirection.h"
 #include "../../util/Logger.h"
-#include "../../../src/ui/component/MenuScreenPosition.h"
+#include "MenuScreenPosition.h"
 
 class MenuComponent : public UIComponent {
 

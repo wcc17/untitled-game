@@ -19,7 +19,7 @@
 class DialogueManager {
 public:
     DialogueManager();
-    void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font, float windowScale);
+    void initialize(std::shared_ptr<EventBus> eventBus);
     void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime);
     void setEntityDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents);
     void onControllerActionEvent();

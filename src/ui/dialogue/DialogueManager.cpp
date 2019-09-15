@@ -4,7 +4,7 @@ Logger DialogueManager::logger("DialogueManager");
 
 DialogueManager::DialogueManager() : defaultDialogueEvent("default") { }
 
-void DialogueManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font, float windowScale) {
+void DialogueManager::initialize(std::shared_ptr<EventBus> eventBus) {
     this->eventBus = eventBus;
 
     Dialogue defaultDialogue("Nothing to see here.", "");

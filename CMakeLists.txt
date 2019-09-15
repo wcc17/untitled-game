@@ -43,7 +43,9 @@ set(SOURCE_FILES src/main.cpp
         src/map/MapLoader.cpp
         src/map/Map.cpp
         src/ui/component/menu_component/PartyMenuComponent.cpp
-        src/ui/component/menu_component/DialogueMenuComponent.cpp)
+        src/ui/component/menu_component/DialogueMenuComponent.cpp
+        src/ui/UIComponentInitializer.cpp
+        src/ui/UIComponentType.cpp)
 
 set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/asset/FontManager.h
@@ -83,7 +85,8 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/map/MapLoader.h
         includes/map/Map.h
         includes/ui/component/menu_component/PartyMenuComponent.h
-        includes/ui/component/menu_component/DialogueMenuComponent.h)
+        includes/ui/component/menu_component/DialogueMenuComponent.h
+        includes/ui/UIComponentInitializer.h)
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/EntityCollisionEvent.h
@@ -110,7 +113,9 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/OpenMenuEvent.h
         includes/events/event/CloseMenuEvent.h
         includes/events/event/ControllerMenuMoveEvent.h
-        includes/ui/UIState.h src/ui/component/MenuScreenPosition.h)
+        includes/ui/UIState.h
+        includes/ui/component/MenuScreenPosition.h
+        includes/ui/UIComponentType.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 

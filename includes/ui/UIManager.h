@@ -17,6 +17,7 @@
 #include "component/menu_component/DialogueMenuComponent.h"
 #include "../../includes/events/event/OpenMenuEvent.h"
 #include "../../includes/events/event/CloseMenuEvent.h"
+#include "UIComponentInitializer.h"
 
 class UIManager {
 
@@ -33,19 +34,12 @@ private:
 
     UIState state = UIState::STATE_NONE;
 
-    std::string DIALOGUE_BOX = "dialogue_box";
-    std::string MENU_SELECTOR = "menu_selector";
-    std::string START_MENU = "start_menu";
-
+    UIComponentInitializer uiComponentInitializer;
     sf::Sprite menuSelectorSprite;
     MenuComponent startMenuComponent;
     DialogueMenuComponent dialogueMenuComponent;
 
     void initializeComponents(TextureManager& textureManager, float windowScale, sf::Font* font);
-    void initializeStartMenuComponent(TextureManager& textureManager, float windowScale, sf::Font* font);
-    void initializeDialogueMenuComponent(TextureManager& textureManager, float windowScale, sf::Font* font);
-    void initializeStartMenuComponentOption(int index, std::string displayText, std::string opensToMenu);
-
     void onControllerMenuEvent(ControllerMenuEvent* event);
     void onControllerActionEvent(ControllerActionEvent* event);
     void onControllerCancelEvent(ControllerCancelEvent* event);
