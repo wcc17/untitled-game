@@ -37,15 +37,13 @@ set(SOURCE_FILES src/main.cpp
         src/util/XmlManager.cpp
         src/ui/component/UIComponent.cpp
         src/ui/UIManager.cpp
-        src/ui/component/UIComponentManager.cpp
-        src/map/MenuMap.cpp
         src/map/SceneMap.cpp
         src/ui/component/MenuComponent.cpp
         src/ui/component/MenuOptionComponent.cpp
-        src/ui/component/MenuLayer.cpp
         src/map/MapLoader.cpp
         src/map/Map.cpp
-        src/ui/component/menu_component/PartyMenuComponent.cpp)
+        src/ui/component/menu_component/PartyMenuComponent.cpp
+        src/ui/component/menu_component/DialogueMenuComponent.cpp)
 
 set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/asset/FontManager.h
@@ -79,15 +77,13 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/util/XmlManager.h
         includes/ui/component/UIComponent.h
         includes/ui/UIManager.h
-        includes/ui/component/UIComponentManager.h
-        includes/map/MenuMap.h
         includes/map/SceneMap.h
         includes/ui/component/MenuComponent.h
         includes/ui/component/MenuOptionComponent.h
-        includes/ui/component/MenuLayer.h
         includes/map/MapLoader.h
         includes/map/Map.h
-        includes/ui/component/menu_component/PartyMenuComponent.h)
+        includes/ui/component/menu_component/PartyMenuComponent.h
+        includes/ui/component/menu_component/DialogueMenuComponent.h)
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/EntityCollisionEvent.h
@@ -113,7 +109,8 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/ControllerCancelEvent.h
         includes/events/event/OpenMenuEvent.h
         includes/events/event/CloseMenuEvent.h
-        includes/events/event/ControllerMenuMoveEvent.h)
+        includes/events/event/ControllerMenuMoveEvent.h
+        includes/ui/UIState.h src/ui/component/MenuScreenPosition.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 

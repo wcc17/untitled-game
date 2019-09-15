@@ -6,7 +6,14 @@
 class PartyMenuComponent : public MenuComponent {
 
 public:
-    void initializeMenuComponent(sf::Font* font, float windowScale) override;
+    void initialize(
+            sf::Font* font,
+            float windowScale,
+            std::string name,
+            ObjectType type,
+            sf::Texture* texture,
+            ScreenPosition screenPosition,
+            sf::Vector2f textOffset) override;
 private:
     std::vector<std::string> partyMemberNames;
     void buildMenuOptions();

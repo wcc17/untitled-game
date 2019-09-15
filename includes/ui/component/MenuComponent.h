@@ -7,31 +7,46 @@
 #include "MenuOptionComponent.h"
 #include "../../controller/MoveDirection.h"
 #include "../../util/Logger.h"
+#include "../../../src/ui/component/MenuScreenPosition.h"
 
 class MenuComponent : public UIComponent {
 
 public:
     MenuComponent();
 
-    virtual void initializeMenuComponent(sf::Font* font, float windowScale);
-
+    virtual void initialize(
+            sf::Font* font,
+            float windowScale,
+            std::string name,
+            ObjectType type,
+            sf::Texture* texture,
+            ScreenPosition screenPosition,
+            sf::Vector2f textOffset);
     void addMenuOption(MenuOptionComponent menuOption);
-    void setPositionRelativeToNewPosition(sf::Vector2f &newPosition, sf::RenderTexture& renderTexture);
-    void draw(sf::RenderTarget& renderTarget) const;
+    void drawToRenderTexture(sf::RenderTexture* renderTexture);
+    virtual void updatePositionForView(sf::RenderTexture& renderTexture, sf::View& view);
+
     void changeActiveMenuOption(MoveDirection direction);
-    sf::Vector2f getSelectorPositionBasedOnSelectedMenuOption();
+    sf::Vector2f getSelectorPositionBasedOnSelectedMenuOption(sf::Vector2f selectorDimensions);
     std::string getActiveMenuOptionNextMenu();
     void resetSelectedMenuOptionIndex();
 
 protected:
     std::vector<MenuOptionComponent> menuOptions;
-    MenuOptionComponent getBaseMenuOption();
 
 private:
     Logger logger;
 
-    void sortMenuOptions();
+    sf::Font* font;
+    sf::Sprite menuSprite;
+    sf::Vector2f defaultTextOffset = sf::Vector2f(10, 5);
+    sf::Vector2f textOffset;
+    ScreenPosition screenPosition;
+    float windowScale;
     int selectedMenuOptionIndex = 0;
+
+    void sortMenuOptions();
+    void updateMenuComponentTextPosition(sf::RenderTexture& renderTexture, sf::View& view, MenuOptionComponent& menuOptionComponent);
 };
 
 

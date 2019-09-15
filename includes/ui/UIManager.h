@@ -9,10 +9,14 @@
 #include "component/UIComponent.h"
 #include "../events/event/ControllerMenuEvent.h"
 #include "dialogue/DialogueManager.h"
-#include "component/UIComponentManager.h"
 #include "../events/event/ControllerCancelEvent.h"
 #include "../events/event/ControllerMoveEvent.h"
 #include "../events/event/ControllerMenuMoveEvent.h"
+#include "component/MenuComponent.h"
+#include "UIState.h"
+#include "component/menu_component/DialogueMenuComponent.h"
+#include "../../includes/events/event/OpenMenuEvent.h"
+#include "../../includes/events/event/CloseMenuEvent.h"
 
 class UIManager {
 
@@ -21,20 +25,33 @@ public:
     void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime);
     void drawToRenderTexture(sf::RenderTexture* renderTexture);
     void release(TextureManager& textureManager);
-    void resetMenu();
     void resetOnNewScene(std::vector<DialogueEvent> entityDialogueEvents);
 
 private:
     std::shared_ptr<EventBus> eventBus;
-
     DialogueManager dialogueManager;
-    UIComponentManager uiComponentManager;
+
+    UIState state = UIState::STATE_NONE;
+
+    std::string DIALOGUE_BOX = "dialogue_box";
+    std::string MENU_SELECTOR = "menu_selector";
+    std::string START_MENU = "start_menu";
+
+    sf::Sprite menuSelectorSprite;
+    MenuComponent startMenuComponent;
+    DialogueMenuComponent dialogueMenuComponent;
+
+    void initializeComponents(TextureManager& textureManager, float windowScale, sf::Font* font);
+    void initializeStartMenuComponent(TextureManager& textureManager, float windowScale, sf::Font* font);
+    void initializeDialogueMenuComponent(TextureManager& textureManager, float windowScale, sf::Font* font);
+    void initializeStartMenuComponentOption(int index, std::string displayText, std::string opensToMenu);
 
     void onControllerMenuEvent(ControllerMenuEvent* event);
     void onControllerActionEvent(ControllerActionEvent* event);
     void onControllerCancelEvent(ControllerCancelEvent* event);
     void onControllerMenuMoveEvent(ControllerMenuMoveEvent* event);
     void onOpenDialogueEvent(OpenDialogueEvent* event);
+    void onCloseDialogueEvent(CloseDialogueEvent* event);
 };
 
 

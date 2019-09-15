@@ -7,8 +7,6 @@ const static std::string WALL_OBJECT_TYPE = "wall";
 const static std::string NPC_OBJECT_TYPE = "npc";
 const static std::string NPC_MOVE_BOUNDARY_OBJECT_TYPE = "npc_move_boundary";
 const static std::string PLAYER_OBJECT_TYPE = "player";
-const static std::string MENU_OBJECT_TYPE = "menu";
-const static std::string MENU_OPTION_OBJECT_TYPE = "menu_option";
 
 Map::Map() : logger("Map") { }
 
@@ -26,10 +24,6 @@ ObjectType Map::determineObjectType(std::string typeName) {
         return ObjectType::PLAYER;
     } else if(typeName == NPC_MOVE_BOUNDARY_OBJECT_TYPE) {
         return ObjectType::NPC_MOVE_BOUNDARY;
-    } else if(typeName == MENU_OBJECT_TYPE) {
-        return ObjectType::MENU;
-    } else if(typeName == MENU_OPTION_OBJECT_TYPE) {
-        return ObjectType::MENU_OPTION;
     }
 
     logger.logError("this type not yet supported");

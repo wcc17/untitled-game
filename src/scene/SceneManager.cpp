@@ -148,8 +148,6 @@ void SceneManager::onChangeSceneEvent(ChangeSceneEvent* event) {
 void SceneManager::onOpenMenuEvent(OpenMenuEvent* event) {
     if(state == STATE_SCENE) {
         state = STATE_PAUSE;
-    } else {
-        uiManager.resetMenu(); //TODO: this is sort of a hack because KeyboardController is in Game.cpp and I can't keep the user from pressing menu button during scene transitions
     }
 }
 

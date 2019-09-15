@@ -12,14 +12,9 @@
 class UIComponent {
 
 public:
-    void initialize(std::string name, ObjectType type, sf::FloatRect boundingBox);
+    void initialize(std::string name, ObjectType type);
     std::string getName();
     ObjectType getType();
-    sf::FloatRect getBoundingBox();
-
-protected:
-    sf::Vector2f initialPosition;
-    sf::FloatRect boundingBox;
 
 private:
     std::string name;

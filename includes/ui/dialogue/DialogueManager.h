@@ -21,12 +21,10 @@ public:
     DialogueManager();
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture, sf::Font* font, float windowScale);
     void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime);
-    void drawToRenderTexture(sf::RenderTexture* renderTexture);
     void setEntityDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents);
     void onControllerActionEvent();
     void onOpenDialogueEvent(OpenDialogueEvent* event);
-    bool isDialogueActive();
-    void release(TextureManager& textureManager);
+    std::string getStringToDraw();
 
 private:
     enum DialogueState {
@@ -38,12 +36,9 @@ private:
     DialogueState dialogueState = STATE_INACTIVE;
 
     std::shared_ptr<EventBus> eventBus;
-    sf::Sprite dialogueBoxSprite;
-    sf::Text dialogueText;
-    std::string stringBeingDrawn;
+    std::string stringToDraw;
     sf::Time stringDrawTimer;
     Collidable entityPlayerInteractedWith;
-    float windowScale; //TODO: better name? If default window size is 1920x1080 and actual is 960x540, then scale should be .5f
 
     static Logger logger;
 
@@ -52,9 +47,6 @@ private:
     DialogueEvent defaultDialogueEvent;
 
     void closeDialogue();
-    void setPositionsOnDialogueIsActive(sf::RenderTexture& renderTexture, sf::View& view);
-    void updateDialogueBoxPosition(const sf::Vector2f& viewCenter, const sf::Vector2f& viewSize);
-    void updateDialogueTextPosition(sf::RenderTexture& renderTexture, sf::View& view);
     void initializeText();
     void updateText(sf::Time deltaTime);
     void drawMoreText();

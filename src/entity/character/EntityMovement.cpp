@@ -104,6 +104,7 @@ void EntityMovement::performGoalLimitedMoveOnCurrentPosition(sf::Time deltaTime,
 void EntityMovement::performMoveOnCurrentPosition(sf::Time deltaTime, sf::Vector2f moveVector, sf::Vector2f& currentPosition) {
     sf::Vector2f moveVectorWithSpeed = moveVector * deltaTime.asSeconds();
     currentPosition = sf::Vector2f(currentPosition.x + moveVectorWithSpeed.x, currentPosition.y + moveVectorWithSpeed.y);
+    entityLogger.logDebug("position: %f, %f", currentPosition.x, currentPosition.y);
 }
 
 MoveDirection EntityMovement::getLastFacingDirection() {

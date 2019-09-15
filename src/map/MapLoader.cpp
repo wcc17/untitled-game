@@ -2,41 +2,6 @@
 
 Logger MapLoader::logger("MapLoader");
 
-//TODO: these (loadMenuMap and loadSceneMap) should be split up into private methods
-MenuLayer MapLoader::loadMenuLayerMap(TextureManager& textureManager, std::string menuName) {
-    MenuMap menuMap;
-    MenuLayer menuLayer;
-    tmx::Map map;
-
-    std::string menuMapPath = AssetPath::getMenuLayerMapPath(menuName);
-    if(!map.load(menuMapPath)) {
-        //TODO: exit the application after printing the error that the file couldn't be loaded
-    }
-
-    tmx::Tileset tileset = map.getTilesets()[0];
-
-    menuLayer.setTilesetImagePath(tileset.getImagePath());
-    textureManager.loadTexture(tileset.getImagePath());
-    menuLayer.setTexture(*textureManager.getTexture(tileset.getImagePath()));
-
-    const auto& layers = map.getLayers();
-    for(const auto& layer : layers) {
-        if(layer->getType() == tmx::Layer::Type::Object) {
-            const tmx::ObjectGroup& objectLayer = layer->getLayerAs<tmx::ObjectGroup>();
-            menuLayer.addMenuComponent(objectLayer.getName(), menuMap.loadMenu(objectLayer.getName(), objectLayer.getObjects()));
-        }
-    }
-
-    for(const auto& layer : layers) {
-        if(layer->getType() == tmx::Layer::Type::Tile) {
-            sf::VertexArray layerVertexArray = TileMap::loadTileLayer(layer->getLayerAs<tmx::TileLayer>(), tileset, map.getTileCount(), map.getTileSize());
-            menuLayer.addLayerVertices(layer->getName(), layerVertexArray);
-        }
-    }
-
-    return menuLayer;
-}
-
 SceneMap MapLoader::loadSceneMap(TextureManager& textureManager, std::string sceneName) {
     SceneMap sceneObjectMap;
     tmx::Map map;

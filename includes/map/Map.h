@@ -33,7 +33,6 @@ public:
     virtual void release(TextureManager& textureManager);
 
 private:
-    //TODO: are all of these being used for MenuMap or should some of it be moved to SceneMap?
     std::string tilesetImagePath;
     sf::Texture* tileMapTexture;
     sf::Vector2u mapSizeInTiles;
