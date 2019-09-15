@@ -37,17 +37,42 @@ MenuComponent UIComponentInitializer::initializeStartMenuComponent(TextureManage
             ScreenPosition::TOP_RIGHT,
             sf::Vector2f(selectorBounds.width, 0));
 
-    initializeStartMenuComponentOption(0, "Party", "", startMenuComponent);
-    initializeStartMenuComponentOption(1, "Items", "", startMenuComponent);
-    initializeStartMenuComponentOption(2, "Skills", "", startMenuComponent);
-    initializeStartMenuComponentOption(3, "Options", "", startMenuComponent);
-    initializeStartMenuComponentOption(4, "Save", "", startMenuComponent);
-    initializeStartMenuComponentOption(5, "Exit", "", startMenuComponent);
+    initializeMenuOptionComponent(0, "Party", UIComponentType::PARTY_MENU, startMenuComponent);
+    initializeMenuOptionComponent(1, "Items", "", startMenuComponent);
+    initializeMenuOptionComponent(2, "Skills", "", startMenuComponent);
+    initializeMenuOptionComponent(3, "Options", "", startMenuComponent);
+    initializeMenuOptionComponent(4, "Save", "", startMenuComponent);
+    initializeMenuOptionComponent(5, "Exit", "", startMenuComponent);
 
     return startMenuComponent;
 }
 
-void UIComponentInitializer::initializeStartMenuComponentOption(int index, std::string displayText, std::string opensToMenu, MenuComponent& startMenuComponent) {
+MenuComponent UIComponentInitializer::initializePartyMenuComponent(TextureManager& textureManager, float windowScale, sf::Font* font, sf::FloatRect selectorBounds) {
+    MenuComponent partyMenuComponent;
+
+    std::string partyMenuAssetPath = AssetPath::getUIComponentAssetPath(UIComponentType::PARTY_MENU);
+    textureManager.loadTexture(partyMenuAssetPath);
+    partyMenuComponent.initialize(
+            font,
+            windowScale,
+            UIComponentType::PARTY_MENU,
+            ObjectType::MENU,
+            textureManager.getTexture(partyMenuAssetPath),
+            ScreenPosition::TOP_LEFT,
+            sf::Vector2f(selectorBounds.width, 0));
+
+    //TODO: need to eventually pass these in from somewhere? it doesn't matter yet so just manually initializing them here
+    initializeMenuOptionComponent(0, "Charlie", "", partyMenuComponent);
+    initializeMenuOptionComponent(1, "Louie", "", partyMenuComponent);
+    initializeMenuOptionComponent(2, "Henry", "", partyMenuComponent);
+    initializeMenuOptionComponent(3, "Edgar", "", partyMenuComponent);
+    initializeMenuOptionComponent(4, "Victoria", "", partyMenuComponent);
+    initializeMenuOptionComponent(5, "Tracy", "", partyMenuComponent);
+
+    return partyMenuComponent;
+}
+
+void UIComponentInitializer::initializeMenuOptionComponent(int index, std::string displayText, std::string opensToMenu, MenuComponent& startMenuComponent) {
     MenuOptionComponent menuOption;
     menuOption.initialize(std::to_string(index), ObjectType::MENU_OPTION, index, displayText, opensToMenu);
     startMenuComponent.addMenuOption(menuOption);
@@ -56,5 +81,5 @@ void UIComponentInitializer::initializeStartMenuComponentOption(int index, std::
 void UIComponentInitializer::release(TextureManager &textureManager) {
     textureManager.releaseTexture(AssetPath::getUIComponentAssetPath(UIComponentType::DIALOGUE_BOX));
     textureManager.releaseTexture(AssetPath::getUIComponentAssetPath(UIComponentType::START_MENU));
-    textureManager.releaseTexture(AssetPath::getUIComponentAssetPath(UIComponentType::MENU_SELECTOR));
+    textureManager.releaseTexture(AssetPath::getUIComponentAssetPath(UIComponentType::PARTY_MENU));
 }

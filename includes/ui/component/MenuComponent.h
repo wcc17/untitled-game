@@ -29,7 +29,6 @@ public:
     void changeActiveMenuOption(MoveDirection direction);
     sf::Vector2f getSelectorPositionBasedOnSelectedMenuOption(sf::Vector2f selectorDimensions);
     std::string getActiveMenuOptionNextMenu();
-    void resetSelectedMenuOptionIndex();
 
 protected:
     std::vector<MenuOptionComponent> menuOptions;

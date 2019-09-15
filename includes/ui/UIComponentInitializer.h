@@ -14,10 +14,11 @@ class UIComponentInitializer {
 public:
     DialogueMenuComponent initializeDialogueMenuComponent(TextureManager& textureManager, float windowScale, sf::Font* font);
     MenuComponent initializeStartMenuComponent(TextureManager& textureManager, float windowScale, sf::Font* font, sf::FloatRect selectorBounds);
+    MenuComponent initializePartyMenuComponent(TextureManager& textureManager, float windowScale, sf::Font* font, sf::FloatRect selectorBounds);
     void release(TextureManager& textureManager);
 
 private:
-    void initializeStartMenuComponentOption(int index, std::string displayText, std::string opensToMenu, MenuComponent& startMenuComponent);
+    void initializeMenuOptionComponent(int index, std::string displayText, std::string opensToMenu, MenuComponent& startMenuComponent);
 };
 
 

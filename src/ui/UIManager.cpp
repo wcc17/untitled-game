@@ -22,20 +22,23 @@ void UIManager::initializeComponents(TextureManager& textureManager, float windo
 
     dialogueMenuComponent = uiComponentInitializer.initializeDialogueMenuComponent(textureManager, windowScale, font);
     startMenuComponent = uiComponentInitializer.initializeStartMenuComponent(textureManager, windowScale, font, menuSelectorSprite.getGlobalBounds());
+    partyMenuComponent = uiComponentInitializer.initializePartyMenuComponent(textureManager, windowScale, font, menuSelectorSprite.getGlobalBounds());
 }
 
+//TODO: state machine instead of switch statements
 void UIManager::update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime) {
     switch(state) {
-        case UIState::STATE_MENU: {
-            sf::Vector2f selectorDimensions = sf::Vector2f(
-                    menuSelectorSprite.getGlobalBounds().width,
-                    menuSelectorSprite.getGlobalBounds().height);
-            menuSelectorSprite.setPosition(
-                    startMenuComponent.getSelectorPositionBasedOnSelectedMenuOption(selectorDimensions));
+        case UIStateType::STATE_START_MENU: {
             startMenuComponent.updatePositionForView(renderTexture, view);
+            updateSelectorPositionBasedOnMenuComponent(startMenuComponent);
             break;
         }
-        case UIState::STATE_DIALOGUE: {
+        case UIStateType::STATE_PARTY_MENU: {
+            partyMenuComponent.updatePositionForView(renderTexture, view);
+            updateSelectorPositionBasedOnMenuComponent(partyMenuComponent);
+            break;
+        }
+        case UIStateType::STATE_DIALOGUE: {
             dialogueManager.update(renderTexture, view, deltaTime);
             dialogueMenuComponent.updatePositionForView(renderTexture, view);
             dialogueMenuComponent.updateMenuOption(dialogueManager.getStringToDraw());
@@ -47,11 +50,14 @@ void UIManager::update(sf::RenderTexture& renderTexture, sf::View& view, sf::Tim
 
 void UIManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
     switch(state) {
-        case UIState::STATE_MENU:
+        case UIStateType::STATE_START_MENU:
             startMenuComponent.drawToRenderTexture(renderTexture);
             renderTexture->draw(menuSelectorSprite);
             break;
-        case UIState::STATE_DIALOGUE:
+        case UIStateType ::STATE_PARTY_MENU:
+            partyMenuComponent.drawToRenderTexture(renderTexture);
+            renderTexture->draw(menuSelectorSprite);
+        case UIStateType::STATE_DIALOGUE:
             dialogueMenuComponent.drawToRenderTexture(renderTexture);
             break;
     }
@@ -59,8 +65,8 @@ void UIManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
 
 void UIManager::onControllerMenuEvent(ControllerMenuEvent* event) {
     switch(state) {
-        case UIState::STATE_NONE:
-            state = UIState::STATE_MENU;
+        case UIStateType::STATE_NONE:
+            state = UIStateType::STATE_START_MENU;
             eventBus->publish(new OpenMenuEvent());
             break;
         default:
@@ -69,13 +75,25 @@ void UIManager::onControllerMenuEvent(ControllerMenuEvent* event) {
 }
 
 void UIManager::onControllerActionEvent(ControllerActionEvent* event) {
-    dialogueManager.onControllerActionEvent();
+    switch(state) {
+        case UIStateType::STATE_DIALOGUE:
+            dialogueManager.onControllerActionEvent();
+            break;
+        case UIStateType::STATE_START_MENU:
+            if(startMenuComponent.getActiveMenuOptionNextMenu() == UIComponentType::PARTY_MENU) {
+                state = UIStateType ::STATE_PARTY_MENU;
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 void UIManager::onControllerCancelEvent(ControllerCancelEvent* event) {
     switch(state) {
-        case UIState::STATE_MENU:
-            state = UIState::STATE_NONE;
+        case UIStateType::STATE_START_MENU:
+        case UIStateType::STATE_PARTY_MENU:
+            state = UIStateType::STATE_NONE;
             eventBus->publish(new CloseMenuEvent());
             break;
     }
@@ -83,8 +101,8 @@ void UIManager::onControllerCancelEvent(ControllerCancelEvent* event) {
 
 void UIManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
     switch(state) {
-        case UIState::STATE_NONE:
-            state = UIState::STATE_DIALOGUE;
+        case UIStateType::STATE_NONE:
+            state = UIStateType::STATE_DIALOGUE;
             dialogueManager.onOpenDialogueEvent(event);
             break;
         default:
@@ -94,8 +112,8 @@ void UIManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
 
 void UIManager::onCloseDialogueEvent(CloseDialogueEvent *event) {
     switch(state) {
-        case UIState::STATE_DIALOGUE:
-            state = UIState::STATE_NONE;
+        case UIStateType::STATE_DIALOGUE:
+            state = UIStateType::STATE_NONE;
         default:
             break;
     }
@@ -103,12 +121,15 @@ void UIManager::onCloseDialogueEvent(CloseDialogueEvent *event) {
 
 void UIManager::onControllerMenuMoveEvent(ControllerMenuMoveEvent* event) {
     switch(state) {
-        case UIState::STATE_NONE:
+        case UIStateType::STATE_NONE:
             break;
-        case UIState::STATE_DIALOGUE:
+        case UIStateType::STATE_DIALOGUE:
             break;
-        case UIState::STATE_MENU:
+        case UIStateType::STATE_START_MENU:
             startMenuComponent.changeActiveMenuOption(event->direction);
+            break;
+        case UIStateType ::STATE_PARTY_MENU:
+            partyMenuComponent.changeActiveMenuOption(event->direction);
             break;
     }
 }
@@ -117,7 +138,16 @@ void UIManager::resetOnNewScene(std::vector<DialogueEvent> entityDialogueEvents)
     dialogueManager.setEntityDialogueEvents(entityDialogueEvents);
 }
 
+void UIManager::updateSelectorPositionBasedOnMenuComponent(MenuComponent menuComponent) {
+    sf::Vector2f selectorDimensions = sf::Vector2f(
+            menuSelectorSprite.getGlobalBounds().width,
+            menuSelectorSprite.getGlobalBounds().height);
+    menuSelectorSprite.setPosition(
+            menuComponent.getSelectorPositionBasedOnSelectedMenuOption(selectorDimensions));
+}
+
 void UIManager::release(TextureManager& textureManager) {
     //TODO: unsubscribe from eventBus
     uiComponentInitializer.release(textureManager);
+    textureManager.releaseTexture(AssetPath::getUIComponentAssetPath(UIComponentType::MENU_SELECTOR));
 }

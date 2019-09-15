@@ -49,8 +49,6 @@ void MenuComponent::changeActiveMenuOption(MoveDirection direction) {
                 selectedMenuOptionIndex = 0;
             }
         }
-
-//        state = MenuLayerState::SELECTOR_POSITION_CHANGED;
     }
 }
 
@@ -72,12 +70,7 @@ sf::Vector2f MenuComponent::getSelectorPositionBasedOnSelectedMenuOption(sf::Vec
     x += menuSprite.getPosition().x;
     y += menuSprite.getPosition().y;
 
-//    return menuOptions[selectedMenuOptionIndex].getPosition();
     return sf::Vector2f(x, y);
-}
-
-void MenuComponent::resetSelectedMenuOptionIndex() {
-    selectedMenuOptionIndex = 0;
 }
 
 void MenuComponent::updatePositionForView(sf::RenderTexture& renderTexture, sf::View& view) {

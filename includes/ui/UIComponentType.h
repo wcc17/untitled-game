@@ -9,6 +9,7 @@ public:
     static const std::string DIALOGUE_BOX;
     static const std::string MENU_SELECTOR;
     static const std::string START_MENU;
+    static const std::string PARTY_MENU;
 };
 
 #endif //NEWNEW_UICOMPONENTTYPE_H

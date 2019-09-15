@@ -13,7 +13,7 @@
 #include "../events/event/ControllerMoveEvent.h"
 #include "../events/event/ControllerMenuMoveEvent.h"
 #include "component/MenuComponent.h"
-#include "UIState.h"
+#include "UIStateType.h"
 #include "component/menu_component/DialogueMenuComponent.h"
 #include "../../includes/events/event/OpenMenuEvent.h"
 #include "../../includes/events/event/CloseMenuEvent.h"
@@ -32,14 +32,16 @@ private:
     std::shared_ptr<EventBus> eventBus;
     DialogueManager dialogueManager;
 
-    UIState state = UIState::STATE_NONE;
+    UIStateType state = UIStateType::STATE_NONE;
 
     UIComponentInitializer uiComponentInitializer;
     sf::Sprite menuSelectorSprite;
     MenuComponent startMenuComponent;
     DialogueMenuComponent dialogueMenuComponent;
+    MenuComponent partyMenuComponent;
 
     void initializeComponents(TextureManager& textureManager, float windowScale, sf::Font* font);
+    void updateSelectorPositionBasedOnMenuComponent(MenuComponent menuComponent);
     void onControllerMenuEvent(ControllerMenuEvent* event);
     void onControllerActionEvent(ControllerActionEvent* event);
     void onControllerCancelEvent(ControllerCancelEvent* event);
