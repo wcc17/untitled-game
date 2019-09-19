@@ -1,4 +1,5 @@
 #include "../../includes/asset/AssetPath.h"
+#include "../../includes/ui/UIComponentType.h"
 
 const std::string AssetPath::OPENSANS_REGULAR = "assets/fonts/OpenSans-Regular.ttf";
 const std::string AssetPath::OPENSANS_BOLD = "assets/fonts/OpenSans-Bold.ttf";
@@ -16,6 +17,22 @@ std::string AssetPath::getNpcAssetPath(std::string npcName) {
     return "assets/gfx/entity/" + npcName + ".png";
 }
 
-std::string AssetPath::getUIComponentAssetPath(std::string componentName) {
+std::string AssetPath::getUIComponentAssetPath(UIComponentType componentType) {
+    std::string componentName = "";
+
+    switch(componentType) {
+        case DIALOGUE_MENU:
+            componentName = "dialogue_menu";
+            break;
+        case START_MENU:
+            componentName = "start_menu";
+            break;
+        case MENU_SELECTOR:
+            componentName = "menu_selector";
+            break;
+        case PARTY_MENU:
+            componentName = "party_menu";
+            break;
+    }
     return "assets/gfx/ui/" + componentName + ".png";
 }

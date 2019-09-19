@@ -6,7 +6,7 @@
 #include "../asset/TextureManager.h"
 #include "../asset/AssetPath.h"
 #include "../map/TileMap.h"
-#include "../ui/component/MenuComponent.h"
+#include "../ui/component/menu_component/MenuWithSelectorComponent.h"
 #include "SceneMap.h"
 
 class MapLoader {

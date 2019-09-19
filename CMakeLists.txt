@@ -35,16 +35,15 @@ set(SOURCE_FILES src/main.cpp
         src/util/Logger.cpp
         src/entity/character/EntityLogger.cpp
         src/util/XmlManager.cpp
-        src/ui/component/UIComponent.cpp
         src/ui/UIManager.cpp
         src/map/SceneMap.cpp
-        src/ui/component/MenuComponent.cpp
+        src/ui/component/menu_component/MenuWithSelectorComponent.cpp
         src/ui/component/MenuOptionComponent.cpp
         src/map/MapLoader.cpp
         src/map/Map.cpp
         src/ui/component/menu_component/DialogueMenuComponent.cpp
         src/ui/UIComponentInitializer.cpp
-        src/ui/UIComponentType.cpp)
+        src/ui/component/menu_component/BaseMenuComponent.cpp)
 
 set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/asset/FontManager.h
@@ -76,15 +75,15 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/util/Logger.h
         includes/entity/character/EntityLogger.h
         includes/util/XmlManager.h
-        includes/ui/component/UIComponent.h
         includes/ui/UIManager.h
         includes/map/SceneMap.h
-        includes/ui/component/MenuComponent.h
+        includes/ui/component/menu_component/MenuWithSelectorComponent.h
         includes/ui/component/MenuOptionComponent.h
         includes/map/MapLoader.h
         includes/map/Map.h
         includes/ui/component/menu_component/DialogueMenuComponent.h
-        includes/ui/UIComponentInitializer.h)
+        includes/ui/UIComponentInitializer.h
+        includes/ui/component/menu_component/BaseMenuComponent.h)
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/EntityCollisionEvent.h
@@ -111,7 +110,6 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/OpenMenuEvent.h
         includes/events/event/CloseMenuEvent.h
         includes/events/event/ControllerMenuMoveEvent.h
-        includes/ui/UIStateType.h
         includes/ui/component/MenuScreenPosition.h
         includes/ui/UIComponentType.h)
 

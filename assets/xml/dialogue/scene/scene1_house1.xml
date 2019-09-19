@@ -2,7 +2,8 @@
 <entity>
     <dialogueEvent name="npc1">
         <dialogue>
-            <dialoguePiece>Yeah I was actually wondering how many cats I could fit in here.</dialoguePiece>
+            <dialoguePiece>Yeah I was actually wondering how many cats I could fit in</dialoguePiece>
+            <dialoguePiece>here.</dialoguePiece>
         </dialogue>
     </dialogueEvent>
 

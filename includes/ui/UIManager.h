@@ -6,14 +6,12 @@
 #include "../asset/TextureManager.h"
 #include "../asset/AssetPath.h"
 #include "../events/EventBus.h"
-#include "component/UIComponent.h"
 #include "../events/event/ControllerMenuEvent.h"
 #include "dialogue/DialogueManager.h"
 #include "../events/event/ControllerCancelEvent.h"
 #include "../events/event/ControllerMoveEvent.h"
 #include "../events/event/ControllerMenuMoveEvent.h"
-#include "component/MenuComponent.h"
-#include "UIStateType.h"
+#include "component/menu_component/MenuWithSelectorComponent.h"
 #include "component/menu_component/DialogueMenuComponent.h"
 #include "../../includes/events/event/OpenMenuEvent.h"
 #include "../../includes/events/event/CloseMenuEvent.h"
@@ -30,24 +28,24 @@ public:
 
 private:
     std::shared_ptr<EventBus> eventBus;
-    DialogueManager dialogueManager;
-
-    UIStateType state = UIStateType::STATE_NONE;
 
     UIComponentInitializer uiComponentInitializer;
-    sf::Sprite menuSelectorSprite;
-    MenuComponent startMenuComponent;
+    BaseMenuComponent* activeMenuComponent = nullptr;
+
+    //TODO: should be able to eventually combine startMenuComponent and partyMenuComponent and re-initialize it when one is ready to be used
+    MenuWithSelectorComponent startMenuComponent;
     DialogueMenuComponent dialogueMenuComponent;
-    MenuComponent partyMenuComponent;
+    MenuWithSelectorComponent partyMenuComponent;
 
     void initializeComponents(TextureManager& textureManager, float windowScale, sf::Font* font);
-    void updateSelectorPositionBasedOnMenuComponent(MenuComponent menuComponent);
     void onControllerMenuEvent(ControllerMenuEvent* event);
     void onControllerActionEvent(ControllerActionEvent* event);
     void onControllerCancelEvent(ControllerCancelEvent* event);
     void onControllerMenuMoveEvent(ControllerMenuMoveEvent* event);
     void onOpenDialogueEvent(OpenDialogueEvent* event);
     void onCloseDialogueEvent(CloseDialogueEvent* event);
+    void onOpenMenuEvent(OpenMenuEvent* event);
+    void onCloseMenuEvent(CloseMenuEvent* event);
 };
 
 

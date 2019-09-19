@@ -3,14 +3,13 @@
 
 
 #include <SFML/Graphics/Text.hpp>
-#include "UIComponent.h"
+#include "../UIComponentType.h"
 
-class MenuOptionComponent : public UIComponent, public sf::Text {
+class MenuOptionComponent : public sf::Text {
 
 public:
-    void initialize(std::string name, ObjectType type, int index,
-            std::string displayText, std::string opensToMenu);
-    std::string getOpensToMenu();
+    void initialize(int index, std::string displayText, UIComponentType opensToMenu);
+    UIComponentType getOpensToMenu();
     int getIndex();
 
     bool operator< (const MenuOptionComponent &other) const {
@@ -19,7 +18,7 @@ public:
 
 private:
     int index;
-    std::string opensToMenu;
+    UIComponentType opensToMenu;
 };
 
 

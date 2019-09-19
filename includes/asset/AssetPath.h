@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include "../ui/UIComponentType.h"
 
 class AssetPath {
 
@@ -18,7 +19,7 @@ public:
     static const std::string PLAYER_TEXTURE;
 
     static std::string getSceneMapPath(std::string sceneName);
-    static std::string getUIComponentAssetPath(std::string componentName);
+    static std::string getUIComponentAssetPath(UIComponentType componentType);
     static std::string getNpcAssetPath(std::string npcName);
 };
 
