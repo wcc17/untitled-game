@@ -5,13 +5,11 @@ void BaseMenuComponent::initialize(
         sf::Font* font,
         float windowScale,
         sf::Texture* componentTexture,
-        ScreenPosition screenPosition,
-        sf::Vector2f textOffset) {
+        ScreenPosition screenPosition) {
     this->eventBus = eventBus;
     this->font = font;
     this->windowScale = windowScale;
     this->screenPosition = screenPosition;
-    this->textOffset = textOffset;
     this->menuSprite.setTexture(*componentTexture);
 }
 

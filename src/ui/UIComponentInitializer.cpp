@@ -10,8 +10,7 @@ DialogueMenuComponent UIComponentInitializer::initializeDialogueMenuComponent(Te
             font,
             windowScale,
             textureManager.getTexture(dialogueBoxAssetPath),
-            ScreenPosition::BOTTOM_LEFT,
-            sf::Vector2f(0, 0));
+            ScreenPosition::BOTTOM_LEFT);
 
     MenuOptionComponent textOptionComponent;
     std::string displayText = "";
@@ -32,8 +31,7 @@ MenuWithSelectorComponent UIComponentInitializer::initializeStartMenuComponent(T
             windowScale,
             textureManager.getTexture(startMenuAssetPath),
             textureManager.getTexture(AssetPath::getUIComponentAssetPath(UIComponentType::MENU_SELECTOR)),
-            ScreenPosition::TOP_RIGHT,
-            sf::Vector2f(0, 0));
+            ScreenPosition::TOP_RIGHT);
 
     initializeMenuOptionComponent(0, "Party", UIComponentType::PARTY_MENU, startMenuComponent);
     initializeMenuOptionComponent(1, "Items", UIComponentType::NO_COMPONENT_TYPE, startMenuComponent);
@@ -56,8 +54,7 @@ MenuWithSelectorComponent UIComponentInitializer::initializePartyMenuComponent(T
             windowScale,
             textureManager.getTexture(partyMenuAssetPath),
             textureManager.getTexture(AssetPath::getUIComponentAssetPath(UIComponentType::MENU_SELECTOR)),
-            ScreenPosition::TOP_LEFT,
-            sf::Vector2f(0, 0));
+            ScreenPosition::TOP_LEFT);
 
     initializeMenuOptionComponent(0, "Charlie", UIComponentType::NO_COMPONENT_TYPE, partyMenuComponent);
     initializeMenuOptionComponent(1, "Louie", UIComponentType::NO_COMPONENT_TYPE, partyMenuComponent);

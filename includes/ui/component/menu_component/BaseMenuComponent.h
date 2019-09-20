@@ -1,6 +1,7 @@
 #ifndef NEWNEW_BASEMENUCOMPONENT_H
 #define NEWNEW_BASEMENUCOMPONENT_H
 
+#include <memory>
 #include <SFML/System/Time.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -25,8 +26,7 @@ public:
             sf::Font* font,
             float windowScale,
             sf::Texture* componentTexture,
-            ScreenPosition screenPosition,
-            sf::Vector2f textOffset);
+            ScreenPosition screenPosition);
     virtual void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime);
     virtual void drawToRenderTexture(sf::RenderTexture* renderTexture);
 

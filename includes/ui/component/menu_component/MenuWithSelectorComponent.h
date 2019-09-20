@@ -21,8 +21,7 @@ public:
             float windowScale,
             sf::Texture* componentTexture,
             sf::Texture* selectorTexture,
-            ScreenPosition screenPosition,
-            sf::Vector2f textOffset);
+            ScreenPosition screenPosition);
     void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime) override;
     void drawToRenderTexture(sf::RenderTexture* renderTexture) override;
 

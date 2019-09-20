@@ -42,7 +42,16 @@ void UIManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
 }
 
 void UIManager::onOpenMenuEvent(OpenMenuEvent* event) {
-    activeMenuComponent = &startMenuComponent;
+    switch(event->getMenuToOpen()) {
+        case PARTY_MENU:
+            activeMenuComponent = &partyMenuComponent;
+            break;
+        case START_MENU:
+            activeMenuComponent = &startMenuComponent;
+            break;
+        default:
+            break;
+    }
 }
 
 void UIManager::onCloseDialogueEvent(CloseDialogueEvent *event) {
@@ -54,9 +63,7 @@ void UIManager::onCloseMenuEvent(CloseMenuEvent *event) {
 }
 
 void UIManager::onControllerMenuEvent(ControllerMenuEvent* event){
-    if(activeMenuComponent != nullptr) {
-        activeMenuComponent->onControllerMenuEvent(event);
-    } else {
+    if(activeMenuComponent == nullptr) {
         activeMenuComponent = &startMenuComponent;
         activeMenuComponent->onControllerMenuEvent(event);
     }

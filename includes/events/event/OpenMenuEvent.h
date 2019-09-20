@@ -5,7 +5,16 @@
 
 class OpenMenuEvent : public Event {
 public:
-    OpenMenuEvent() {};
+    OpenMenuEvent(UIComponentType menuToOpen) {
+        this->menuToOpen = menuToOpen;
+    }
+
+    UIComponentType getMenuToOpen() {
+        return this->menuToOpen;
+    }
+private:
+    UIComponentType menuToOpen = UIComponentType::NO_COMPONENT_TYPE;
+
 };
 
 #endif //NEWNEW_OPENMENUEVENT_H

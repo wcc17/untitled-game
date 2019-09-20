@@ -6,10 +6,10 @@ void MenuWithSelectorComponent::initialize(
         float windowScale,
         sf::Texture* componentTexture,
         sf::Texture* selectorTexture,
-        ScreenPosition screenPosition,
-        sf::Vector2f textOffset) {
-    BaseMenuComponent::initialize(eventBus, font, windowScale, componentTexture, screenPosition, textOffset);
+        ScreenPosition screenPosition) {
+    BaseMenuComponent::initialize(eventBus, font, windowScale, componentTexture, screenPosition);
     this->menuSelectorSprite.setTexture(*selectorTexture);
+    this->textOffset = sf::Vector2f(menuSelectorSprite.getGlobalBounds().width, 0);
 }
 
 void MenuWithSelectorComponent::update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime) {
@@ -70,15 +70,12 @@ sf::Vector2f MenuWithSelectorComponent::getSelectorPositionBasedOnSelectedMenuOp
 //TODO: I'm not sure that onControllerMenuEvent should be here in the component, in the UIManager makes more sense
 void MenuWithSelectorComponent::onControllerMenuEvent(ControllerMenuEvent* event) {
     //TODO: OpenMenuEvent should have the name of the menu we actually want to open
-    eventBus->publish(new OpenMenuEvent());
+    eventBus->publish(new OpenMenuEvent(UIComponentType::START_MENU));
 }
 
 void MenuWithSelectorComponent::onControllerActionEvent(ControllerActionEvent* event) {
     //TODO: open the menu thats stored in the "opensTo" variable on the selected menu option. Probably will publish an OpenMenuEvent like onControllerMenuEvent
-
-//    if(startMenuComponent.getActiveMenuOptionNextMenu() == UIComponentType::PARTY_MENU) {
-//        state = UIStateType ::STATE_PARTY_MENU;
-//    }
+    eventBus->publish(new OpenMenuEvent(getActiveMenuOptionNextMenu()));
 }
 
 void MenuWithSelectorComponent::onControllerMenuMoveEvent(ControllerMenuMoveEvent* event) {
