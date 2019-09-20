@@ -5,7 +5,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include "../../controller/MoveDirection.h"
-#include "../character/EntityState.h"
+#include "EntityState.h"
 #include "../../util/Logger.h"
 #include "EntityLogger.h"
 

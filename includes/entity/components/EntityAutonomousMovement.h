@@ -6,9 +6,9 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/System/Time.hpp>
 #include "../../controller/MoveDirection.h"
-#include "../character/EntityMovement.h"
-#include "../../../includes/util/Logger.h"
-#include "../character/EntityLogger.h"
+#include "EntityMovement.h"
+#include "../../util/Logger.h"
+#include "EntityLogger.h"
 
 class EntityAutonomousMovement {
 public:

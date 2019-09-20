@@ -367,11 +367,13 @@
   <object id="10" name="npc2" type="npc" x="240" y="416" width="8" height="8">
    <properties>
     <property name="assetName" value="npc1"/>
+    <property name="npcType" value="human"/>
    </properties>
   </object>
   <object id="9" name="npc1" type="npc" x="320" y="304" width="8" height="8">
    <properties>
     <property name="assetName" value="npc2"/>
+    <property name="npcType" value="human"/>
    </properties>
   </object>
  </objectgroup>

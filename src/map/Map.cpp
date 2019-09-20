@@ -8,6 +8,10 @@ const static std::string NPC_OBJECT_TYPE = "npc";
 const static std::string NPC_MOVE_BOUNDARY_OBJECT_TYPE = "npc_move_boundary";
 const static std::string PLAYER_OBJECT_TYPE = "player";
 
+const std::string Map::PROPERTY_NAME_ASSET_NAME = "assetName";
+const std::string Map::PROPERTY_NAME_IS_AGGRESSIVE = "isAggressive";
+const std::string Map::PROPERTY_NAME_NPC_TYPE = "npcType";
+
 Map::Map() : logger("Map") { }
 
 ObjectType Map::determineObjectType(std::string typeName) {
@@ -28,26 +32,6 @@ ObjectType Map::determineObjectType(std::string typeName) {
 
     logger.logError("this type not yet supported");
     return ObjectType::NO_TYPE;
-}
-
-std::string Map::getObjectPropertyStringValue(std::string propertyName, const std::vector<tmx::Property> objectProperties) {
-    for(const tmx::Property property : objectProperties) {
-        if(property.getType() == tmx::Property::Type::String && property.getName() == propertyName) {
-            return property.getStringValue();
-        }
-    }
-
-    return "";
-}
-
-bool Map::getObjectPropertyBoolValue(std::string propertyName, const std::vector<tmx::Property> objectProperties) {
-    for(const tmx::Property property : objectProperties) {
-        if(property.getType() == tmx::Property::Type::Boolean && property.getName() == propertyName) {
-            return property.getBoolValue();
-        }
-    }
-
-    return false;
 }
 
 void Map::addVertices(sf::VertexArray vertexArray) {
@@ -103,3 +87,23 @@ void Map::release(TextureManager& textureManager) {
 }
 
 void Map::loadRectangleObjects(const tmx::Object& object) {}
+
+std::string Map::getObjectPropertyStringValue(std::string propertyName, const std::vector<tmx::Property> objectProperties) {
+    for(const tmx::Property property : objectProperties) {
+        if(property.getType() == tmx::Property::Type::String && property.getName() == propertyName) {
+            return property.getStringValue();
+        }
+    }
+
+    return "";
+}
+
+bool Map::getObjectPropertyBoolValue(std::string propertyName, const std::vector<tmx::Property> objectProperties) {
+    for(const tmx::Property property : objectProperties) {
+        if(property.getType() == tmx::Property::Type::Boolean && property.getName() == propertyName) {
+            return property.getBoolValue();
+        }
+    }
+
+    return false;
+}

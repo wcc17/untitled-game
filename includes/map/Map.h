@@ -13,9 +13,6 @@ class Map {
 public:
     Map();
     ObjectType determineObjectType(std::string typeName);
-    std::string getObjectPropertyStringValue(std::string propertyName, const std::vector<tmx::Property> objectProperties);
-    bool getObjectPropertyBoolValue(std::string propertyName, const std::vector<tmx::Property> objectProperties);
-    virtual void loadRectangleObjects(const tmx::Object& object);
 
     void addVertices(sf::VertexArray vertexArray);
     std::vector<sf::VertexArray> getVertices();
@@ -30,7 +27,14 @@ public:
     void setTileSize(sf::Vector2u tileSize);
     void setMapSizeInPixels(sf::Vector2u mapSizeInPixels);
 
+    virtual void loadRectangleObjects(const tmx::Object& object);
     virtual void release(TextureManager& textureManager);
+    static std::string getObjectPropertyStringValue(std::string propertyName, const std::vector<tmx::Property> objectProperties);
+    static bool getObjectPropertyBoolValue(std::string propertyName, const std::vector<tmx::Property> objectProperties);
+
+    static const std::string PROPERTY_NAME_ASSET_NAME;
+    static const std::string PROPERTY_NAME_IS_AGGRESSIVE;
+    static const std::string PROPERTY_NAME_NPC_TYPE;
 
 private:
     std::string tilesetImagePath;

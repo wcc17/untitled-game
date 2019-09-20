@@ -1,4 +1,4 @@
-#include "../../../includes/entity/character/EntityAnimation.h"
+#include "../../../includes/entity/components/EntityAnimation.h"
 
 void EntityAnimation::update(sf::Time deltaTime, MoveDirection direction) {
     move(direction);

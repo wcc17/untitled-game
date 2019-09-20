@@ -12,10 +12,10 @@
 #include "../../events/event/PlayerDoorCollisionEvent.h"
 #include "../../events/event/PlayerPositionChangeEvent.h"
 #include "../../events/event/ChangeSceneEvent.h"
-#include "../character/EntityAnimation.h"
-#include "../character/EntityCollidable.h"
-#include "../character/EntityState.h"
-#include "../character/EntityMovement.h"
+#include "../components/EntityAnimation.h"
+#include "../components/EntityCollidable.h"
+#include "../components/EntityState.h"
+#include "../components/EntityMovement.h"
 
 class Player : public sf::Sprite {
 

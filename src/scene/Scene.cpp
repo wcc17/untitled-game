@@ -42,8 +42,8 @@ Collidable Scene::getPlayerCollidable(std::string spawnName) {
     return sceneMap.getPlayerCollidable(spawnName);
 }
 
-std::map<std::string, std::string> Scene::getNpcNameToNpcAssetNameMap() {
-    return sceneMap.getNpcNameToNpcAssetNameMap();
+std::map<std::string, std::vector<tmx::Property>> Scene::getNpcNameToPropertiesMap() {
+    return sceneMap.getNpcNameToPropertiesMap();
 }
 
 std::string Scene::getPlayerSpawnPointName(std::string sceneName) {

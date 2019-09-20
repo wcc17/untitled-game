@@ -2,16 +2,20 @@
 #define NEWNEW_NPCENTITY_H
 
 
-#include "../character/EntityAnimation.h"
-#include "../character/EntityCollidable.h"
-#include "../character/EntityState.h"
-#include "../character/EntityMovement.h"
-#include "EntityAutonomousMovement.h"
+#include "../components/EntityAnimation.h"
+#include "../components/EntityCollidable.h"
+#include "../components/EntityState.h"
+#include "../components/EntityMovement.h"
+#include "../components/EntityAutonomousMovement.h"
+#include "types/NpcType.h"
 
 class NpcEntity : public sf::Sprite {
 
 public:
-    void initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries, std::string assetName);
+    virtual void initialize(
+            sf::Texture* texture, const Collidable& collidable,
+            sf::IntRect moveBoundaries, std::string assetName,
+            bool isAggressive, NpcType npcType);
     void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void onPlayerInteractionStart(MoveDirection playerFacingDirection);
     void onPlayerInteractionFinish();
@@ -19,19 +23,26 @@ public:
     EntityCollidable getEntityCollidable();
     std::string getAssetName();
     bool isMoving();
+    bool isNpcAggressive();
+
+protected:
+    EntityAnimation entityAnimation;
+    float entitySpeed;
+    float entityFrameTime;
+    float entityWidth;
+    float entityHeight;
+    virtual void initializeAnimations() {};
+
 private:
     EntityState state;
     EntityState stateBeforeInteraction;
-    EntityAnimation entityAnimation;
     EntityCollidable entityCollidable;
     EntityAutonomousMovement entityAutonomousMovement;
     EntityLogger entityLogger;
     std::string assetName;
+    bool isAggressive = false;
+    NpcType npcType;
 
-    float entityWidth;
-    float entityHeight;
-
-    void initializeAnimations();
     void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void handleInteractingState(sf::Time deltaTime);

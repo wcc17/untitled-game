@@ -1,4 +1,4 @@
-#include "../../../includes/entity/character/EntityCollidable.h"
+#include "../../../includes/entity/components/EntityCollidable.h"
 
 void EntityCollidable::initialize(const Collidable& collidable) {
     setName(collidable.getName());

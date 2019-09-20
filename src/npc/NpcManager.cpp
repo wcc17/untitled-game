@@ -1,17 +1,27 @@
 #include "../../includes/npc/NpcManager.h"
 
+static const std::string NPC_TYPE_HUMAN = "human";
+static const std::string NPC_TYPE_CAT = "cat";
+static const std::string NPC_TYPE_MONSTER = "monster";
+
 void NpcManager::initialize(std::shared_ptr<EventBus> eventBus,
                             std::vector<Collidable> collidables,
                             std::map<std::string, sf::IntRect> npcMoveBoundaries,
-                            std::map<std::string, std::string> npcNameToNpcAssetNameMap,
+                            std::map<std::string, std::vector<tmx::Property>> npcNameToPropertiesMap,
                             TextureManager& textureManager) {
     this->eventBus = eventBus;
 
     for(Collidable collidable : collidables) {
-        std::string assetName = npcNameToNpcAssetNameMap.at(collidable.getName());
+        std::vector<tmx::Property> npcProperties = npcNameToPropertiesMap.at(collidable.getName());
+
+        std::string assetName = Map::getObjectPropertyStringValue(Map::PROPERTY_NAME_ASSET_NAME, npcProperties);
+        bool isAggressive = Map::getObjectPropertyBoolValue(Map::PROPERTY_NAME_IS_AGGRESSIVE, npcProperties);
+        std::string npcTypeString = Map::getObjectPropertyStringValue(Map::PROPERTY_NAME_NPC_TYPE, npcProperties);
+        NpcType npcType = getNpcTypeFromString(npcTypeString);
+
         sf::IntRect moveBoundaries = npcMoveBoundaries.at(collidable.getName());
         sf::Texture* texture = loadAndRetrieveNpcTexture(assetName, textureManager);
-        initializeNpc(collidable, moveBoundaries, texture, assetName);
+        initializeNpc(collidable, moveBoundaries, texture, assetName, isAggressive, npcType);
     }
 
     eventBus->subscribe(this, &NpcManager::onOpenDialogueEvent);
@@ -63,10 +73,13 @@ void NpcManager::onNpcCollisionEvent(NpcCollisionEvent* event) {
     }
 }
 
-void NpcManager::initializeNpc(Collidable& collidable, sf::IntRect moveBoundaries, sf::Texture* texture, std::string assetName) {
-    std::shared_ptr<NpcEntity> npcEntity = std::make_shared<NpcEntity>();
+void NpcManager::initializeNpc(
+        Collidable& collidable, sf::IntRect moveBoundaries, sf::Texture* texture,
+        std::string assetName, bool isAggressive, NpcType npcType) {
+
+    std::shared_ptr<NpcEntity> npcEntity = getNewNpcEntityFromType(npcType);
     try {
-        npcEntity->initialize(texture, collidable, moveBoundaries, assetName);
+        npcEntity->initialize(texture, collidable, moveBoundaries, assetName, isAggressive, npcType);
     } catch (const std::out_of_range& e) {
         std::string exitMessage = "Entity " + collidable.getName() + " is not assigned a move boundary. Exiting";
         eventBus->publish(new ExitGameEvent(exitMessage));
@@ -79,6 +92,31 @@ sf::Texture* NpcManager::loadAndRetrieveNpcTexture(std::string assetName, Textur
     std::string assetFilePath = AssetPath::getNpcAssetPath(assetName);
     textureManager.loadTexture(assetFilePath);
     return textureManager.getTexture(assetFilePath);
+}
+
+NpcType NpcManager::getNpcTypeFromString(std::string npcTypeString) {
+    if(NPC_TYPE_HUMAN == npcTypeString) {
+        return NpcType::HUMAN;
+    } else if(NPC_TYPE_CAT == npcTypeString) {
+        return NpcType::CAT;
+    } else if(NPC_TYPE_MONSTER == npcTypeString) {
+        return NpcType::MONSTER;
+    } else {
+        return NpcType::NO_NPC_TYPE;
+    }
+}
+
+std::shared_ptr<NpcEntity> NpcManager::getNewNpcEntityFromType(NpcType npcType) {
+    switch(npcType) {
+        case NpcType::HUMAN:
+            return std::make_shared<HumanNpcEntity>();
+        case NpcType::CAT:
+            return std::make_shared<CatNpcEntity>();
+        case NpcType::MONSTER:
+            return std::make_shared<MonsterNpcEntity>();
+        case NpcType::NO_NPC_TYPE:
+            return std::make_shared<HumanNpcEntity>();
+    }
 }
 
 void NpcManager::releaseNpcTextures(std::string assetName, TextureManager& textureManager) {

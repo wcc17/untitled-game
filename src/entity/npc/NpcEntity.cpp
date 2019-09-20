@@ -1,25 +1,25 @@
 #include "../../../includes/entity/npc/NpcEntity.h"
 
-//const float ENTITY_WIDTH = 16.f;
-//const float ENTITY_HEIGHT = 16.f;
-const float ENTITY_MOVEMENT_SPEED = 65.f;
-const float ENTITY_FRAME_TIME = 0.16f; //TODO: not sure where I want to load this from yet
-
-void NpcEntity::initialize(sf::Texture* texture, const Collidable& collidable, sf::IntRect moveBoundaries, std::string assetName) {
+void NpcEntity::initialize(
+        sf::Texture* texture, const Collidable& collidable,
+        sf::IntRect moveBoundaries, std::string assetName,
+        bool isAggressive, NpcType npcType) {
     sf::Sprite::setTexture(*texture);
 
-    entityWidth = getTexture()->getSize().x / 4;
-    entityHeight = getTexture()->getSize().y / 4;
-
+    this->entityWidth = getTexture()->getSize().x / 4;
+    this->entityHeight = getTexture()->getSize().y / 4;
+    this->npcType = npcType;
+    this->isAggressive = isAggressive;
     this->assetName = assetName;
     this->state = STATE_STANDING;
-    this->entityCollidable.initialize(collidable);
+
+    entityCollidable.initialize(collidable);
     setEntityPosition(sf::Vector2f(collidable.getBoundingBox().left, collidable.getBoundingBox().top));
 
-    entityAnimation.setFrameTime(sf::seconds(ENTITY_FRAME_TIME));
     initializeAnimations();
+    entityAnimation.setFrameTime(sf::seconds(entityFrameTime));
 
-    entityAutonomousMovement.initialize(entityCollidable.getName(), moveBoundaries, ENTITY_MOVEMENT_SPEED);
+    entityAutonomousMovement.initialize(entityCollidable.getName(), moveBoundaries, entitySpeed);
     entityLogger.initialize("NpcEntity", entityCollidable.getName());
 }
 
@@ -101,34 +101,6 @@ bool NpcEntity::isMoving() {
     return (this->state == EntityState::STATE_MOVING);
 }
 
-//TODO: can this be moved to the header file?
-//TODO: EVERYTHING needs to be multiples of  tile size, including the character textures (its frames). There should be a check to ensure this is happening so that I don't forget
-void NpcEntity::initializeAnimations() {
-
-    //TODO: these constants are temporary until I figure out where I want to load this information from. Probably from a more specific derived NpcEntity class
-    entityAnimation.walkingAnimationDown.setSpriteSheet(*this->getTexture());
-    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(0, 0, entityWidth, entityHeight));
-    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(entityWidth, 0, entityWidth, entityHeight));
-    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(entityWidth*2, 0, entityWidth, entityHeight));
-    entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(entityWidth*3, 0, entityWidth, entityHeight));
-
-    entityAnimation.walkingAnimationRight.setSpriteSheet(*this->getTexture());
-    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(0, entityHeight, entityWidth, entityHeight));
-    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(entityWidth, entityHeight, entityWidth, entityHeight));
-    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(entityWidth*2, entityHeight, entityWidth, entityHeight));
-    entityAnimation.walkingAnimationRight.addFrame(sf::IntRect(entityWidth*3, entityHeight, entityWidth, entityHeight));
-
-    entityAnimation.walkingAnimationUp.setSpriteSheet(*this->getTexture());
-    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(0, entityHeight*2, entityWidth, entityHeight));
-    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(entityWidth, entityHeight*2, entityWidth, entityHeight));
-    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(entityWidth*2, entityHeight*2, entityWidth, entityHeight));
-    entityAnimation.walkingAnimationUp.addFrame(sf::IntRect(entityWidth*3, entityHeight*2, entityWidth, entityHeight));
-
-    entityAnimation.walkingAnimationLeft.setSpriteSheet(*this->getTexture());
-    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(0, entityHeight*3, entityWidth, entityHeight));
-    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(entityWidth, entityHeight*3, entityWidth, entityHeight));
-    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(entityWidth*2, entityHeight*3, entityWidth, entityHeight));
-    entityAnimation.walkingAnimationLeft.addFrame(sf::IntRect(entityWidth*3, entityHeight*3, entityWidth, entityHeight));
-
-    entityAnimation.turnToFaceDirection(MoveDirection::DOWN);
+bool NpcEntity::isNpcAggressive() {
+    return this->isAggressive;
 }

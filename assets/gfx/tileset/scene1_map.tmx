@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="112" height="112" tilewidth="8" tileheight="8" infinite="0" nextlayerid="20" nextobjectid="106">
+<map version="1.2" tiledversion="1.2.4" orientation="orthogonal" renderorder="right-down" width="112" height="112" tilewidth="8" tileheight="8" infinite="0" nextlayerid="20" nextobjectid="108">
  <tileset firstgid="1" source="scene1_tileset.tsx"/>
  <layer id="12" name="background" width="112" height="112">
   <data encoding="csv">
@@ -554,16 +554,25 @@
   <object id="5" name="npc1" type="npc" x="528" y="424" width="8" height="8">
    <properties>
     <property name="assetName" value="npc1"/>
+    <property name="npcType" value="human"/>
    </properties>
   </object>
   <object id="8" name="npc2" type="npc" x="368" y="504" width="8" height="8">
    <properties>
     <property name="assetName" value="npc2"/>
+    <property name="npcType" value="human"/>
+   </properties>
+  </object>
+  <object id="106" name="monster1" type="npc" x="600" y="512" width="8" height="8">
+   <properties>
+    <property name="assetName" value="monster1"/>
+    <property name="npcType" value="monster"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup id="4" name="npc_move_boundaries">
-  <object id="4" name="npc1" type="npc_move_boundary" x="488" y="392" width="80" height="72"/>
+  <object id="4" name="npc1" type="npc_move_boundary" x="504" y="392" width="80" height="72"/>
   <object id="9" name="npc2" type="npc_move_boundary" x="328" y="408" width="88" height="112"/>
+  <object id="107" name="monster1" type="npc_move_boundary" x="560" y="488" width="80" height="72"/>
  </objectgroup>
 </map>

@@ -109,7 +109,7 @@ void SceneManager::loadScene(std::string previousSceneName, std::string sceneNam
     player.initializeForScene(scene->getPlayerCollidable(spawnName));
 
     npcManager.initialize(eventBus, scene->getNpcCollidables(), scene->getNpcMoveBoundariesMap(),
-                          scene->getNpcNameToNpcAssetNameMap(), textureManager);
+                          scene->getNpcNameToPropertiesMap(), textureManager);
 
     std::vector<DialogueEvent> entityDialogueEvents = xmlManager.loadEntityDialogueForScene(sceneName);
     uiManager.resetOnNewScene(entityDialogueEvents);

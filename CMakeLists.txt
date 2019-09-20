@@ -13,9 +13,9 @@ set(SOURCE_FILES src/main.cpp
         src/asset/BaseAssetManager.cpp
         src/asset/AssetPath.cpp
         src/entity/player/Player.cpp
-        src/entity/character/Animation.cpp
+        src/entity/components/Animation.cpp
         src/scene/Scene.cpp
-        src/entity/character/EntityAnimation.cpp
+        src/entity/components/EntityAnimation.cpp
         src/collisions/Collidable.cpp
         src/scene/SceneManager.cpp
         src/ui/dialogue/DialogueManager.cpp
@@ -25,15 +25,15 @@ set(SOURCE_FILES src/main.cpp
         src/npc/NpcManager.cpp
         src/entity/npc/NpcEntity.cpp
         src/map/TileMap.cpp
-        src/entity/character/EntityMovement.cpp
-        src/entity/character/EntityCollidable.cpp
+        src/entity/components/EntityMovement.cpp
+        src/entity/components/EntityCollidable.cpp
         src/scene/ViewManager.cpp
         src/ui/dialogue/DialogueEvent.cpp
         src/ui/dialogue/Dialogue.cpp
         src/ui/dialogue/DialoguePiece.cpp
-        src/entity/npc/EntityAutonomousMovement.cpp
+        src/entity/components/EntityAutonomousMovement.cpp
         src/util/Logger.cpp
-        src/entity/character/EntityLogger.cpp
+        src/entity/components/EntityLogger.cpp
         src/util/XmlManager.cpp
         src/ui/UIManager.cpp
         src/map/SceneMap.cpp
@@ -54,9 +54,9 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/asset/BaseAssetManager.h
         includes/asset/AssetPath.h
         includes/entity/player/Player.h
-        includes/entity/character/Animation.h
+        includes/entity/components/Animation.h
         includes/scene/Scene.h
-        includes/entity/character/EntityAnimation.h
+        includes/entity/components/EntityAnimation.h
         includes/collisions/Collidable.h
         includes/scene/SceneManager.h
         includes/ui/dialogue/DialogueManager.h
@@ -65,15 +65,15 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/npc/NpcManager.h
         includes/entity/npc/NpcEntity.h
         includes/map/TileMap.h
-        includes/entity/character/EntityMovement.h
-        includes/entity/character/EntityCollidable.h
+        includes/entity/components/EntityMovement.h
+        includes/entity/components/EntityCollidable.h
         includes/scene/ViewManager.h
         includes/ui/dialogue/DialogueEvent.h
         includes/ui/dialogue/Dialogue.h
         includes/ui/dialogue/DialoguePiece.h
-        includes/entity/npc/EntityAutonomousMovement.h
+        includes/entity/components/EntityAutonomousMovement.h
         includes/util/Logger.h
-        includes/entity/character/EntityLogger.h
+        includes/entity/components/EntityLogger.h
         includes/util/XmlManager.h
         includes/ui/UIManager.h
         includes/map/SceneMap.h
@@ -94,7 +94,7 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/HandlerFunctionBase.h
         includes/events/MemberFunctionHandler.h
         includes/events/event/ControllerMoveEvent.h
-        includes/entity/character/EntityState.h
+        includes/entity/components/EntityState.h
         includes/events/event/PlayerVicinityCollisionEvent.h
         includes/events/event/ControllerActionEvent.h
         includes/events/event/OpenDialogueEvent.h
@@ -111,7 +111,7 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/CloseMenuEvent.h
         includes/events/event/ControllerMenuMoveEvent.h
         includes/ui/component/MenuScreenPosition.h
-        includes/ui/UIComponentType.h)
+        includes/ui/UIComponentType.h includes/entity/npc/types/MonsterNpcEntity.h includes/entity/npc/types/NpcType.h includes/entity/npc/types/HumanNpcEntity.h includes/entity/npc/types/CatNpcEntity.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 

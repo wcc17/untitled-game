@@ -30,7 +30,7 @@ void SceneMap::loadRectangleObjects(const tmx::Object &object) {
     ObjectType type = determineObjectType(object.getType());
     Collidable collidable = Collidable(objectName, type, position, size);
     if(type == ObjectType::NPC) {
-        npcNameToNpcAssetNameMap.insert(std::make_pair(collidable.getName(), getObjectPropertyStringValue("assetName", object.getProperties())));
+        npcNameToNpcPropertyMap.insert(std::make_pair(collidable.getName(), object.getProperties()));
         npcCollidables.push_back(collidable);
     } else if(type == ObjectType::PLAYER) {
         std::string spawnName = collidable.getName(); //using spawnName as object name makes tiled map easier to read
@@ -65,8 +65,8 @@ Collidable SceneMap::getPlayerCollidable(std::string spawnName) {
     }
 }
 
-std::map<std::string, std::string> SceneMap::getNpcNameToNpcAssetNameMap() {
-    return this->npcNameToNpcAssetNameMap;
+std::map<std::string, std::vector<tmx::Property>> SceneMap::getNpcNameToPropertiesMap() {
+    return this->npcNameToNpcPropertyMap;
 }
 
 std::string SceneMap::getPlayerSpawnPointName(std::string sceneName) {

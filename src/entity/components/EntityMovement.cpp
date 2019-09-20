@@ -1,4 +1,4 @@
-#include "../../../includes/entity/character/EntityMovement.h"
+#include "../../../includes/entity/components/EntityMovement.h"
 
 void EntityMovement::initialize(std::string entityName, float moveSpeed) {
     this->entityLogger.initialize("EntityMovement", entityName);

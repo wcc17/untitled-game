@@ -1,4 +1,4 @@
-#include "../../../includes/entity/npc/EntityAutonomousMovement.h"
+#include "../../../includes/entity/components/EntityAutonomousMovement.h"
 
 const sf::Vector2f moveDelayRange = sf::Vector2f(1.5f, 5.5f); //TODO: do i want this hardcoded?
 

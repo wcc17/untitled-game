@@ -1,4 +1,4 @@
-#include "../../../includes/entity/character/EntityLogger.h"
+#include "../../../includes/entity/components/EntityLogger.h"
 
 void EntityLogger::initialize(std::string className, std::string entityName) {
     this->logger = std::make_shared<Logger>(className);

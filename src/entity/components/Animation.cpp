@@ -1,4 +1,4 @@
-#include "../../../includes/entity/character/Animation.h"
+#include "../../../includes/entity/components/Animation.h"
 
 Animation::Animation() : m_texture(NULL) { }
 
