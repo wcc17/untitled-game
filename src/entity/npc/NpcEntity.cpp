@@ -18,6 +18,7 @@ void NpcEntity::initialize(
 
     initializeAnimations();
     entityAnimation.setFrameTime(sf::seconds(entityFrameTime));
+    entityAnimation.stop();
 
     entityAutonomousMovement.initialize(entityCollidable.getName(), moveBoundaries, entitySpeed, moveDelayRange);
     entityLogger.initialize("NpcEntity", entityCollidable.getName());
