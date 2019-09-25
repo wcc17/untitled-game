@@ -10,6 +10,7 @@
 #include "../events/event/PlayerVicinityCollisionEvent.h"
 #include "../events/event/NpcCollisionEvent.h"
 #include "../../includes/events/event/PlayerDoorCollisionEvent.h"
+#include "../../includes/events/event/AggressiveNpcCollisionEvent.h"
 
 class CollisionManager {
 public:

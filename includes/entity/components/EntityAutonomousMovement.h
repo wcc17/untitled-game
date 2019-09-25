@@ -12,7 +12,7 @@
 
 class EntityAutonomousMovement {
 public:
-    void initialize(std::string npcName, sf::IntRect moveBoundaries, float moveSpeed);
+    void initialize(std::string npcName, sf::IntRect moveBoundaries, float moveSpeed, sf::Vector2f moveDelayRange);
     void handleStanding(sf::Time deltaTime, const sf::Vector2u& mapTileSize, EntityState& state, const sf::Vector2f& currentPosition);
     sf::Vector2f handleMoveAndReturnPosition(sf::Time deltaTime, sf::Vector2f currentPosition, EntityState& state);
     MoveDirection getCurrentDirection();
@@ -21,6 +21,7 @@ public:
 private:
     sf::IntRect moveBoundaries;
     sf::Time moveDelay;
+    sf::Vector2f moveDelayRange;
     float movementGoal = 0;
     float moveSpeed = 0;
     MoveDirection currentDirection;

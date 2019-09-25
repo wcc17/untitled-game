@@ -12,16 +12,7 @@ void NpcManager::initialize(std::shared_ptr<EventBus> eventBus,
     this->eventBus = eventBus;
 
     for(Collidable collidable : collidables) {
-        std::vector<tmx::Property> npcProperties = npcNameToPropertiesMap.at(collidable.getName());
-
-        std::string assetName = Map::getObjectPropertyStringValue(Map::PROPERTY_NAME_ASSET_NAME, npcProperties);
-        bool isAggressive = Map::getObjectPropertyBoolValue(Map::PROPERTY_NAME_IS_AGGRESSIVE, npcProperties);
-        std::string npcTypeString = Map::getObjectPropertyStringValue(Map::PROPERTY_NAME_NPC_TYPE, npcProperties);
-        NpcType npcType = getNpcTypeFromString(npcTypeString);
-
-        sf::IntRect moveBoundaries = npcMoveBoundaries.at(collidable.getName());
-        sf::Texture* texture = loadAndRetrieveNpcTexture(assetName, textureManager);
-        initializeNpc(collidable, moveBoundaries, texture, assetName, isAggressive, npcType);
+        initializeNpc(textureManager, collidable, npcMoveBoundaries, npcNameToPropertiesMap);
     }
 
     eventBus->subscribe(this, &NpcManager::onOpenDialogueEvent);
@@ -74,17 +65,20 @@ void NpcManager::onNpcCollisionEvent(NpcCollisionEvent* event) {
 }
 
 void NpcManager::initializeNpc(
-        Collidable& collidable, sf::IntRect moveBoundaries, sf::Texture* texture,
-        std::string assetName, bool isAggressive, NpcType npcType) {
+        TextureManager& textureManager,
+        Collidable collidable,
+        std::map<std::string, sf::IntRect> npcMoveBoundaries,
+        std::map<std::string, std::vector<tmx::Property>> npcNameToPropertiesMap) {
+
+    std::vector<tmx::Property> npcProperties = npcNameToPropertiesMap.at(collidable.getName());
+    sf::IntRect moveBoundaries = npcMoveBoundaries.at(collidable.getName());
+    NpcType npcType = getNpcTypeFromString(Map::getObjectPropertyStringValue(Map::PROPERTY_NAME_NPC_TYPE, npcProperties));
+    std::string assetName = Map::getObjectPropertyStringValue(Map::PROPERTY_NAME_ASSET_NAME, npcProperties);
+    bool isAggressive = Map::getObjectPropertyBoolValue(Map::PROPERTY_NAME_IS_AGGRESSIVE, npcProperties);
+    sf::Texture* texture = loadAndRetrieveNpcTexture(assetName, textureManager);
 
     std::shared_ptr<NpcEntity> npcEntity = getNewNpcEntityFromType(npcType);
-    try {
-        npcEntity->initialize(texture, collidable, moveBoundaries, assetName, isAggressive, npcType);
-    } catch (const std::out_of_range& e) {
-        std::string exitMessage = "Entity " + collidable.getName() + " is not assigned a move boundary. Exiting";
-        eventBus->publish(new ExitGameEvent(exitMessage));
-    }
-
+    npcEntity->initialize(texture, collidable, moveBoundaries, assetName, isAggressive, npcType);
     npcs.push_back(npcEntity);
 }
 

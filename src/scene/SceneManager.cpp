@@ -16,6 +16,7 @@ void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font
     eventBus->subscribe(this, &SceneManager::onChangeSceneEvent);
     eventBus->subscribe(this, &SceneManager::onOpenMenuEvent);
     eventBus->subscribe(this, &SceneManager::onCloseMenuEvent);
+    eventBus->subscribe(this, &SceneManager::onAggressiveNpcCollisionEvent);
     loadScene("", "scene1");
 }
 
@@ -155,6 +156,10 @@ void SceneManager::onCloseMenuEvent(CloseMenuEvent* event) {
     if(state == STATE_PAUSE) {
         state = STATE_SCENE;
     }
+}
+
+void SceneManager::onAggressiveNpcCollisionEvent(AggressiveNpcCollisionEvent* event) {
+    //start up the battle scene
 }
 
 sf::Color SceneManager::getSceneTransparency(sf::Color currentColor) {

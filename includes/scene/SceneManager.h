@@ -37,6 +37,8 @@ private:
     void onChangeSceneEvent(ChangeSceneEvent* event);
     void onOpenMenuEvent(OpenMenuEvent* event);
     void onCloseMenuEvent(CloseMenuEvent* event);
+    void onAggressiveNpcCollisionEvent(AggressiveNpcCollisionEvent* event);
+
     float sceneAlpha = 255.f;
 
     std::unique_ptr<Scene> scene;

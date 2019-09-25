@@ -6,7 +6,6 @@ void CollisionManager::initialize(std::shared_ptr<EventBus> eventBus) {
     this->eventBus = eventBus;
 }
 
-//TODO: does it really make sense to only handle one collision per frame? Or is it doing a bunch of extra work?
 //TODO: consider referring to "collisions" as something else to differentiate it from vicinity collision
 void CollisionManager::handleCollisions(Player& player,
                                         const std::vector<std::shared_ptr<NpcEntity>>& entities,
@@ -126,16 +125,21 @@ bool CollisionManager::playerDoorCollisionOccurred(Player& player, const Collida
 }
 
 void CollisionManager::handleCollisionWithPlayerAndNpcEntity(Player& player, std::shared_ptr<NpcEntity> npc) {
-    if(player.isMoving()) {
-        eventBus->publish(new PlayerCollisionEvent(npc->getEntityCollidable()));
-    }
-    if(npc->isMoving()) {
-        eventBus->publish(new NpcCollisionEvent(*npc, player.getEntityCollidable()));
-    }
+    //TODO: is it okay not to handle the collisions if a battle is going to begin anyway? Need to test how this looks
+    if(npc->isNpcAggressive()) {
+        eventBus->publish(new AggressiveNpcCollisionEvent(*npc));
+    } else {
+        if(player.isMoving()) {
+            eventBus->publish(new PlayerCollisionEvent(npc->getEntityCollidable()));
+        }
+        if(npc->isMoving()) {
+            eventBus->publish(new NpcCollisionEvent(*npc, player.getEntityCollidable()));
+        }
 
-    if(!player.isMoving() && !npc->isMoving()) {
-        logger.logDebug("Player and npc are colliding but neither is moving. Correcting player only. Is this an issue?");
-        eventBus->publish(new PlayerCollisionEvent(npc->getEntityCollidable()));
+        if(!player.isMoving() && !npc->isMoving()) {
+            logger.logDebug("Player and npc are colliding but neither is moving. Correcting player only. Is this an issue?");
+            eventBus->publish(new PlayerCollisionEvent(npc->getEntityCollidable()));
+        }
     }
 }
 

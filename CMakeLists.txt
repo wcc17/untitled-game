@@ -111,7 +111,12 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/CloseMenuEvent.h
         includes/events/event/ControllerMenuMoveEvent.h
         includes/ui/component/MenuScreenPosition.h
-        includes/ui/UIComponentType.h includes/entity/npc/types/MonsterNpcEntity.h includes/entity/npc/types/NpcType.h includes/entity/npc/types/HumanNpcEntity.h includes/entity/npc/types/CatNpcEntity.h)
+        includes/ui/UIComponentType.h
+        includes/entity/npc/types/MonsterNpcEntity.h
+        includes/entity/npc/types/NpcType.h
+        includes/entity/npc/types/HumanNpcEntity.h
+        includes/entity/npc/types/CatNpcEntity.h
+        includes/events/event/AggressiveNpcCollisionEvent.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 

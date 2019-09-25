@@ -4,14 +4,16 @@
 #include "../NpcEntity.h"
 
 class MonsterNpcEntity : public NpcEntity {
-
-protected:
-    //TODO: EVERYTHING needs to be multiples of  tile size, including the character textures (its frames). There should be a check to ensure this is happening so that I don't forget
-    void initializeAnimations() override {
-
+public:
+    MonsterNpcEntity() {
         this->entitySpeed = 70.f;
         this->entityFrameTime = 0.16f;
+        this->moveDelayRange = sf::Vector2f(0.0f, 1.5f);
+    }
 
+protected:
+    //TODO: EVERYTHING needs to be multiples of tile size, including the character textures (its frames). There should be a check to ensure this is happening so that I don't forget
+    void initializeAnimations() override {
         entityAnimation.walkingAnimationDown.setSpriteSheet(*this->getTexture());
         entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(0, 0, entityWidth, entityHeight));
         entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(entityWidth, 0, entityWidth, entityHeight));

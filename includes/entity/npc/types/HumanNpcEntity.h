@@ -4,14 +4,16 @@
 #include "../NpcEntity.h"
 
 class HumanNpcEntity : public NpcEntity {
+public:
+    HumanNpcEntity() {
+        this->entitySpeed = 65.f;
+        this->entityFrameTime = 0.16f;
+        this->moveDelayRange = sf::Vector2f(1.5f, 5.5f);
+    }
 
 protected:
     //TODO: EVERYTHING needs to be multiples of  tile size, including the character textures (its frames). There should be a check to ensure this is happening so that I don't forget
     void initializeAnimations() override {
-
-        this->entitySpeed = 65.f;
-        this->entityFrameTime = 0.16f;
-
         entityAnimation.walkingAnimationDown.setSpriteSheet(*this->getTexture());
         entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(0, 0, entityWidth, entityHeight));
         entityAnimation.walkingAnimationDown.addFrame(sf::IntRect(entityWidth, 0, entityWidth, entityHeight));

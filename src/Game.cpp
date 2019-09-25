@@ -1,4 +1,3 @@
-#include <tinyxml2.h>
 #include "../includes/Game.h"
 
 Logger Game::logger("Game");

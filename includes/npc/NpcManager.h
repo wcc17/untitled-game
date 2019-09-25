@@ -34,8 +34,10 @@ private:
     std::shared_ptr<EventBus> eventBus;
     std::vector<std::shared_ptr<NpcEntity>> npcs;
     void initializeNpc(
-            Collidable& collidable, sf::IntRect moveBoundaries, sf::Texture* texture,
-            std::string assetName, bool isAggressive, NpcType npcType);
+            TextureManager& textureManager,
+            Collidable collidable,
+            std::map<std::string, sf::IntRect> npcMoveBoundaries,
+            std::map<std::string, std::vector<tmx::Property>> npcNameToPropertiesMap);
     void onOpenDialogueEvent(OpenDialogueEvent* event);
     void onCloseDialogueEvent(CloseDialogueEvent* event);
     void onNpcCollisionEvent(NpcCollisionEvent* event);

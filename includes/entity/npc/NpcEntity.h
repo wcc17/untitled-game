@@ -31,6 +31,7 @@ protected:
     float entityFrameTime;
     float entityWidth;
     float entityHeight;
+    sf::Vector2f moveDelayRange;
     virtual void initializeAnimations() {};
 
 private:

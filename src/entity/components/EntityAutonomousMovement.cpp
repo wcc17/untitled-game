@@ -1,11 +1,10 @@
 #include "../../../includes/entity/components/EntityAutonomousMovement.h"
 
-const sf::Vector2f moveDelayRange = sf::Vector2f(1.5f, 5.5f); //TODO: do i want this hardcoded?
-
-void EntityAutonomousMovement::initialize(std::string npcName, sf::IntRect moveBoundaries, float moveSpeed) {
+void EntityAutonomousMovement::initialize(std::string npcName, sf::IntRect moveBoundaries, float moveSpeed, sf::Vector2f moveDelayRange) {
     this->entityLogger.initialize("EntityAutonomousMovement", npcName);
     this->moveBoundaries = moveBoundaries;
     this->moveSpeed = moveSpeed;
+    this->moveDelayRange = moveDelayRange;
     setMoveDelayTimer();
 }
 
