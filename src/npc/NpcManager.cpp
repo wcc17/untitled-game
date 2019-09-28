@@ -58,7 +58,7 @@ void NpcManager::onCloseDialogueEvent(CloseDialogueEvent* event) {
 void NpcManager::onNpcCollisionEvent(NpcCollisionEvent* event) {
     for(std::shared_ptr<NpcEntity> npc : npcs) {
         if(event->npc.getEntityCollidable().getName() == npc->getEntityCollidable().getName()) {
-            npc->onCollisionEvent(event->collidedWith);
+            npc->onCollisionEvent(event->newNpcPosition);
             break;
         }
     }

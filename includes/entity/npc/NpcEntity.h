@@ -19,8 +19,8 @@ public:
     void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
     void onPlayerInteractionStart(MoveDirection playerFacingDirection);
     void onPlayerInteractionFinish();
-    void onCollisionEvent(const Collidable& collidedWith);
-    EntityCollidable getEntityCollidable();
+    void onCollisionEvent(sf::Vector2f newNpcPosition);
+    EntityCollidable getEntityCollidable() const;
     std::string getAssetName();
     bool isMoving();
     bool isNpcAggressive();

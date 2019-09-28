@@ -43,6 +43,7 @@ private:
 
     std::unique_ptr<Scene> scene;
     std::shared_ptr<EventBus> eventBus;
+    std::shared_ptr<Player> player;
 
     SceneState state = SceneState::STATE_TRANSITION_SCENE_IN;
     std::string nextSceneName;
@@ -52,7 +53,6 @@ private:
     NpcManager npcManager;
     ViewManager viewManager;
     XmlManager xmlManager;
-    Player player;
     UIManager uiManager;
 };
 

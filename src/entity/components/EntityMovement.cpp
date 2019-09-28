@@ -107,7 +107,7 @@ void EntityMovement::performMoveOnCurrentPosition(sf::Time deltaTime, sf::Vector
     entityLogger.logDebug("position: %f, %f", currentPosition.x, currentPosition.y);
 }
 
-MoveDirection EntityMovement::getLastFacingDirection() {
+MoveDirection EntityMovement::getLastFacingDirection() const {
     return this->lastFacingDirection;
 }
 

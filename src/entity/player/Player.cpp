@@ -115,7 +115,7 @@ void Player::onCloseDialogueEvent(CloseDialogueEvent* event) {
 }
 
 void Player::onCollisionEvent(PlayerCollisionEvent* event) {
-    setPosition(entityCollidable.getFixedPositionAfterCollision(event->collidedWith));
+    setPosition(event->newPlayerPosition);
     adjustPlayerAndViewPositions();
 }
 
@@ -131,11 +131,11 @@ void Player::roundPosition() {
     setPosition(std::round(getPosition().x), std::round(getPosition().y));
 }
 
-EntityCollidable Player::getEntityCollidable() {
+EntityCollidable Player::getEntityCollidable() const {
     return entityCollidable;
 }
 
-MoveDirection Player::getLastFacingDirection() {
+MoveDirection Player::getLastFacingDirection() const {
     return entityMovement.getLastFacingDirection();
 }
 

@@ -14,7 +14,7 @@ public:
     void initialize(std::string entityName, float moveSpeed);
     void handleStanding(sf::Time deltaTime, EntityState& state, MoveDirection& currentDirection, sf::Vector2f& currentPosition);
     void handleMoving(sf::Time deltaTime, const sf::Vector2u& mapTileSize, EntityState& state, MoveDirection& currentDirection, sf::Vector2f& currentPosition);
-    MoveDirection getLastFacingDirection();
+    MoveDirection getLastFacingDirection() const;
     void performRegularMoveOnCurrentPosition(sf::Time deltaTime, MoveDirection& currentDirection, sf::Vector2f& currentPosition);
     void performGoalLimitedMoveOnCurrentPosition(sf::Time deltaTime, const sf::Vector2u& mapTileSize, MoveDirection& currentDirection, sf::Vector2f& currentPosition);
 

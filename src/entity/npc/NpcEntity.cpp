@@ -21,7 +21,6 @@ void NpcEntity::initialize(
     entityAnimation.stop();
 
     entityAutonomousMovement.initialize(entityCollidable.getName(), moveBoundaries, entitySpeed, moveDelayRange);
-    entityLogger.initialize("NpcEntity", entityCollidable.getName());
 }
 
 void NpcEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
@@ -73,10 +72,9 @@ void NpcEntity::onPlayerInteractionFinish() {
     state = stateBeforeInteraction;
 }
 
-void NpcEntity::onCollisionEvent(const Collidable& collidedWith) {
-    entityLogger.logDebug("npc is colliding with something in onCollisionEvent()");
-    sf::Vector2f newPosition = entityCollidable.getFixedPositionAfterCollision(collidedWith);
-    setEntityPosition(newPosition);
+void NpcEntity::onCollisionEvent(sf::Vector2f newNpcPosition) {
+//    entityLogger.logDebug("npc is colliding with something in onCollisionEvent()");
+    setEntityPosition(newNpcPosition);
     entityAutonomousMovement.stopMovement(state);
 }
 
@@ -90,7 +88,7 @@ void NpcEntity::setEntityPosition(const sf::Vector2f& position) {
     roundPosition();
 }
 
-EntityCollidable NpcEntity::getEntityCollidable() {
+EntityCollidable NpcEntity::getEntityCollidable() const {
     return this->entityCollidable;
 }
 

@@ -23,8 +23,8 @@ public:
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture);
     void initializeForScene(const Collidable& collidable);
     void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
-    EntityCollidable getEntityCollidable();
-    MoveDirection getLastFacingDirection();
+    EntityCollidable getEntityCollidable() const;
+    MoveDirection getLastFacingDirection() const;
     bool isMoving();
 private:
     EntityState state;

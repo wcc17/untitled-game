@@ -6,8 +6,8 @@
 
 class PlayerCollisionEvent : public Event {
 public:
-    PlayerCollisionEvent(const Collidable& collision): collidedWith(collision) {}
-    const Collidable& collidedWith;
+    PlayerCollisionEvent(const sf::Vector2f& newPlayerPosition) : newPlayerPosition(newPlayerPosition) {}
+    const sf::Vector2f& newPlayerPosition;
 };
 
 #endif //NEWNEW_PLAYERCOLLISIONEVENT_H

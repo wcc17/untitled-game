@@ -8,8 +8,9 @@ void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font
     collisionManager.initialize(eventBus);
     viewManager.initialize(eventBus);
 
+    player = std::make_shared<Player>();
     textureManager.loadTexture(AssetPath::PLAYER_TEXTURE);
-    player.initialize(eventBus, textureManager.getTexture(AssetPath::PLAYER_TEXTURE));
+    player->initialize(eventBus, textureManager.getTexture(AssetPath::PLAYER_TEXTURE));
 
     uiManager.initialize(eventBus, textureManager, font, windowSize, defaultWindowSize);
 
@@ -43,9 +44,9 @@ void SceneManager::update(sf::Time elapsedTime, sf::RenderTexture& renderTexture
 }
 
 void SceneManager::updateSceneState(sf::Time elapsedTime, sf::RenderTexture& renderTexture) {
-    player.update(elapsedTime, scene->getMapTileSize());
+    player->update(elapsedTime, scene->getMapTileSize());
     npcManager.update(elapsedTime, scene->getMapTileSize());
-    collisionManager.handleCollisions(player, npcManager.getNpcEntities(), scene->getMapCollidables());
+    collisionManager.checkAllCollisions(player, npcManager.getNpcEntities(), scene->getMapCollidables());
     uiManager.update(renderTexture, viewManager.getView(), elapsedTime);
 }
 
@@ -97,7 +98,7 @@ void SceneManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
 void SceneManager::drawSceneStateToRenderTexture(sf::RenderTexture* renderTexture) {
     renderTexture->setView(viewManager.getView());
     renderTexture->draw(*scene);
-    renderTexture->draw(player);
+    renderTexture->draw(*player);
     npcManager.drawToRenderTexture(renderTexture);
     uiManager.drawToRenderTexture(renderTexture);
 }
@@ -107,7 +108,7 @@ void SceneManager::loadScene(std::string previousSceneName, std::string sceneNam
     scene->initialize(sceneName, textureManager);
     std::string spawnName = scene->getPlayerSpawnPointName(previousSceneName);
 
-    player.initializeForScene(scene->getPlayerCollidable(spawnName));
+    player->initializeForScene(scene->getPlayerCollidable(spawnName));
 
     npcManager.initialize(eventBus, scene->getNpcCollidables(), scene->getNpcMoveBoundariesMap(),
                           scene->getNpcNameToPropertiesMap(), textureManager);

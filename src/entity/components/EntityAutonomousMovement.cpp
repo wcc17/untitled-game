@@ -125,7 +125,6 @@ void EntityAutonomousMovement::setMoveDelayTimer() {
     float max = moveDelayRange.y;
     float delay = getRandomFloatInRange(min, max);
 
-    entityLogger.logDebug("");
     entityLogger.logDebug("move delay timer set to %f", delay);
 
     this->moveDelay = sf::seconds(delay);

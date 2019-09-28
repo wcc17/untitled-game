@@ -43,7 +43,9 @@ set(SOURCE_FILES src/main.cpp
         src/map/Map.cpp
         src/ui/component/menu_component/DialogueMenuComponent.cpp
         src/ui/UIComponentInitializer.cpp
-        src/ui/component/menu_component/BaseMenuComponent.cpp)
+        src/ui/component/menu_component/BaseMenuComponent.cpp
+        src/collisions/CollisionPublisher.cpp
+        src/collisions/CollisionUtil.cpp)
 
 set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/asset/FontManager.h
@@ -83,7 +85,9 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/map/Map.h
         includes/ui/component/menu_component/DialogueMenuComponent.h
         includes/ui/UIComponentInitializer.h
-        includes/ui/component/menu_component/BaseMenuComponent.h)
+        includes/ui/component/menu_component/BaseMenuComponent.h
+        includes/collisions/CollisionPublisher.h
+        includes/collisions/CollisionUtil.h)
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/EntityCollisionEvent.h

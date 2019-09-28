@@ -7,9 +7,12 @@
 
 class NpcCollisionEvent : public Event {
 public:
-    NpcCollisionEvent(NpcEntity& npc, const Collidable& collidedWith): npc(npc), collidedWith(collidedWith) {}
-    const Collidable& collidedWith;
-    NpcEntity& npc;
+    NpcCollisionEvent(
+            const NpcEntity& npc,
+            const sf::Vector2f& newNpcPosition)
+        : npc(npc), newNpcPosition(newNpcPosition) {}
+    const NpcEntity& npc;
+    const sf::Vector2f& newNpcPosition;
 };
 
 
