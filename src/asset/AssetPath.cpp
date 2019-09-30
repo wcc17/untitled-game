@@ -33,6 +33,9 @@ std::string AssetPath::getUIComponentAssetPath(UIComponentType componentType) {
         case PARTY_MENU:
             componentName = "party_menu";
             break;
+        default:
+            componentName = "invalid_component_type";
+            break;
     }
     return "assets/gfx/ui/" + componentName + ".png";
 }

@@ -21,23 +21,26 @@
 class NpcManager {
 
 public:
-    void initialize(std::shared_ptr<EventBus> eventBus,
-                    std::vector<Collidable> collidables,
-                    std::map<std::string, sf::IntRect> npcMoveBoundaries,
-                    std::map<std::string, std::vector<tmx::Property>> npcNameToPropertiesMap,
+    void initialize(const std::shared_ptr<EventBus> eventBus,
+                    const std::vector<Collidable>& collidables,
+                    const std::map<std::string, sf::IntRect>& npcMoveBoundaries,
+                    const std::map<std::string, std::vector<tmx::Property>>& npcNameToPropertiesMap,
+                    const sf::Vector2u& mapTileSize,
                     TextureManager& textureManager);
-    void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
+    void update(sf::Time deltaTime);
     void drawToRenderTexture(sf::RenderTexture* renderTexture);
     std::vector<std::shared_ptr<NpcEntity>>& getNpcEntities();
     void release(TextureManager& textureManager);
 private:
     std::shared_ptr<EventBus> eventBus;
     std::vector<std::shared_ptr<NpcEntity>> npcs;
+    sf::Vector2u mapTileSize;
+
     void initializeNpc(
             TextureManager& textureManager,
-            Collidable collidable,
-            std::map<std::string, sf::IntRect> npcMoveBoundaries,
-            std::map<std::string, std::vector<tmx::Property>> npcNameToPropertiesMap);
+            const Collidable& collidable,
+            const std::map<std::string, sf::IntRect>& npcMoveBoundaries,
+            const std::map<std::string, std::vector<tmx::Property>>& npcNameToPropertiesMap);
     void onOpenDialogueEvent(OpenDialogueEvent* event);
     void onCloseDialogueEvent(CloseDialogueEvent* event);
     void onNpcCollisionEvent(NpcCollisionEvent* event);

@@ -4,12 +4,14 @@ static const std::string NPC_TYPE_HUMAN = "human";
 static const std::string NPC_TYPE_CAT = "cat";
 static const std::string NPC_TYPE_MONSTER = "monster";
 
-void NpcManager::initialize(std::shared_ptr<EventBus> eventBus,
-                            std::vector<Collidable> collidables,
-                            std::map<std::string, sf::IntRect> npcMoveBoundaries,
-                            std::map<std::string, std::vector<tmx::Property>> npcNameToPropertiesMap,
+void NpcManager::initialize(const std::shared_ptr<EventBus> eventBus,
+                            const std::vector<Collidable>& collidables,
+                            const std::map<std::string, sf::IntRect>& npcMoveBoundaries,
+                            const std::map<std::string, std::vector<tmx::Property>>& npcNameToPropertiesMap,
+                            const sf::Vector2u& mapTileSize,
                             TextureManager& textureManager) {
     this->eventBus = eventBus;
+    this->mapTileSize = mapTileSize;
 
     for(Collidable collidable : collidables) {
         initializeNpc(textureManager, collidable, npcMoveBoundaries, npcNameToPropertiesMap);
@@ -20,7 +22,7 @@ void NpcManager::initialize(std::shared_ptr<EventBus> eventBus,
     eventBus->subscribe(this, &NpcManager::onNpcCollisionEvent);
 }
 
-void NpcManager::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
+void NpcManager::update(sf::Time deltaTime) {
     for(std::shared_ptr<NpcEntity> npc : npcs) {
         npc->update(deltaTime, mapTileSize);
     }
@@ -66,9 +68,9 @@ void NpcManager::onNpcCollisionEvent(NpcCollisionEvent* event) {
 
 void NpcManager::initializeNpc(
         TextureManager& textureManager,
-        Collidable collidable,
-        std::map<std::string, sf::IntRect> npcMoveBoundaries,
-        std::map<std::string, std::vector<tmx::Property>> npcNameToPropertiesMap) {
+        const Collidable& collidable,
+        const std::map<std::string, sf::IntRect>& npcMoveBoundaries,
+        const std::map<std::string, std::vector<tmx::Property>>& npcNameToPropertiesMap) {
 
     std::vector<tmx::Property> npcProperties = npcNameToPropertiesMap.at(collidable.getName());
     sf::IntRect moveBoundaries = npcMoveBoundaries.at(collidable.getName());

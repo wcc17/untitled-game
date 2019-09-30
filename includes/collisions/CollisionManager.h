@@ -15,20 +15,23 @@
 #include "CollisionPublisher.h"
 
 class CollisionManager {
+
 public:
+    CollisionManager();
     void initialize(std::shared_ptr<EventBus> eventBus);
+    void initializeForScene(std::vector<std::shared_ptr<Collidable>> mapCollidables);
     void checkAllCollisions(const std::shared_ptr<Player>& player,
-            const std::vector<std::shared_ptr<NpcEntity>>& entities,
-            const std::vector<std::shared_ptr<Collidable>>& mapCollidables);
+            const std::vector<std::shared_ptr<NpcEntity>>& entities);
 
 private:
     CollisionPublisher collisionPublisher;
+    std::vector<std::shared_ptr<Collidable>> mapCollidables;
     static Logger logger;
 
-    void checkCollisionsWithPlayerAndMap(const std::shared_ptr<Player>& player, const std::vector<std::shared_ptr<Collidable>>& collidables);
+    void checkCollisionsWithPlayerAndMap(const std::shared_ptr<Player>& player);
     void checkCollisionsWithPlayerAndEntities(const std::shared_ptr<Player>& player, const std::vector<std::shared_ptr<NpcEntity>>& entities);
     void checkCollisionsBetweenEntitiesAndEntity(const std::vector<std::shared_ptr<NpcEntity>>& entities);
-    void checkCollisionsBetweenEntitiesAndMap(const std::vector<std::shared_ptr<NpcEntity>>& entities, const std::vector<std::shared_ptr<Collidable>>& collidables);
+    void checkCollisionsBetweenEntitiesAndMap(const std::vector<std::shared_ptr<NpcEntity>>& entities);
 
     void handleCollisionWithPlayerAndNpcEntity(const std::shared_ptr<Player>& player, std::shared_ptr<NpcEntity> npc);
     void handleCollisionWithNpcAndNpc(const std::shared_ptr<NpcEntity> npc1, const std::shared_ptr<NpcEntity> npc2);

@@ -156,6 +156,9 @@ void CollisionUtil::fixCollidablePositionAfterCollision(
                 top2 -= bottom2;
             }
         }
+        default: {
+            break;
+        }
     }
 
     collidable1Position = sf::Vector2f(left1, top1);

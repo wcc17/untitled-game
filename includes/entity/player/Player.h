@@ -21,8 +21,8 @@ class Player : public sf::Sprite {
 
 public:
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture);
-    void initializeForScene(const Collidable& collidable);
-    void update(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
+    void initializeForScene(const Collidable& collidable, const sf::Vector2u& mapTileSize);
+    void update(sf::Time deltaTime);
     EntityCollidable getEntityCollidable() const;
     MoveDirection getLastFacingDirection() const;
     bool isMoving();
@@ -33,11 +33,12 @@ private:
     EntityMovement entityMovement;
     std::shared_ptr<EventBus> eventBus;
     MoveDirection currentDirection;
+    sf::Vector2u mapTileSize;
     static Logger logger;
 
     void initializeAnimations();
-    void handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
-    void handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize);
+    void handleStandingState(sf::Time deltaTime);
+    void handleMovingState(sf::Time deltaTime);
     void handleInteractingState();
     void handleState(sf::Time deltaTime);
     void resetAfterFrame();

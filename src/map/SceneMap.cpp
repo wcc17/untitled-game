@@ -69,7 +69,7 @@ std::map<std::string, std::vector<tmx::Property>> SceneMap::getNpcNameToProperti
     return this->npcNameToNpcPropertyMap;
 }
 
-std::string SceneMap::getPlayerSpawnPointName(std::string sceneName) {
+std::string SceneMap::getPlayerSpawnNameForPreviousToCurrentSceneTransition(std::string sceneName) {
     std::string spawnPointName = DEFAULT_SPAWN_NAME;
 
     if(sceneName != "") {

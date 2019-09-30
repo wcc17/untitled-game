@@ -16,6 +16,7 @@
 #include "../ui/UIManager.h"
 #include "../events/event/OpenMenuEvent.h"
 #include "../events/event/CloseMenuEvent.h"
+#include "OverworldScene.h"
 
 class SceneManager {
 public:
@@ -25,15 +26,14 @@ public:
     void release();
     sf::Color getSceneTransparency(sf::Color currentColor);
 private:
-    void loadScene(std::string previousSceneName, std::string sceneName);
+    void loadOverworldScene(std::string previousSceneName, std::string sceneName);
     void setNextScene();
     void releaseScene();
-    void updateSceneState(sf::Time elapsedTime, sf::RenderTexture& renderTexture);
+    void updateOverworldSceneState(sf::Time elapsedTime, sf::RenderTexture& renderTexture);
     void updateSceneTransition(sf::Time elapsedTime);
     void updateChangeSceneState();
     void updatePauseState(sf::Time elapsedTime, sf::RenderTexture& renderTexture);
-    void drawSceneStateToRenderTexture(sf::RenderTexture* renderTexture);
-    void drawChangeSceneStateToRenderTexture(sf::RenderTexture* renderTexture);
+    void drawOverworldSceneStateToRenderTexture(sf::RenderTexture* renderTexture);
     void onChangeSceneEvent(ChangeSceneEvent* event);
     void onOpenMenuEvent(OpenMenuEvent* event);
     void onCloseMenuEvent(CloseMenuEvent* event);
@@ -41,7 +41,9 @@ private:
 
     float sceneAlpha = 255.f;
 
-    std::unique_ptr<Scene> scene;
+    std::unique_ptr<OverworldScene> scene; //TODO: should just be a base Scene
+//    std::unique_ptr<OverworldScene> currentOverworldScene;
+//    std::unique_ptr<BattleScene> currentBattleScene;
     std::shared_ptr<EventBus> eventBus;
     std::shared_ptr<Player> player;
 

@@ -2,13 +2,18 @@
 
 Logger CollisionManager::logger("CollisionManager");
 
+CollisionManager::CollisionManager() : mapCollidables(std::vector<std::shared_ptr<Collidable>>()) { }
+
 void CollisionManager::initialize(std::shared_ptr<EventBus> eventBus) {
     collisionPublisher.initialize(eventBus);
 }
 
+void CollisionManager::initializeForScene(std::vector<std::shared_ptr<Collidable>> mapCollidables) {
+    this->mapCollidables = mapCollidables;
+}
+
 void CollisionManager::checkAllCollisions(const std::shared_ptr<Player>& player,
-                                        const std::vector<std::shared_ptr<NpcEntity>>& entities,
-                                        const std::vector<std::shared_ptr<Collidable>>& mapCollidables) {
+                                        const std::vector<std::shared_ptr<NpcEntity>>& entities) {
 
     //checkAllCollisions will go through all possible collisions
     //for each type of collision, we check if the collision occurred
@@ -17,11 +22,11 @@ void CollisionManager::checkAllCollisions(const std::shared_ptr<Player>& player,
 
     //player collisions
     checkCollisionsWithPlayerAndEntities(player, entities);
-    checkCollisionsWithPlayerAndMap(player, mapCollidables);
+    checkCollisionsWithPlayerAndMap(player);
 
     //entity collisions
     checkCollisionsBetweenEntitiesAndEntity(entities);
-    checkCollisionsBetweenEntitiesAndMap(entities, mapCollidables);
+    checkCollisionsBetweenEntitiesAndMap(entities);
 }
 
 void CollisionManager::checkCollisionsWithPlayerAndEntities(const std::shared_ptr<Player>& player, const std::vector<std::shared_ptr<NpcEntity>>& entities) {
@@ -40,9 +45,9 @@ void CollisionManager::checkCollisionsWithPlayerAndEntities(const std::shared_pt
     }
 }
 
-void CollisionManager::checkCollisionsWithPlayerAndMap(const std::shared_ptr<Player>& player, const std::vector<std::shared_ptr<Collidable>>& collidables) {
+void CollisionManager::checkCollisionsWithPlayerAndMap(const std::shared_ptr<Player>& player) {
 
-    for(std::shared_ptr<Collidable> collidable : collidables) {
+    for(std::shared_ptr<Collidable> collidable : mapCollidables) {
 
         EntityCollidable playerCollidable = player->getEntityCollidable();
         if(CollisionUtil::collisionOccurred(playerCollidable, *collidable)) {
@@ -75,11 +80,10 @@ void CollisionManager::checkCollisionsBetweenEntitiesAndEntity(const std::vector
     }
 }
 
-void CollisionManager::checkCollisionsBetweenEntitiesAndMap(const std::vector<std::shared_ptr<NpcEntity>>& entities,
-        const std::vector<std::shared_ptr<Collidable>>& collidables) {
+void CollisionManager::checkCollisionsBetweenEntitiesAndMap(const std::vector<std::shared_ptr<NpcEntity>>& entities) {
 
     for(std::shared_ptr<NpcEntity> npc : entities) {
-        for(std::shared_ptr<Collidable> collidable : collidables) {
+        for(std::shared_ptr<Collidable> collidable : mapCollidables) {
 
             EntityCollidable entityCollidable = npc->getEntityCollidable();
             if(CollisionUtil::collisionOccurred(entityCollidable, *collidable)) {

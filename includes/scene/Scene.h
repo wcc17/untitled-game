@@ -16,25 +16,17 @@
 
 class Scene : public sf::Drawable, public sf::Transformable {
 public:
-    void initialize(std::string sceneName, TextureManager& textureManager);
-    void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-    void release(TextureManager& textureManager);
-    sf::Vector2u getMapTileSize();
-    std::string getSceneName();
-    std::vector<std::shared_ptr<Collidable>>& getMapCollidables();
-    std::vector<Collidable> getNpcCollidables();
-    std::map<std::string, sf::IntRect> getNpcMoveBoundariesMap();
-    std::map<std::string, std::vector<tmx::Property>> getNpcNameToPropertiesMap();
-    Collidable getPlayerCollidable(std::string spawnName);
-    std::string getPlayerSpawnPointName(std::string sceneName);
+    virtual void initialize(std::string sceneName, TextureManager& textureManager) {};
+    virtual void update() {};
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {};
+    virtual void release(TextureManager& textureManager) {};
+    virtual std::string getSceneName();
 
-private:
+protected:
     std::string sceneName;
     sf::Texture* texture;
-    std::vector<sf::VertexArray> vertices;
-    SceneMap sceneMap;
-    MapLoader mapLoader;
 
+private:
     static Logger logger;
 };
 

@@ -15,7 +15,7 @@ public:
     std::map<std::string, sf::IntRect> getNpcMoveBoundariesMap();
     std::map<std::string, std::vector<tmx::Property>> getNpcNameToPropertiesMap();
     Collidable getPlayerCollidable(std::string spawnName);
-    std::string getPlayerSpawnPointName(std::string sceneName);
+    std::string getPlayerSpawnNameForPreviousToCurrentSceneTransition(std::string sceneName);
 protected:
     void loadRectangleObjects(const tmx::Object& object) override;
 private:

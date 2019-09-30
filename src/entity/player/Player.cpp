@@ -24,7 +24,8 @@ void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture
     eventBus->subscribe(this, &Player::onDoorCollisionEvent);
 }
 
-void Player::initializeForScene(const Collidable& collidable) {
+void Player::initializeForScene(const Collidable& collidable, const sf::Vector2u& mapTileSize) {
+    this->mapTileSize = mapTileSize;
     entityMovement.initialize(collidable.getName(), MOVEMENT_SPEED);
     entityCollidable.initialize(collidable);
     entityCollidable.setVicinityBoundsOffset(VICINITY_BOUNDS_OFFSET);
@@ -32,13 +33,13 @@ void Player::initializeForScene(const Collidable& collidable) {
     adjustPlayerAndViewPositions();
 }
 
-void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
+void Player::update(sf::Time deltaTime) {
     switch(state) {
         case STATE_STANDING:
-            handleStandingState(deltaTime, mapTileSize);
+            handleStandingState(deltaTime);
             break;
         case STATE_MOVING:
-            handleMovingState(deltaTime, mapTileSize);
+            handleMovingState(deltaTime);
             break;
         case STATE_PLAYER_INTERACTING_WITH_UI:
             handleInteractingState();
@@ -46,7 +47,7 @@ void Player::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
     }
 }
 
-void Player::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
+void Player::handleStandingState(sf::Time deltaTime) {
     sf::Vector2f newPosition = getPosition();
     entityMovement.handleStanding(deltaTime, state, currentDirection, newPosition);
     setPosition(newPosition);
@@ -58,7 +59,7 @@ void Player::handleStandingState(sf::Time deltaTime, const sf::Vector2u& mapTile
     }
 }
 
-void Player::handleMovingState(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
+void Player::handleMovingState(sf::Time deltaTime) {
     sf::Vector2f newPosition = getPosition();
     entityMovement.handleMoving(deltaTime, mapTileSize, state, currentDirection, newPosition);
     setPosition(newPosition);
