@@ -28,7 +28,11 @@ public:
         event = NULL;
     }
 
-    template<class T, class EventType> void subscribe(T* instance, void (T::*memberFunction)(EventType *)) {
+    template<class T, class EventType> void subscribe(
+            T* instance,
+            void (T::*memberFunction)(EventType *),
+            std::string instanceClassName) {
+
         HandlerList* handlers = subscribers[typeid(EventType)];
 
         //perform first time initialization if necessary
@@ -37,7 +41,7 @@ public:
             subscribers[typeid(EventType)] = handlers;
         }
 
-        handlers->push_back(new MemberFunctionHandler<T, EventType>(instance, memberFunction));
+        handlers->push_back(new MemberFunctionHandler<T, EventType>(instance, memberFunction, instanceClassName));
         handlers = NULL;
     }
 
@@ -51,7 +55,10 @@ public:
                 MemberFunctionHandler<T, EventType>* handler = dynamic_cast<MemberFunctionHandler<T, EventType>*>(*it);
 
                 if(handler == NULL) {
-                    //NOTE: dynamic_cast returning null means that we tried to assign a class to the object that doesn't actually match what class it is. If thats the case here, we don't even need to check it because its definitely not the correct MemberFunction
+                    //NOTE: dynamic_cast returning null means that we tried to assign a class to the object that
+                    //doesn't actually match what class it is. If thats the case here, we don't even need to check
+                    // it because its definitely not the correct MemberFunction
+
                     ++it; //iterate normally, nothing to do here
                 } else {
                     if(handler->getMemberFunction() == memberFunction) {
@@ -65,6 +72,56 @@ public:
         }
 
         handlers = NULL;
+    }
+
+    template<class T> void unsubscribeInstanceFromAllEventTypes(T* instance) {
+        std::map<std::type_index, HandlerList*>::iterator subscriberIterator = subscribers.begin();
+
+        while (subscriberIterator != subscribers.end())
+        {
+            HandlerList& handlers = *subscriberIterator->second;
+            HandlerList::iterator handlerListIterator = handlers.begin();
+            while(handlerListIterator != handlers.end()) {
+
+                MemberFunctionHandler<T, Event>* memberFunctionHandler =
+                        static_cast<MemberFunctionHandler<T, Event>*>(*handlerListIterator);
+                if(memberFunctionHandler->getInstance() == instance) {
+                    delete *handlerListIterator;
+                    handlerListIterator = handlers.erase(handlerListIterator);
+                } else {
+                    ++handlerListIterator;
+                }
+
+                memberFunctionHandler = nullptr;
+            }
+
+            subscriberIterator++;
+        }
+    }
+
+    void printSubscriptionsToConsole() {
+        std::map<std::type_index, HandlerList *>::iterator subscriberIterator = subscribers.begin();
+
+        while (subscriberIterator != subscribers.end()) {
+            HandlerList &handlers = *subscriberIterator->second;
+            HandlerList::iterator handlerListIterator = handlers.begin();
+            while (handlerListIterator != handlers.end()) {
+
+                MemberFunctionHandler<class T, Event> *memberFunctionHandler =
+                        static_cast<MemberFunctionHandler<T, Event> *>(*handlerListIterator);
+
+                //TODO: should be using logger?
+                std::string eventName = subscriberIterator->first.name();
+                eventName = eventName.substr(2); //hack to not worry about mangled type names
+                printf("instance class: %s, eventType: %s\n",
+                        memberFunctionHandler->getInstanceClassName().c_str(),
+                        eventName.c_str());
+
+                handlerListIterator++;
+            }
+
+            subscriberIterator++;
+        }
     }
 
 private:

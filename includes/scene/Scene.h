@@ -16,8 +16,12 @@
 
 class Scene : public sf::Drawable, public sf::Transformable {
 public:
-    virtual void initialize(std::string sceneName, TextureManager& textureManager) {};
-    virtual void update() {};
+    virtual void initialize(
+            std::shared_ptr<EventBus> eventBus,
+            std::string sceneName,
+            std::string previousSceneName,
+            TextureManager& textureManager) {};
+    virtual void update(sf::Time elapsedTime) {};
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {};
     virtual void release(TextureManager& textureManager) {};
     virtual std::string getSceneName();

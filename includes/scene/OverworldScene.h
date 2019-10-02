@@ -3,12 +3,19 @@
 
 
 #include "Scene.h"
+#include "../npc/NpcManager.h"
+#include "../collisions/CollisionManager.h"
+#include "ViewManager.h"
 
 class OverworldScene : public Scene {
 
 public:
-    virtual void initialize(std::string sceneName, TextureManager& textureManager) override;
-    virtual void update() override;
+    virtual void initialize(
+            std::shared_ptr<EventBus> eventBus,
+            std::string sceneName,
+            std::string previousSceneName,
+            TextureManager& textureManager) override;
+    virtual void update(sf::Time elapsedTime) override;
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
     virtual void release(TextureManager& textureManager) override;
 
@@ -22,9 +29,11 @@ public:
 
 private:
     std::vector<sf::VertexArray> vertices;
+    std::shared_ptr<Player> player;
     SceneMap sceneMap;
     MapLoader mapLoader;
-
+    NpcManager npcManager;
+    CollisionManager collisionManager;
 };
 
 

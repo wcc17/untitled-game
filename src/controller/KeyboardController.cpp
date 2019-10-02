@@ -17,6 +17,8 @@ void KeyboardController::handleInput(std::vector<sf::Event> sfEvents) {
         eventBus->publish(new ControllerMoveEvent(MoveDirection::DOWN));
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         eventBus->publish(new ControllerMoveEvent(MoveDirection::RIGHT));
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1)) {
+        eventBus->printSubscriptionsToConsole();
     } else {
         //TODO: should this be called every frame? Its really not that different from anything else. The method tied to the event still only gets called once every frame
         eventBus->publish(new ControllerMoveEvent(MoveDirection::NONE));

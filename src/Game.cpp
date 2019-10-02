@@ -1,8 +1,8 @@
 #include "../includes/Game.h"
 
 Logger Game::logger("Game");
-const int DEFAULT_SCREEN_WIDTH = 1920;
-const int DEFAULT_SCREEN_HEIGHT = 1080;
+const int DEFAULT_SCREEN_WIDTH = 1920/2;
+const int DEFAULT_SCREEN_HEIGHT = 1080/2;
 const int SCREEN_WIDTH = DEFAULT_SCREEN_WIDTH;
 const int SCREEN_HEIGHT = DEFAULT_SCREEN_HEIGHT;
 
@@ -25,7 +25,7 @@ void Game::initialize() {
     keyboardController.initialize(eventBus);
     sceneManager.initialize(eventBus, fontManager.getFont(AssetPath::MUNRO_REGULAR), window->getSize(), sf::Vector2f(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT));
 
-    eventBus->subscribe(this, &Game::onExitGameEvent);
+    eventBus->subscribe(this, &Game::onExitGameEvent, "Game");
 }
 
 void Game::run() {

@@ -5,7 +5,7 @@ const float VIEW_SIZE_Y = 180.f;
 
 void ViewManager::initialize(std::shared_ptr<EventBus> eventBus) {
     view.setSize(sf::Vector2f(VIEW_SIZE_X, VIEW_SIZE_Y));
-    eventBus->subscribe(this, &ViewManager::onPlayerPositionChanged);
+    eventBus->subscribe(this, &ViewManager::onPlayerPositionChanged, "ViewManager");
 }
 
 void ViewManager::onPlayerPositionChanged(PlayerPositionChangeEvent* event) {

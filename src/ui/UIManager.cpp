@@ -6,14 +6,14 @@ void UIManager::initialize(std::shared_ptr<EventBus> eventBus, TextureManager& t
     float windowScale = (windowSize.x / defaultWindowSize.x); //assuming aspect ratio is 16:9 I think
     initializeComponents(textureManager, windowScale, font);
 
-    eventBus->subscribe(this, &UIManager::onOpenDialogueEvent);
-    eventBus->subscribe(this, &UIManager::onCloseDialogueEvent);
-    eventBus->subscribe(this, &UIManager::onOpenMenuEvent);
-    eventBus->subscribe(this, &UIManager::onCloseMenuEvent);
-    eventBus->subscribe(this, &UIManager::onControllerActionEvent);
-    eventBus->subscribe(this, &UIManager::onControllerMenuEvent);
-    eventBus->subscribe(this, &UIManager::onControllerCancelEvent);
-    eventBus->subscribe(this, &UIManager::onControllerMenuMoveEvent);
+    eventBus->subscribe(this, &UIManager::onOpenDialogueEvent, "UIManager");
+    eventBus->subscribe(this, &UIManager::onCloseDialogueEvent, "UIManager");
+    eventBus->subscribe(this, &UIManager::onOpenMenuEvent, "UIManager");
+    eventBus->subscribe(this, &UIManager::onCloseMenuEvent, "UIManager");
+    eventBus->subscribe(this, &UIManager::onControllerActionEvent, "UIManager");
+    eventBus->subscribe(this, &UIManager::onControllerMenuEvent, "UIManager");
+    eventBus->subscribe(this, &UIManager::onControllerCancelEvent, "UIManager");
+    eventBus->subscribe(this, &UIManager::onControllerMenuMoveEvent, "UIManager");
 }
 
 void UIManager::initializeComponents(TextureManager& textureManager, float windowScale, sf::Font* font) {

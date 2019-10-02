@@ -16,12 +16,12 @@ void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture
     entityAnimation.setFrameTime(sf::seconds(PLAYER_FRAME_TIME));
     initializeAnimations();
 
-    eventBus->subscribe(this, &Player::onControllerMoveEvent);
-    eventBus->subscribe(this, &Player::onControllerActionEvent);
-    eventBus->subscribe(this, &Player::onVicinityCollisionEvent);
-    eventBus->subscribe(this, &Player::onCloseDialogueEvent);
-    eventBus->subscribe(this, &Player::onCollisionEvent);
-    eventBus->subscribe(this, &Player::onDoorCollisionEvent);
+    eventBus->subscribe(this, &Player::onControllerMoveEvent, "Player");
+    eventBus->subscribe(this, &Player::onControllerActionEvent, "Player");
+    eventBus->subscribe(this, &Player::onVicinityCollisionEvent, "Player");
+    eventBus->subscribe(this, &Player::onCloseDialogueEvent, "Player");
+    eventBus->subscribe(this, &Player::onCollisionEvent, "Player");
+    eventBus->subscribe(this, &Player::onDoorCollisionEvent, "Player");
 }
 
 void Player::initializeForScene(const Collidable& collidable, const sf::Vector2u& mapTileSize) {
@@ -142,6 +142,10 @@ MoveDirection Player::getLastFacingDirection() const {
 
 bool Player::isMoving() {
     return state == STATE_MOVING;
+}
+
+void Player::release() {
+    eventBus->unsubscribeInstanceFromAllEventTypes(this);
 }
 
 void Player::initializeAnimations() {

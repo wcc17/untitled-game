@@ -26,14 +26,14 @@ public:
     void release();
     sf::Color getSceneTransparency(sf::Color currentColor);
 private:
-    void loadOverworldScene(std::string previousSceneName, std::string sceneName);
+    void loadScene(std::string previousSceneName, std::string sceneName);
     void setNextScene();
     void releaseScene();
-    void updateOverworldSceneState(sf::Time elapsedTime, sf::RenderTexture& renderTexture);
+    void updateSceneState(sf::Time elapsedTime, sf::RenderTexture& renderTexture);
     void updateSceneTransition(sf::Time elapsedTime);
     void updateChangeSceneState();
     void updatePauseState(sf::Time elapsedTime, sf::RenderTexture& renderTexture);
-    void drawOverworldSceneStateToRenderTexture(sf::RenderTexture* renderTexture);
+    void drawSceneStateToRenderTexture(sf::RenderTexture* renderTexture);
     void onChangeSceneEvent(ChangeSceneEvent* event);
     void onOpenMenuEvent(OpenMenuEvent* event);
     void onCloseMenuEvent(CloseMenuEvent* event);
@@ -45,17 +45,14 @@ private:
 //    std::unique_ptr<OverworldScene> currentOverworldScene;
 //    std::unique_ptr<BattleScene> currentBattleScene;
     std::shared_ptr<EventBus> eventBus;
-    std::shared_ptr<Player> player;
 
     SceneState state = SceneState::STATE_TRANSITION_SCENE_IN;
     std::string nextSceneName;
 
     TextureManager textureManager;
-    CollisionManager collisionManager;
-    NpcManager npcManager;
-    ViewManager viewManager;
     XmlManager xmlManager;
     UIManager uiManager;
+    ViewManager viewManager;
 };
 
 

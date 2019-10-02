@@ -5,30 +5,24 @@ const float SCENE_TRANSITION_SPEED = 1850.f;
 void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font, sf::Vector2u windowSize, sf::Vector2f defaultWindowSize) {
     this->eventBus = eventBus;
 
-    collisionManager.initialize(eventBus);
+    uiManager.initialize(eventBus, textureManager, font, windowSize, defaultWindowSize);
     viewManager.initialize(eventBus);
 
-    player = std::make_shared<Player>();
-    textureManager.loadTexture(AssetPath::PLAYER_TEXTURE);
-    player->initialize(eventBus, textureManager.getTexture(AssetPath::PLAYER_TEXTURE));
-
-    uiManager.initialize(eventBus, textureManager, font, windowSize, defaultWindowSize);
-
-    eventBus->subscribe(this, &SceneManager::onChangeSceneEvent);
-    eventBus->subscribe(this, &SceneManager::onOpenMenuEvent);
-    eventBus->subscribe(this, &SceneManager::onCloseMenuEvent);
-    eventBus->subscribe(this, &SceneManager::onAggressiveNpcCollisionEvent);
-    loadOverworldScene("", "scene1");
+    eventBus->subscribe(this, &SceneManager::onChangeSceneEvent, "SceneManager");
+    eventBus->subscribe(this, &SceneManager::onOpenMenuEvent, "SceneManager");
+    eventBus->subscribe(this, &SceneManager::onCloseMenuEvent, "SceneManager");
+    eventBus->subscribe(this, &SceneManager::onAggressiveNpcCollisionEvent, "SceneManager");
+    loadScene("", "scene1");
 }
 
 void SceneManager::update(sf::Time elapsedTime, sf::RenderTexture& renderTexture) {
     switch(state) {
         case SceneState::STATE_OVERWORLD_SCENE:
-            updateOverworldSceneState(elapsedTime, renderTexture);
+            updateSceneState(elapsedTime, renderTexture);
             break;
         case SceneState::STATE_TRANSITION_SCENE_IN:
         case SceneState::STATE_TRANSITION_SCENE_OUT:
-            updateOverworldSceneState(elapsedTime, renderTexture); //TODO: this is wrong
+            updateSceneState(elapsedTime, renderTexture);
             updateSceneTransition(elapsedTime);
             break;
         case SceneState::STATE_CHANGING_SCENE:
@@ -43,10 +37,8 @@ void SceneManager::update(sf::Time elapsedTime, sf::RenderTexture& renderTexture
     }
 }
 
-void SceneManager::updateOverworldSceneState(sf::Time elapsedTime, sf::RenderTexture& renderTexture) {
-    player->update(elapsedTime);
-    npcManager.update(elapsedTime);
-    collisionManager.checkAllCollisions(player, npcManager.getNpcEntities());
+void SceneManager::updateSceneState(sf::Time elapsedTime, sf::RenderTexture& renderTexture) {
+    scene->update(elapsedTime);
     uiManager.update(renderTexture, viewManager.getView(), elapsedTime);
 }
 
@@ -71,7 +63,7 @@ void SceneManager::updateChangeSceneState() {
     //will only run once, just switching scenes
     std::string previousSceneName = scene->getSceneName();
     releaseScene();
-    loadOverworldScene(previousSceneName, nextSceneName); //TODO: generic loadScene would be better
+    loadScene(previousSceneName, nextSceneName);
     nextSceneName = "";
     setNextScene();
 }
@@ -86,7 +78,7 @@ void SceneManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
         case SceneState::STATE_TRANSITION_SCENE_IN:
         case SceneState::STATE_TRANSITION_SCENE_OUT:
         case SceneState::STATE_PAUSE:
-            drawOverworldSceneStateToRenderTexture(renderTexture);
+            drawSceneStateToRenderTexture(renderTexture);
             break;
         case SceneState::STATE_CHANGING_SCENE:
         case SceneState::STATE_SKIP_FRAME:
@@ -94,31 +86,15 @@ void SceneManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
     }
 }
 
-void SceneManager::drawOverworldSceneStateToRenderTexture(sf::RenderTexture* renderTexture) {
+void SceneManager::drawSceneStateToRenderTexture(sf::RenderTexture* renderTexture) {
     renderTexture->setView(viewManager.getView());
     renderTexture->draw(*scene);
-    renderTexture->draw(*player);
-    npcManager.drawToRenderTexture(renderTexture);
     uiManager.drawToRenderTexture(renderTexture);
 }
 
-void SceneManager::loadOverworldScene(std::string previousSceneName, std::string sceneName) {
+void SceneManager::loadScene(std::string previousSceneName, std::string sceneName) {
     scene = std::make_unique<OverworldScene>();
-    scene->initialize(sceneName, textureManager);
-
-    std::string spawnName = scene->getPlayerSpawnNameForPreviousToCurrentSceneTransition(previousSceneName);
-    player->initializeForScene(scene->getPlayerCollidable(spawnName), scene->getMapTileSize());
-
-    npcManager.initialize(
-            eventBus,
-            scene->getNpcCollidables(),
-            scene->getNpcMoveBoundariesMap(),
-            scene->getNpcNameToPropertiesMap(),
-            scene->getMapTileSize(),
-            textureManager);
-
-    collisionManager.initializeForScene(scene->getMapCollidables());
-
+    scene->initialize(eventBus, sceneName, previousSceneName, textureManager);
     std::vector<DialogueEvent> entityDialogueEvents = xmlManager.loadEntityDialogueForScene(sceneName);
     uiManager.resetOnNewScene(entityDialogueEvents);
 }
@@ -177,7 +153,7 @@ sf::Color SceneManager::getSceneTransparency(sf::Color currentColor) {
 }
 
 void SceneManager::release() {
-    //TODO: don't forget to unsubscribe things from eventBus!
+    eventBus->unsubscribeInstanceFromAllEventTypes(this);
 
     textureManager.releaseTexture(AssetPath::PLAYER_TEXTURE);
     uiManager.release(textureManager);
@@ -188,5 +164,4 @@ void SceneManager::releaseScene() {
     scene->release(textureManager);
     scene.reset();
     scene = nullptr;
-    npcManager.release(textureManager);
 }

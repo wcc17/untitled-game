@@ -28,7 +28,7 @@ public:
                     const sf::Vector2u& mapTileSize,
                     TextureManager& textureManager);
     void update(sf::Time deltaTime);
-    void drawToRenderTexture(sf::RenderTexture* renderTexture);
+    void drawToRenderTexture(sf::RenderTexture& renderTexture) const;
     std::vector<std::shared_ptr<NpcEntity>>& getNpcEntities();
     void release(TextureManager& textureManager);
 private:

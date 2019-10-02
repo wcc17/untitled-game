@@ -26,6 +26,7 @@ public:
     EntityCollidable getEntityCollidable() const;
     MoveDirection getLastFacingDirection() const;
     bool isMoving();
+    void release();
 private:
     EntityState state;
     EntityAnimation entityAnimation;

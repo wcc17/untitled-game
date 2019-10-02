@@ -17,9 +17,9 @@ void NpcManager::initialize(const std::shared_ptr<EventBus> eventBus,
         initializeNpc(textureManager, collidable, npcMoveBoundaries, npcNameToPropertiesMap);
     }
 
-    eventBus->subscribe(this, &NpcManager::onOpenDialogueEvent);
-    eventBus->subscribe(this, &NpcManager::onCloseDialogueEvent);
-    eventBus->subscribe(this, &NpcManager::onNpcCollisionEvent);
+    eventBus->subscribe(this, &NpcManager::onOpenDialogueEvent, "NpcManager");
+    eventBus->subscribe(this, &NpcManager::onCloseDialogueEvent, "NpcManager");
+    eventBus->subscribe(this, &NpcManager::onNpcCollisionEvent, "NpcManager");
 }
 
 void NpcManager::update(sf::Time deltaTime) {
@@ -28,9 +28,9 @@ void NpcManager::update(sf::Time deltaTime) {
     }
 }
 
-void NpcManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
+void NpcManager::drawToRenderTexture(sf::RenderTexture& renderTexture) const {
     for(std::shared_ptr<NpcEntity> npc : npcs) {
-        renderTexture->draw(*npc);
+        renderTexture.draw(*npc);
     }
 }
 
@@ -124,10 +124,7 @@ std::vector<std::shared_ptr<NpcEntity>>& NpcManager::getNpcEntities() {
 }
 
 void NpcManager::release(TextureManager& textureManager) {
-    eventBus->unsubscribe(this, &NpcManager::onOpenDialogueEvent);
-    eventBus->unsubscribe(this, &NpcManager::onCloseDialogueEvent);
-    eventBus->unsubscribe(this, &NpcManager::onNpcCollisionEvent);
-
+    eventBus->unsubscribeInstanceFromAllEventTypes(this);
     for(std::shared_ptr<NpcEntity> npc : npcs) {
         releaseNpcTextures(npc->getAssetName(), textureManager);
     }
