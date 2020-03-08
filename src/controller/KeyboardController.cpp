@@ -6,6 +6,15 @@ void KeyboardController::initialize(std::shared_ptr<EventBus> eventBus) {
     BaseController::initialize(eventBus);
 }
 
+/**
+ * handleInput(..)
+ * handleSfEvents makes a call to either handleKeyPressedEvent or handleKeyReleasedEvent
+ * movement keys are handled seperately.
+ *
+ * sf::Keyboard::isKeyPressed is used for movement, as it only cares whether a key was pressed or not
+ * sf::Event::KeyPressed (checked in handleSfEvents) is used to trigger something the moment a key is pressed
+**/
+
 void KeyboardController::handleInput(std::vector<sf::Event> sfEvents) {
     BaseController::handleSfEvents(sfEvents);
 
@@ -17,8 +26,6 @@ void KeyboardController::handleInput(std::vector<sf::Event> sfEvents) {
         eventBus->publish(new ControllerMoveEvent(MoveDirection::DOWN));
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         eventBus->publish(new ControllerMoveEvent(MoveDirection::RIGHT));
-    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1)) {
-        eventBus->printSubscriptionsToConsole();
     } else {
         //TODO: should this be called every frame? Its really not that different from anything else. The method tied to the event still only gets called once every frame
         eventBus->publish(new ControllerMoveEvent(MoveDirection::NONE));
@@ -27,7 +34,6 @@ void KeyboardController::handleInput(std::vector<sf::Event> sfEvents) {
 
 void KeyboardController::handleKeyPressedEvent(sf::Keyboard::Key key) {
     switch(key) {
-        //TODO: do I want to limit how many times/how often the player can hit these keys? Otherwise we will spam playerManager with events
         case sf::Keyboard::Enter:
             logger.logDebug("enter pressed");
             eventBus->publish(new ControllerMenuEvent());
@@ -48,6 +54,9 @@ void KeyboardController::handleKeyPressedEvent(sf::Keyboard::Key key) {
             logger.logDebug("s pressed");
             eventBus->publish(new ControllerMenuMoveEvent(MoveDirection::DOWN));
             break;
+        case sf::Keyboard::F1:
+            eventBus->printSubscriptionsToConsole();
+            break;
         default:
             break;
     }
@@ -60,6 +69,7 @@ void KeyboardController::handleKeyReleasedEvent(sf::Keyboard::Key key) {
             break;
         case sf::Keyboard::Space:
             logger.logDebug("space released");
+            break;
         default:
             break;
     }

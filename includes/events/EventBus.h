@@ -5,6 +5,7 @@
 #include <list>
 #include <typeindex>
 #include <map>
+#include <vector>
 
 //NOTE: code used from https://medium.com/@savas/nomad-game-engine-part-7-the-event-system-45a809ccb68f
 typedef std::list<HandlerFunctionBase*> HandlerList;
@@ -101,6 +102,7 @@ public:
 
     void printSubscriptionsToConsole() {
         std::map<std::type_index, HandlerList *>::iterator subscriberIterator = subscribers.begin();
+        std::vector<std::string> subscriptionStrings;
 
         while (subscriberIterator != subscribers.end()) {
             HandlerList &handlers = *subscriberIterator->second;
@@ -110,17 +112,25 @@ public:
                 MemberFunctionHandler<class T, Event> *memberFunctionHandler =
                         static_cast<MemberFunctionHandler<T, Event> *>(*handlerListIterator);
 
-                //TODO: should be using logger?
                 std::string eventName = subscriberIterator->first.name();
                 eventName = eventName.substr(2); //hack to not worry about mangled type names
-                printf("instance class: %s, eventType: %s\n",
-                        memberFunctionHandler->getInstanceClassName().c_str(),
-                        eventName.c_str());
+
+                std::string subscriptionString = "instance class: ";
+                subscriptionString += memberFunctionHandler->getInstanceClassName().c_str();
+                subscriptionString += ", eventType: ";
+                subscriptionString += eventName.c_str();
+                subscriptionStrings.push_back(subscriptionString);
 
                 handlerListIterator++;
             }
 
             subscriberIterator++;
+        }
+
+        std::sort(subscriptionStrings.begin(), subscriptionStrings.end());
+        for(std::string &s : subscriptionStrings) {
+            //TODO: should be using logger?
+            printf("%s\n", s.c_str());
         }
     }
 

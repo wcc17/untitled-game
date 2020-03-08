@@ -1,8 +1,8 @@
 #include "../includes/Game.h"
 
 Logger Game::logger("Game");
-const int DEFAULT_SCREEN_WIDTH = 1920/2;
-const int DEFAULT_SCREEN_HEIGHT = 1080/2;
+const int DEFAULT_SCREEN_WIDTH = 1920;
+const int DEFAULT_SCREEN_HEIGHT = 1080;
 const int SCREEN_WIDTH = DEFAULT_SCREEN_WIDTH;
 const int SCREEN_HEIGHT = DEFAULT_SCREEN_HEIGHT;
 
@@ -10,6 +10,7 @@ Game::Game() {
     window = std::make_unique<sf::RenderWindow>(sf::VideoMode(SCREEN_WIDTH,SCREEN_HEIGHT,32),"newnew", sf::Style::Titlebar | sf::Style::Close);
 //     window->setFramerateLimit(60);
     window->setVerticalSyncEnabled(true);
+    window->setKeyRepeatEnabled(false);
 
     initialize();
 

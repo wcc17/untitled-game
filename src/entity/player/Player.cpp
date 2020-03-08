@@ -44,6 +44,9 @@ void Player::update(sf::Time deltaTime) {
         case STATE_PLAYER_INTERACTING_WITH_UI:
             handleInteractingState();
             break;
+        case STATE_PLAYER_DONE_WITH_UI:
+            handleDoneInteractingState();
+            break;
     }
 }
 
@@ -69,6 +72,11 @@ void Player::handleMovingState(sf::Time deltaTime) {
 
 void Player::handleInteractingState() {
     resetAfterFrame();
+}
+
+void Player::handleDoneInteractingState() {
+    resetAfterFrame();
+    state = STATE_STANDING;
 }
 
 void Player::handleState(sf::Time deltaTime) {
@@ -102,7 +110,7 @@ void Player::onControllerMoveEvent(ControllerMoveEvent* event) {
 }
 
 void Player::onControllerActionEvent(ControllerActionEvent* event) {
-    if(state != STATE_PLAYER_INTERACTING_WITH_UI) {
+    if(state == STATE_MOVING || state == STATE_STANDING) {
         handleActionButtonPressed();
     }
 }
@@ -112,7 +120,7 @@ void Player::onVicinityCollisionEvent(PlayerVicinityCollisionEvent* event) {
 }
 
 void Player::onCloseDialogueEvent(CloseDialogueEvent* event) {
-    state = STATE_STANDING;
+    state = STATE_PLAYER_DONE_WITH_UI;
 }
 
 void Player::onCollisionEvent(PlayerCollisionEvent* event) {

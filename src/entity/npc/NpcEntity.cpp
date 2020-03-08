@@ -21,6 +21,7 @@ void NpcEntity::initialize(
     entityAnimation.stop();
 
     entityAutonomousMovement.initialize(entityCollidable.getName(), moveBoundaries, entitySpeed, moveDelayRange);
+    entityLogger.initialize("NpcEntity", assetName);
 }
 
 void NpcEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
@@ -73,7 +74,7 @@ void NpcEntity::onPlayerInteractionFinish() {
 }
 
 void NpcEntity::onCollisionEvent(sf::Vector2f newNpcPosition) {
-//    entityLogger.logDebug("npc is colliding with something in onCollisionEvent()");
+    entityLogger.logDebug("npc is colliding with something in onCollisionEvent()");
     setEntityPosition(newNpcPosition);
     entityAutonomousMovement.stopMovement(state);
 }

@@ -41,6 +41,7 @@ private:
     void handleStandingState(sf::Time deltaTime);
     void handleMovingState(sf::Time deltaTime);
     void handleInteractingState();
+    void handleDoneInteractingState();
     void handleState(sf::Time deltaTime);
     void resetAfterFrame();
     void roundPosition();
