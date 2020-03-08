@@ -33,6 +33,9 @@ std::string AssetPath::getUIComponentAssetPath(UIComponentType componentType) {
         case PARTY_MENU:
             componentName = "party_menu";
             break;
+        case BATTLE_CHARACTER_CHOICES_MENU:
+            componentName = "battle_choice_menu";
+            break;
         default:
             componentName = "invalid_component_type";
             break;

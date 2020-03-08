@@ -47,7 +47,9 @@ set(SOURCE_FILES src/main.cpp
         src/collisions/CollisionPublisher.cpp
         src/collisions/CollisionUtil.cpp
         src/scene/OverworldScene.cpp
-        src/scene/BattleScene.cpp)
+        src/scene/BattleScene.cpp
+        src/scene/SceneStateHandler.cpp
+        )
 
 set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/asset/FontManager.h
@@ -91,7 +93,9 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/collisions/CollisionPublisher.h
         includes/collisions/CollisionUtil.h
         includes/scene/OverworldScene.h
-        includes/scene/BattleScene.h)
+        includes/scene/BattleScene.h
+        includes/scene/SceneStateHandler.h
+        )
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/EntityCollisionEvent.h
@@ -125,7 +129,10 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/entity/npc/types/CatNpcEntity.h
         includes/events/event/PlayerAndNpcCollisionEvent.h
         includes/events/event/ChangeSceneToNewMapEvent.h
-        includes/events/event/ChangeSceneToBattleEvent.h)
+        includes/events/event/ChangeSceneToBattleEvent.h
+        includes/scene/battle/BattleSceneDialogueEventName.h
+        includes/scene/battle/BattleState.h
+        )
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 
