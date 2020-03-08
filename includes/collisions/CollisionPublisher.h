@@ -5,6 +5,7 @@
 #include "../../includes/events/event/NpcCollisionEvent.h"
 #include "../../includes/events/event/PlayerVicinityCollisionEvent.h"
 #include "../../includes/events/event/PlayerDoorCollisionEvent.h"
+#include "../../includes/events/event/PlayerAndNpcCollisionEvent.h"
 #include "../entity/components/EntityCollidable.h"
 #include "../events/EventBus.h"
 
@@ -18,6 +19,7 @@ public:
             const sf::Vector2f& newNpcPosition);
     void publishPlayerVicinityCollisionEvent(const std::shared_ptr<Collidable> collidable);
     void publishPlayerDoorCollisionEvent(const Collidable& collidable);
+    void publishPlayerAndNpcCollisionEvent(const NpcEntity& npc);
 
 private:
     std::shared_ptr<EventBus> eventBus;

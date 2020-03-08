@@ -11,11 +11,13 @@
 #include "../../events/event/PlayerCollisionEvent.h"
 #include "../../events/event/PlayerDoorCollisionEvent.h"
 #include "../../events/event/PlayerPositionChangeEvent.h"
-#include "../../events/event/ChangeSceneEvent.h"
+#include "../../events/event/ChangeSceneToNewMapEvent.h"
+#include "../../events/event/ChangeSceneToBattleEvent.h"
 #include "../components/EntityAnimation.h"
 #include "../components/EntityCollidable.h"
 #include "../components/EntityState.h"
 #include "../components/EntityMovement.h"
+#include "../../events/event/PlayerAndNpcCollisionEvent.h"
 
 class Player : public sf::Sprite {
 
@@ -25,7 +27,6 @@ public:
     void update(sf::Time deltaTime);
     EntityCollidable getEntityCollidable() const;
     MoveDirection getLastFacingDirection() const;
-    bool isMoving();
     void release();
 private:
     EntityState state;
@@ -55,6 +56,7 @@ private:
     void onCloseDialogueEvent(CloseDialogueEvent* event);
     void onCollisionEvent(PlayerCollisionEvent* event);
     void onDoorCollisionEvent(PlayerDoorCollisionEvent* event);
+    void onPlayerAndNpcCollisionEvent(PlayerAndNpcCollisionEvent* event);
 };
 
 

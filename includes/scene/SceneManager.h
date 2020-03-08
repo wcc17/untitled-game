@@ -16,7 +16,10 @@
 #include "../ui/UIManager.h"
 #include "../events/event/OpenMenuEvent.h"
 #include "../events/event/CloseMenuEvent.h"
+#include "../events/event/ChangeSceneToNewMapEvent.h"
+#include "../events/event/ChangeSceneToBattleEvent.h"
 #include "OverworldScene.h"
+#include "BattleScene.h"
 
 class SceneManager {
 public:
@@ -34,16 +37,15 @@ private:
     void updateChangeSceneState();
     void updatePauseState(sf::Time elapsedTime, sf::RenderTexture& renderTexture);
     void drawSceneStateToRenderTexture(sf::RenderTexture* renderTexture);
-    void onChangeSceneEvent(ChangeSceneEvent* event);
+    void onChangeSceneToNewMapEvent(ChangeSceneToNewMapEvent* event);
+    void onChangeSceneToBattleEvent(ChangeSceneToBattleEvent* event);
     void onOpenMenuEvent(OpenMenuEvent* event);
     void onCloseMenuEvent(CloseMenuEvent* event);
-    void onAggressiveNpcCollisionEvent(AggressiveNpcCollisionEvent* event);
+    void createSceneObject(std::string previousSceneName, std::string sceneName);
 
     float sceneAlpha = 255.f;
 
-    std::unique_ptr<OverworldScene> scene; //TODO: should just be a base Scene
-//    std::unique_ptr<OverworldScene> currentOverworldScene;
-//    std::unique_ptr<BattleScene> currentBattleScene;
+    std::unique_ptr<Scene> scene;
     std::shared_ptr<EventBus> eventBus;
 
     SceneState state = SceneState::STATE_TRANSITION_SCENE_IN;

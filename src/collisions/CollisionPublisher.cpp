@@ -21,3 +21,7 @@ void CollisionPublisher::publishPlayerVicinityCollisionEvent(const std::shared_p
 void CollisionPublisher::publishPlayerDoorCollisionEvent(const Collidable& collidable) {
     eventBus->publish(new PlayerDoorCollisionEvent(collidable));
 }
+
+void CollisionPublisher::publishPlayerAndNpcCollisionEvent(const NpcEntity& npc) {
+    eventBus->publish(new PlayerAndNpcCollisionEvent(npc));
+}

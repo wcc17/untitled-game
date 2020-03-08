@@ -8,16 +8,16 @@ void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font
     uiManager.initialize(eventBus, textureManager, font, windowSize, defaultWindowSize);
     viewManager.initialize(eventBus);
 
-    eventBus->subscribe(this, &SceneManager::onChangeSceneEvent, "SceneManager");
+    eventBus->subscribe(this, &SceneManager::onChangeSceneToNewMapEvent, "SceneManager");
+    eventBus->subscribe(this, &SceneManager::onChangeSceneToBattleEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onOpenMenuEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onCloseMenuEvent, "SceneManager");
-    eventBus->subscribe(this, &SceneManager::onAggressiveNpcCollisionEvent, "SceneManager");
     loadScene("", "scene1");
 }
 
 void SceneManager::update(sf::Time elapsedTime, sf::RenderTexture& renderTexture) {
     switch(state) {
-        case SceneState::STATE_OVERWORLD_SCENE:
+        case SceneState::STATE_SCENE:
             updateSceneState(elapsedTime, renderTexture);
             break;
         case SceneState::STATE_TRANSITION_SCENE_IN:
@@ -74,7 +74,7 @@ void SceneManager::updatePauseState(sf::Time elapsedTime, sf::RenderTexture& ren
 
 void SceneManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
     switch(state) {
-        case SceneState::STATE_OVERWORLD_SCENE:
+        case SceneState::STATE_SCENE:
         case SceneState::STATE_TRANSITION_SCENE_IN:
         case SceneState::STATE_TRANSITION_SCENE_OUT:
         case SceneState::STATE_PAUSE:
@@ -93,16 +93,27 @@ void SceneManager::drawSceneStateToRenderTexture(sf::RenderTexture* renderTextur
 }
 
 void SceneManager::loadScene(std::string previousSceneName, std::string sceneName) {
-    scene = std::make_unique<OverworldScene>();
-    scene->initialize(eventBus, sceneName, previousSceneName, textureManager);
+
+    createSceneObject(previousSceneName, sceneName);
+
     std::vector<DialogueEvent> entityDialogueEvents = xmlManager.loadEntityDialogueForScene(sceneName);
     uiManager.resetOnNewScene(entityDialogueEvents);
+}
+
+void SceneManager::createSceneObject(std::string previousSceneName, std::string sceneName) {
+    if(sceneName == "battle") {
+        scene = std::make_unique<BattleScene>();
+    } else {
+        scene = std::make_unique<OverworldScene>();
+    }
+
+    scene->initialize(eventBus, sceneName, previousSceneName, textureManager);
 }
 
 void SceneManager::setNextScene() {
     //transition in > change scene > scene > transition out > change scene > transition in > ......
     switch(state) {
-        case STATE_OVERWORLD_SCENE:
+        case STATE_SCENE:
             state = STATE_TRANSITION_SCENE_OUT;
             break;
         case STATE_TRANSITION_SCENE_OUT:
@@ -115,36 +126,37 @@ void SceneManager::setNextScene() {
             state = STATE_TRANSITION_SCENE_IN;
             break;
         case STATE_TRANSITION_SCENE_IN:
-            state = STATE_OVERWORLD_SCENE;
+            state = STATE_SCENE;
             break;
         default:
             break;
     }
 }
 
-void SceneManager::onChangeSceneEvent(ChangeSceneEvent* event) {
-    if(state == STATE_OVERWORLD_SCENE) {
+void SceneManager::onChangeSceneToNewMapEvent(ChangeSceneToNewMapEvent* event) {
+    if(state == STATE_SCENE) {
         this->nextSceneName = event->door.getName();
         setNextScene();
     }
 }
 
+void SceneManager::onChangeSceneToBattleEvent(ChangeSceneToBattleEvent* event) {
+    if(state == STATE_SCENE) {
+        this->nextSceneName = "battle";
+        setNextScene();
+    }
+}
+
 void SceneManager::onOpenMenuEvent(OpenMenuEvent* event) {
-    if(state == STATE_OVERWORLD_SCENE) {
+    if(state == STATE_SCENE) {
         state = STATE_PAUSE;
     }
 }
 
 void SceneManager::onCloseMenuEvent(CloseMenuEvent* event) {
     if(state == STATE_PAUSE) {
-        state = STATE_OVERWORLD_SCENE;
+        state = STATE_SCENE;
     }
-}
-
-void SceneManager::onAggressiveNpcCollisionEvent(AggressiveNpcCollisionEvent* event) {
-    //start up the battle scene
-//    sceneToReturnToAfterBattle = std::move(scene);
-//    scene = battleScene;
 }
 
 sf::Color SceneManager::getSceneTransparency(sf::Color currentColor) {

@@ -45,7 +45,9 @@ set(SOURCE_FILES src/main.cpp
         src/ui/UIComponentInitializer.cpp
         src/ui/component/menu_component/BaseMenuComponent.cpp
         src/collisions/CollisionPublisher.cpp
-        src/collisions/CollisionUtil.cpp src/scene/OverworldScene.cpp includes/scene/OverworldScene.h)
+        src/collisions/CollisionUtil.cpp
+        src/scene/OverworldScene.cpp
+        src/scene/BattleScene.cpp)
 
 set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/asset/FontManager.h
@@ -87,7 +89,9 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/ui/UIComponentInitializer.h
         includes/ui/component/menu_component/BaseMenuComponent.h
         includes/collisions/CollisionPublisher.h
-        includes/collisions/CollisionUtil.h src/scene/OverworldScene.cpp includes/scene/OverworldScene.h)
+        includes/collisions/CollisionUtil.h
+        includes/scene/OverworldScene.h
+        includes/scene/BattleScene.h)
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/EntityCollisionEvent.h
@@ -106,7 +110,6 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/PlayerPositionChangeEvent.h
         includes/events/event/ExitGameEvent.h
         includes/events/event/NpcCollisionEvent.h
-        includes/events/event/ChangeSceneEvent.h
         includes/scene/SceneState.h
         includes/events/event/PlayerDoorCollisionEvent.h
         includes/events/event/ControllerMenuEvent.h
@@ -120,7 +123,9 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/entity/npc/types/NpcType.h
         includes/entity/npc/types/HumanNpcEntity.h
         includes/entity/npc/types/CatNpcEntity.h
-        includes/events/event/AggressiveNpcCollisionEvent.h)
+        includes/events/event/PlayerAndNpcCollisionEvent.h
+        includes/events/event/ChangeSceneToNewMapEvent.h
+        includes/events/event/ChangeSceneToBattleEvent.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 

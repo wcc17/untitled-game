@@ -97,10 +97,10 @@ std::string NpcEntity::getAssetName() {
     return this->assetName;
 }
 
-bool NpcEntity::isMoving() {
+bool NpcEntity::isMoving() const {
     return (this->state == EntityState::STATE_MOVING);
 }
 
-bool NpcEntity::isNpcAggressive() {
+bool NpcEntity::isNpcAggressive() const {
     return this->isAggressive;
 }

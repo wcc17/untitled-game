@@ -15,6 +15,7 @@ public:
     DialogueMenuComponent initializeDialogueMenuComponent(TextureManager& textureManager, std::shared_ptr<EventBus> eventBus, float windowScale, sf::Font* font);
     MenuWithSelectorComponent initializeStartMenuComponent(TextureManager& textureManager, std::shared_ptr<EventBus> eventBus, float windowScale, sf::Font* font);
     MenuWithSelectorComponent initializePartyMenuComponent(TextureManager& textureManager, std::shared_ptr<EventBus> eventBus, float windowScale, sf::Font* font);
+    MenuWithSelectorComponent initializeBattleMenuComponent(TextureManager& textureManager, std::shared_ptr<EventBus> eventBus, float windowScale, sf::Font* font);
     void release(TextureManager& textureManager);
 
 private:

@@ -66,6 +66,29 @@ MenuWithSelectorComponent UIComponentInitializer::initializePartyMenuComponent(T
     return partyMenuComponent;
 }
 
+MenuWithSelectorComponent UIComponentInitializer::initializeBattleMenuComponent(TextureManager& textureManager, std::shared_ptr<EventBus> eventBus, float windowScale, sf::Font* font) {
+//    MenuWithSelectorComponent battleMenuComponent;
+//
+//    std::string partyMenuAssetPath = AssetPath::getUIComponentAssetPath(UIComponentType::PARTY_MENU);
+//    textureManager.loadTexture(partyMenuAssetPath);
+//    partyMenuComponent.initialize(
+//            eventBus,
+//            font,
+//            windowScale,
+//            textureManager.getTexture(partyMenuAssetPath),
+//            textureManager.getTexture(AssetPath::getUIComponentAssetPath(UIComponentType::MENU_SELECTOR)),
+//            ScreenPosition::TOP_LEFT);
+//
+//    initializeMenuOptionComponent(0, "Charlie", UIComponentType::NO_COMPONENT_TYPE, partyMenuComponent);
+//    initializeMenuOptionComponent(1, "Louie", UIComponentType::NO_COMPONENT_TYPE, partyMenuComponent);
+//    initializeMenuOptionComponent(2, "Henry", UIComponentType::NO_COMPONENT_TYPE, partyMenuComponent);
+//    initializeMenuOptionComponent(3, "Edgar", UIComponentType::NO_COMPONENT_TYPE, partyMenuComponent);
+//    initializeMenuOptionComponent(4, "Victoria", UIComponentType::NO_COMPONENT_TYPE, partyMenuComponent);
+//    initializeMenuOptionComponent(5, "Tracy", UIComponentType::NO_COMPONENT_TYPE, partyMenuComponent);
+//
+//    return partyMenuComponent;
+}
+
 void UIComponentInitializer::initializeMenuOptionComponent(int index, std::string displayText, UIComponentType opensToMenu, MenuWithSelectorComponent& startMenuComponent) {
     MenuOptionComponent menuOption;
     menuOption.initialize(index, displayText, opensToMenu);

@@ -567,6 +567,7 @@
    <properties>
     <property name="assetName" value="monster1"/>
     <property name="npcType" value="monster"/>
+    <property name="isAggressive" type="bool" value="true"/>
    </properties>
   </object>
  </objectgroup>

@@ -22,8 +22,8 @@ public:
     void onCollisionEvent(sf::Vector2f newNpcPosition);
     EntityCollidable getEntityCollidable() const;
     std::string getAssetName();
-    bool isMoving();
-    bool isNpcAggressive();
+    bool isMoving() const;
+    bool isNpcAggressive() const;
 
 protected:
     EntityAnimation entityAnimation;

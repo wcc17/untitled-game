@@ -22,6 +22,7 @@ void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture
     eventBus->subscribe(this, &Player::onCloseDialogueEvent, "Player");
     eventBus->subscribe(this, &Player::onCollisionEvent, "Player");
     eventBus->subscribe(this, &Player::onDoorCollisionEvent, "Player");
+    eventBus->subscribe(this, &Player::onPlayerAndNpcCollisionEvent, "Player");
 }
 
 void Player::initializeForScene(const Collidable& collidable, const sf::Vector2u& mapTileSize) {
@@ -129,7 +130,13 @@ void Player::onCollisionEvent(PlayerCollisionEvent* event) {
 }
 
 void Player::onDoorCollisionEvent(PlayerDoorCollisionEvent* event) {
-    eventBus->publish(new ChangeSceneEvent(event->collidedWith));
+    eventBus->publish(new ChangeSceneToNewMapEvent(event->collidedWith));
+}
+
+void Player::onPlayerAndNpcCollisionEvent(PlayerAndNpcCollisionEvent* event) {
+    if(event->npc.isNpcAggressive()) {
+        eventBus->publish(new ChangeSceneToBattleEvent(event->npc));
+    }
 }
 
 void Player::resetAfterFrame() {
@@ -146,10 +153,6 @@ EntityCollidable Player::getEntityCollidable() const {
 
 MoveDirection Player::getLastFacingDirection() const {
     return entityMovement.getLastFacingDirection();
-}
-
-bool Player::isMoving() {
-    return state == STATE_MOVING;
 }
 
 void Player::release() {

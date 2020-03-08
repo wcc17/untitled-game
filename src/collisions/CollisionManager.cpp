@@ -111,6 +111,8 @@ void CollisionManager::handleCollisionWithPlayerAndNpcEntity(const std::shared_p
     if(!CollisionUtil::positionsAreEqual(npcPosition, npc->getPosition())) {
         collisionPublisher.publishNpcCollisionEvent(*npc, npcPosition);
     }
+
+    collisionPublisher.publishPlayerAndNpcCollisionEvent(*npc);
 }
 
 void CollisionManager::handleCollisionWithNpcAndNpc(const std::shared_ptr<NpcEntity> npc1, const std::shared_ptr<NpcEntity> npc2) {
