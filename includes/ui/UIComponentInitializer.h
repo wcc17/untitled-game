@@ -12,14 +12,36 @@
 class UIComponentInitializer {
 
 public:
-    DialogueMenuComponent initializeDialogueMenuComponent(TextureManager& textureManager, std::shared_ptr<EventBus> eventBus, float windowScale, sf::Font* font);
-    MenuWithSelectorComponent initializeStartMenuComponent(TextureManager& textureManager, std::shared_ptr<EventBus> eventBus, float windowScale, sf::Font* font);
-    MenuWithSelectorComponent initializePartyMenuComponent(TextureManager& textureManager, std::shared_ptr<EventBus> eventBus, float windowScale, sf::Font* font);
-    MenuWithSelectorComponent initializeBattleMenuComponent(TextureManager& textureManager, std::shared_ptr<EventBus> eventBus, float windowScale, sf::Font* font);
+    DialogueMenuComponent initializeDialogueMenuComponent(
+            TextureManager& textureManager,
+            std::shared_ptr<EventBus> eventBus,
+            float windowScale,
+            sf::Font* font);
+    MenuWithSelectorComponent initializeStartMenuComponent(
+            TextureManager& textureManager,
+            std::shared_ptr<EventBus> eventBus,
+            float windowScale,
+            sf::Font* font);
+    MenuWithSelectorComponent initializePartyMenuComponent(
+            TextureManager& textureManager,
+            std::shared_ptr<EventBus> eventBus,
+            float windowScale,
+            sf::Font* font);
+    MenuWithSelectorComponent initializeBattleMenuComponent(
+            TextureManager& textureManager,
+            std::shared_ptr<EventBus> eventBus,
+            float windowScale,
+            sf::Font* font,
+            bool isPartyLeader,
+            int indexOfCharacterInParty);
     void release(TextureManager& textureManager);
 
 private:
-    void initializeMenuOptionComponent(int index, std::string displayText, UIComponentType opensToMenu, MenuWithSelectorComponent& menuComponent);
+    void initializeMenuOptionComponent(
+            int index,
+            std::string displayText,
+            UIComponentType opensToMenu,
+            MenuWithSelectorComponent& menuComponent);
 };
 
 

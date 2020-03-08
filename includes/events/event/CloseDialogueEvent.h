@@ -6,8 +6,8 @@
 
 class CloseDialogueEvent : public Event {
 public:
-    CloseDialogueEvent(const Collidable& interactedWith) : interactedWith(interactedWith) {};
-    const Collidable& interactedWith;
+    CloseDialogueEvent(std::string nameOfDialogueClosed) : nameOfDialogueClosed(nameOfDialogueClosed) {};
+    const std::string nameOfDialogueClosed;
 };
 
 #endif //NEWNEW_CLOSEDIALOGUEEVENT_H

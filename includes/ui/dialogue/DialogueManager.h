@@ -22,9 +22,9 @@ public:
     void initialize(std::shared_ptr<EventBus> eventBus);
     void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime);
     void setEntityDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents);
-    void onControllerActionEvent();
-    void onOpenDialogueEvent(OpenDialogueEvent* event);
     std::string getStringToDraw();
+    void handleControllerActionButtonPressed();
+    void openDialogue(std::string nameOfDialogueTextAsset);
 
 private:
     enum DialogueState {
@@ -38,7 +38,7 @@ private:
     std::shared_ptr<EventBus> eventBus;
     std::string stringToDraw;
     sf::Time stringDrawTimer;
-    Collidable entityPlayerInteractedWith;
+    std::string nameOfDialogueTextAsset;
 
     static Logger logger;
 

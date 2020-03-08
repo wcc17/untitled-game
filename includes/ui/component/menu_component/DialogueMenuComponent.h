@@ -7,12 +7,19 @@
 
 class DialogueMenuComponent : public BaseMenuComponent {
 public:
-    void initialize(std::shared_ptr<EventBus> eventBus, sf::Font *font, float windowScale,
-                    sf::Texture *componentTexture, ScreenPosition screenPosition) override;
-    void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime) override;
+    void initialize(
+            std::shared_ptr<EventBus> eventBus,
+            sf::Font *font,
+            float windowScale,
+            sf::Texture *componentTexture,
+            ScreenPosition screenPosition) override;
+    void update(
+            sf::RenderTexture& renderTexture,
+            sf::View& view,
+            sf::Time deltaTime) override;
     void setEntityDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents);
-    void onOpenDialogueEvent(OpenDialogueEvent* event) override;
-    void onControllerActionEvent(ControllerActionEvent* event) override;
+    void openDialogue(std::string nameOfDialogueTextAsset) override;
+    void handleControllerActionButtonPressed() override;
 
 private:
     DialogueManager dialogueManager;

@@ -24,7 +24,7 @@ void DialogueManager::update(sf::RenderTexture& renderTexture, sf::View& view, s
     }
 }
 
-void DialogueManager::onControllerActionEvent() {
+void DialogueManager::handleControllerActionButtonPressed() {
     if(dialogueState == STATE_ACTIVE) {
         if(currentDialogueEvent->shouldStartNextDialogue()) {
             startNextDialogue();
@@ -37,9 +37,9 @@ void DialogueManager::onControllerActionEvent() {
     }
 }
 
-void DialogueManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
+void DialogueManager::openDialogue(std::string dialogueTextAssetName) {
     logger.logDebug("ready to handle the dialogue box in DialogueManager");
-    entityPlayerInteractedWith = event->interactedWith;
+    nameOfDialogueTextAsset = dialogueTextAssetName;
     initializeText();
     dialogueState = STATE_READY;
 }
@@ -48,15 +48,13 @@ void DialogueManager::closeDialogue() {
     dialogueState = STATE_INACTIVE;
     this->stringToDraw = "";
     this->currentDialogueEvent.reset();
-    eventBus->publish(new CloseDialogueEvent(entityPlayerInteractedWith));
+    eventBus->publish(new CloseDialogueEvent(nameOfDialogueTextAsset));
 }
 
 void DialogueManager::initializeText() {
-    std::string entityName = entityPlayerInteractedWith.getName();
-
     currentDialogueEvent = nullptr;
     for(int i = 0; i < entityDialogueEvents.size(); i++) {
-        if(entityDialogueEvents[i].getName() == entityName) {
+        if(entityDialogueEvents[i].getName() == nameOfDialogueTextAsset) {
             currentDialogueEvent = std::make_unique<DialogueEvent>(entityDialogueEvents[i]);
             break;
         }

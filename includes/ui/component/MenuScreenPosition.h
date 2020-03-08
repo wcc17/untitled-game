@@ -2,10 +2,16 @@
 #define NEWNEW_MENUSCREENPOSITION_H
 
 enum ScreenPosition {
-    TOP_LEFT,
-    TOP_RIGHT,
-    BOTTOM_LEFT,
-    BOTTOM_RIGHT,
+    TOP_LEFT, //1st quadrant
+    TOP_SECOND_QUADRANT,
+    TOP_THIRD_QUADRANT,
+    TOP_RIGHT, //4th quadrant
+
+    BOTTOM_LEFT, //1st quadrant
+    BOTTOM_SECOND_QUADRANT,
+    BOTTOM_THIRD_QUADRANT,
+    BOTTOM_RIGHT, //4th quadrant
+
     CENTERED
 };
 

@@ -48,7 +48,7 @@ void MenuWithSelectorComponent::changeActiveMenuOption(MoveDirection direction) 
     }
 }
 
-UIComponentType MenuWithSelectorComponent::getActiveMenuOptionNextMenu() {
+UIComponentType MenuWithSelectorComponent::getNextMenuType() {
     if(menuOptions.size() > 0) {
         return menuOptions[selectedMenuOptionIndex].getOpensToMenu();
     }
@@ -67,21 +67,6 @@ sf::Vector2f MenuWithSelectorComponent::getSelectorPositionBasedOnSelectedMenuOp
     return sf::Vector2f(x, y);
 }
 
-//TODO: I'm not sure that onControllerMenuEvent should be here in the component, in the UIManager makes more sense
-void MenuWithSelectorComponent::onControllerMenuEvent(ControllerMenuEvent* event) {
-    //TODO: OpenMenuEvent should have the name of the menu we actually want to open
-    eventBus->publish(new OpenMenuEvent(UIComponentType::START_MENU));
-}
-
-void MenuWithSelectorComponent::onControllerActionEvent(ControllerActionEvent* event) {
-    //TODO: open the menu thats stored in the "opensTo" variable on the selected menu option. Probably will publish an OpenMenuEvent like onControllerMenuEvent
-    eventBus->publish(new OpenMenuEvent(getActiveMenuOptionNextMenu()));
-}
-
-void MenuWithSelectorComponent::onControllerMenuMoveEvent(ControllerMenuMoveEvent* event) {
-    changeActiveMenuOption(event->direction);
-}
-
-void MenuWithSelectorComponent::onControllerCancelEvent(ControllerCancelEvent* event) {
-    eventBus->publish(new CloseMenuEvent());
+void MenuWithSelectorComponent::handleControllerMenuMoveButtonPressed(MoveDirection direction) {
+    changeActiveMenuOption(direction);
 }

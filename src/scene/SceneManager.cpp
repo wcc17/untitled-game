@@ -4,14 +4,22 @@ const float SCENE_TRANSITION_SPEED = 1850.f;
 
 void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font, sf::Vector2u windowSize, sf::Vector2f defaultWindowSize) {
     this->eventBus = eventBus;
+    this->font = font;
+    this->windowSize = windowSize;
+    this->defaultWindowSize = defaultWindowSize;
 
-    uiManager.initialize(eventBus, textureManager, font, windowSize, defaultWindowSize);
     viewManager.initialize(eventBus);
 
     eventBus->subscribe(this, &SceneManager::onChangeSceneToNewMapEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onChangeSceneToBattleEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onOpenMenuEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onCloseMenuEvent, "SceneManager");
+    eventBus->subscribe(this, &SceneManager::onOpenDialogueEvent, "SceneManager");
+    eventBus->subscribe(this, &SceneManager::onCloseDialogueEvent, "SceneManager");
+    eventBus->subscribe(this, &SceneManager::onControllerActionEvent, "SceneManager");
+    eventBus->subscribe(this, &SceneManager::onControllerMenuEvent, "SceneManager");
+    eventBus->subscribe(this, &SceneManager::onControllerCancelEvent, "SceneManager");
+    eventBus->subscribe(this, &SceneManager::onControllerMenuMoveEvent, "SceneManager");
     loadScene("", "scene1");
 }
 
@@ -30,7 +38,7 @@ void SceneManager::update(sf::Time elapsedTime, sf::RenderTexture& renderTexture
             break;
         case SceneState::STATE_SKIP_FRAME:
             //skip a frame so that everything can catch up after loading a new scene
-            setNextScene();
+            this->state = sceneStateHandler.getNextState(state);
         case SceneState::STATE_PAUSE:
             updatePauseState(elapsedTime, renderTexture);
             break;
@@ -38,8 +46,8 @@ void SceneManager::update(sf::Time elapsedTime, sf::RenderTexture& renderTexture
 }
 
 void SceneManager::updateSceneState(sf::Time elapsedTime, sf::RenderTexture& renderTexture) {
-    scene->update(elapsedTime);
-    uiManager.update(renderTexture, viewManager.getView(), elapsedTime);
+    bool isPaused = false;
+    scene->update(elapsedTime, isPaused, renderTexture, viewManager.getView());
 }
 
 void SceneManager::updateSceneTransition(sf::Time elapsedTime) {
@@ -48,13 +56,13 @@ void SceneManager::updateSceneTransition(sf::Time elapsedTime) {
         sceneAlpha += transitionSpeed;
         if(sceneAlpha >= 255.f) {
             sceneAlpha = 255.f;
-            setNextScene();
+            this->state = sceneStateHandler.getNextState(state);
         }
     } else if (state == SceneState::STATE_TRANSITION_SCENE_OUT) {
         sceneAlpha -= transitionSpeed;
         if(sceneAlpha <= 0.f) {
             sceneAlpha = 0.f;
-            setNextScene();
+            this->state = sceneStateHandler.getNextState(state);
         }
     }
 }
@@ -65,11 +73,12 @@ void SceneManager::updateChangeSceneState() {
     releaseScene();
     loadScene(previousSceneName, nextSceneName);
     nextSceneName = "";
-    setNextScene();
+    this->state = sceneStateHandler.getNextState(state);
 }
 
 void SceneManager::updatePauseState(sf::Time elapsedTime, sf::RenderTexture& renderTexture) {
-    uiManager.update(renderTexture, viewManager.getView(), elapsedTime);
+    bool isPaused = true;
+    scene->update(elapsedTime, isPaused, renderTexture, viewManager.getView());
 }
 
 void SceneManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
@@ -89,61 +98,30 @@ void SceneManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
 void SceneManager::drawSceneStateToRenderTexture(sf::RenderTexture* renderTexture) {
     renderTexture->setView(viewManager.getView());
     renderTexture->draw(*scene);
-    uiManager.drawToRenderTexture(renderTexture);
 }
 
 void SceneManager::loadScene(std::string previousSceneName, std::string sceneName) {
 
-    createSceneObject(previousSceneName, sceneName);
-
-    std::vector<DialogueEvent> entityDialogueEvents = xmlManager.loadEntityDialogueForScene(sceneName);
-    uiManager.resetOnNewScene(entityDialogueEvents);
-}
-
-void SceneManager::createSceneObject(std::string previousSceneName, std::string sceneName) {
     if(sceneName == "battle") {
         scene = std::make_unique<BattleScene>();
     } else {
         scene = std::make_unique<OverworldScene>();
     }
 
-    scene->initialize(eventBus, sceneName, previousSceneName, textureManager);
-}
-
-void SceneManager::setNextScene() {
-    //transition in > change scene > scene > transition out > change scene > transition in > ......
-    switch(state) {
-        case STATE_SCENE:
-            state = STATE_TRANSITION_SCENE_OUT;
-            break;
-        case STATE_TRANSITION_SCENE_OUT:
-            state = STATE_CHANGING_SCENE;
-            break;
-        case STATE_CHANGING_SCENE:
-            state = STATE_SKIP_FRAME;
-            break;
-        case STATE_SKIP_FRAME:
-            state = STATE_TRANSITION_SCENE_IN;
-            break;
-        case STATE_TRANSITION_SCENE_IN:
-            state = STATE_SCENE;
-            break;
-        default:
-            break;
-    }
+    scene->initialize(eventBus, sceneName, previousSceneName, textureManager, font, windowSize, defaultWindowSize);
 }
 
 void SceneManager::onChangeSceneToNewMapEvent(ChangeSceneToNewMapEvent* event) {
     if(state == STATE_SCENE) {
         this->nextSceneName = event->door.getName();
-        setNextScene();
+        this->state = sceneStateHandler.getNextState(state);
     }
 }
 
 void SceneManager::onChangeSceneToBattleEvent(ChangeSceneToBattleEvent* event) {
     if(state == STATE_SCENE) {
         this->nextSceneName = "battle";
-        setNextScene();
+        this->state = sceneStateHandler.getNextState(state);
     }
 }
 
@@ -151,12 +129,40 @@ void SceneManager::onOpenMenuEvent(OpenMenuEvent* event) {
     if(state == STATE_SCENE) {
         state = STATE_PAUSE;
     }
+
+    scene->openMenu(event->getMenuToOpen());
 }
 
 void SceneManager::onCloseMenuEvent(CloseMenuEvent* event) {
     if(state == STATE_PAUSE) {
         state = STATE_SCENE;
     }
+
+    scene->closeCurrentMenuOrDialogue();
+}
+
+void SceneManager::onOpenDialogueEvent(OpenDialogueEvent *event) {
+    scene->openDialogue(event->interactedWith.getName());
+}
+
+void SceneManager::onCloseDialogueEvent(CloseDialogueEvent *event) {
+    scene->closeCurrentMenuOrDialogue();
+}
+
+void SceneManager::onControllerMenuEvent(ControllerMenuEvent *event) {
+    scene->handleControllerMenuButtonPressed();
+}
+
+void SceneManager::onControllerActionEvent(ControllerActionEvent *event) {
+    scene->handleControllerActionButtonPressed();
+}
+
+void SceneManager::onControllerCancelEvent(ControllerCancelEvent *event) {
+    scene->handleControllerCancelButtonPressed();
+}
+
+void SceneManager::onControllerMenuMoveEvent(ControllerMenuMoveEvent *event) {
+    scene->handleControllerMenuMoveButtonPressed(event->direction);
 }
 
 sf::Color SceneManager::getSceneTransparency(sf::Color currentColor) {
@@ -168,7 +174,6 @@ void SceneManager::release() {
     eventBus->unsubscribeInstanceFromAllEventTypes(this);
 
     textureManager.releaseTexture(AssetPath::PLAYER_TEXTURE);
-    uiManager.release(textureManager);
     releaseScene();
 }
 

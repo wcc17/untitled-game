@@ -6,7 +6,6 @@ void BaseMenuComponent::initialize(
         float windowScale,
         sf::Texture* componentTexture,
         ScreenPosition screenPosition) {
-    this->eventBus = eventBus;
     this->font = font;
     this->windowScale = windowScale;
     this->screenPosition = screenPosition;

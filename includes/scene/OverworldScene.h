@@ -14,10 +14,20 @@ public:
             std::shared_ptr<EventBus> eventBus,
             std::string sceneName,
             std::string previousSceneName,
-            TextureManager& textureManager) override;
-    virtual void update(sf::Time elapsedTime) override;
+            TextureManager& textureManager,
+            sf::Font* font,
+            sf::Vector2u windowSize,
+            sf::Vector2f defaultWindowSize) override;
+    virtual void update(sf::Time elapsedTime, bool isPaused, sf::RenderTexture& renderTexture, sf::View& view) override;
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
     virtual void release(TextureManager& textureManager) override;
+    void openDialogue(std::string dialogueTextAssetName) override;
+    void openMenu(UIComponentType menuTypeToOpen) override;
+    void closeCurrentMenuOrDialogue() override;
+    void handleControllerMenuButtonPressed() override;
+    void handleControllerActionButtonPressed() override;
+    void handleControllerCancelButtonPressed() override;
+    void handleControllerMenuMoveButtonPressed(MoveDirection direction) override;
 
     sf::Vector2u getMapTileSize();
     std::vector<std::shared_ptr<Collidable>>& getMapCollidables();

@@ -11,15 +11,13 @@
 #include "../npc/NpcManager.h"
 #include "../ui/dialogue/DialogueManager.h"
 #include "ViewManager.h"
-#include "../util/XmlManager.h"
-#include "SceneState.h"
-#include "../ui/UIManager.h"
 #include "../events/event/OpenMenuEvent.h"
 #include "../events/event/CloseMenuEvent.h"
 #include "../events/event/ChangeSceneToNewMapEvent.h"
 #include "../events/event/ChangeSceneToBattleEvent.h"
 #include "OverworldScene.h"
 #include "BattleScene.h"
+#include "SceneStateHandler.h"
 
 class SceneManager {
 public:
@@ -30,7 +28,6 @@ public:
     sf::Color getSceneTransparency(sf::Color currentColor);
 private:
     void loadScene(std::string previousSceneName, std::string sceneName);
-    void setNextScene();
     void releaseScene();
     void updateSceneState(sf::Time elapsedTime, sf::RenderTexture& renderTexture);
     void updateSceneTransition(sf::Time elapsedTime);
@@ -41,20 +38,27 @@ private:
     void onChangeSceneToBattleEvent(ChangeSceneToBattleEvent* event);
     void onOpenMenuEvent(OpenMenuEvent* event);
     void onCloseMenuEvent(CloseMenuEvent* event);
-    void createSceneObject(std::string previousSceneName, std::string sceneName);
+    void onControllerMenuEvent(ControllerMenuEvent* event);
+    void onControllerActionEvent(ControllerActionEvent* event);
+    void onControllerCancelEvent(ControllerCancelEvent* event);
+    void onControllerMenuMoveEvent(ControllerMenuMoveEvent* event);
+    void onOpenDialogueEvent(OpenDialogueEvent* event);
+    void onCloseDialogueEvent(CloseDialogueEvent* event);
 
     float sceneAlpha = 255.f;
 
     std::unique_ptr<Scene> scene;
     std::shared_ptr<EventBus> eventBus;
+    sf::Font* font;
+    sf::Vector2u windowSize;
+    sf::Vector2f defaultWindowSize;
 
     SceneState state = SceneState::STATE_TRANSITION_SCENE_IN;
     std::string nextSceneName;
 
     TextureManager textureManager;
-    XmlManager xmlManager;
-    UIManager uiManager;
     ViewManager viewManager;
+    SceneStateHandler sceneStateHandler;
 };
 
 

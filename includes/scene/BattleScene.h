@@ -6,6 +6,7 @@
 #include "../npc/NpcManager.h"
 #include "../collisions/CollisionManager.h"
 #include "ViewManager.h"
+#include "battle/BattleState.h"
 
 class BattleScene : public Scene {
 
@@ -14,13 +15,25 @@ public:
             std::shared_ptr<EventBus> eventBus,
             std::string sceneName,
             std::string previousSceneName,
-            TextureManager& textureManager) override;
-    virtual void update(sf::Time elapsedTime) override;
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+            TextureManager& textureManager,
+            sf::Font* font,
+            sf::Vector2u windowSize,
+            sf::Vector2f defaultWindowSize) override;
+    virtual void update(
+            sf::Time elapsedTime,
+            bool isPaused,
+            sf::RenderTexture& renderTexture,
+            sf::View& view) override;
+    virtual void draw(
+            sf::RenderTarget& target,
+            sf::RenderStates states) const override;
     virtual void release(TextureManager& textureManager) override;
+    void handleControllerActionButtonPressed() override;
 
 private:
-    std::shared_ptr<EventBus> eventBus;
+    void changeToShowBattleChoicesState();
+
+    BattleState state;
 };
 
 

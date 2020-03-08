@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<entity>
+    <dialogueEvent name="enemy_appeared">
+        <dialogue>
+            <dialoguePiece>An enemy {enemyName} has attacked!</dialoguePiece>
+        </dialogue>
+    </dialogueEvent>
+
+    <dialogueEvent name="party_ran_away">
+        <dialogue>
+            <dialoguePiece>The party ran way from the battle!</dialoguePiece>
+        </dialogue>
+    </dialogueEvent>
+
+    <dialogueEvent name="party_could_not_run">
+        <dialogue>
+            <dialoguePiece>The party couldn't get away!</dialoguePiece>
+        </dialogue>
+    </dialogueEvent>
+</entity>

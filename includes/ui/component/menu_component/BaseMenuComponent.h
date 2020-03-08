@@ -12,11 +12,6 @@
 #include "../MenuScreenPosition.h"
 #include "../../../events/Event.h"
 #include "../../../events/EventBus.h"
-#include "../../../events/event/ControllerMenuEvent.h"
-#include "../../../events/event/ControllerActionEvent.h"
-#include "../../../events/event/ControllerCancelEvent.h"
-#include "../../../events/event/ControllerMenuMoveEvent.h"
-#include "../../../events/event/OpenDialogueEvent.h"
 
 class BaseMenuComponent {
 
@@ -32,14 +27,13 @@ public:
 
     void addMenuOption(MenuOptionComponent menuOption);
 
-    virtual void onControllerMenuEvent(ControllerMenuEvent* event) {};
-    virtual void onControllerActionEvent(ControllerActionEvent* event) {};
-    virtual void onControllerCancelEvent(ControllerCancelEvent* event) {};
-    virtual void onControllerMenuMoveEvent(ControllerMenuMoveEvent* event) {};
-    virtual void onOpenDialogueEvent(OpenDialogueEvent* event) {};
+    virtual void handleControllerMenuButtonPressed() {};
+    virtual void handleControllerActionButtonPressed() {};
+    virtual void handleControllerCancelButtonPressed() {};
+    virtual void handleControllerMenuMoveButtonPressed(MoveDirection direction) {};
+    virtual void openDialogue(std::string nameOfDialogueTextAsset) {};
 
 protected:
-    std::shared_ptr<EventBus> eventBus;
     sf::Font* font;
     std::vector<MenuOptionComponent> menuOptions;
     sf::Sprite menuSprite;
@@ -51,7 +45,6 @@ protected:
     void updatePositionForView(sf::RenderTexture& renderTexture, sf::View& view);
     void sortMenuOptions();
     void updateMenuComponentTextPosition(sf::RenderTexture& renderTexture, sf::View& view, MenuOptionComponent& menuOptionComponent);
-
 };
 
 

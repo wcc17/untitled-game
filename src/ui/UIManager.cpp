@@ -1,98 +1,104 @@
 #include "../../includes/ui/UIManager.h"
 
-void UIManager::initialize(std::shared_ptr<EventBus> eventBus, TextureManager& textureManager, sf::Font* font, sf::Vector2u windowSize, sf::Vector2f defaultWindowSize) {
+void UIManager::initialize(
+        std::shared_ptr<EventBus> eventBus,
+        TextureManager &textureManager,
+        sf::Font *font,
+        sf::Vector2u windowSize,
+        sf::Vector2f defaultWindowSize,
+        std::string sceneName) {
     this->eventBus = eventBus;
-
     float windowScale = (windowSize.x / defaultWindowSize.x); //assuming aspect ratio is 16:9 I think
-    initializeComponents(textureManager, windowScale, font);
-
-    eventBus->subscribe(this, &UIManager::onOpenDialogueEvent, "UIManager");
-    eventBus->subscribe(this, &UIManager::onCloseDialogueEvent, "UIManager");
-    eventBus->subscribe(this, &UIManager::onOpenMenuEvent, "UIManager");
-    eventBus->subscribe(this, &UIManager::onCloseMenuEvent, "UIManager");
-    eventBus->subscribe(this, &UIManager::onControllerActionEvent, "UIManager");
-    eventBus->subscribe(this, &UIManager::onControllerMenuEvent, "UIManager");
-    eventBus->subscribe(this, &UIManager::onControllerCancelEvent, "UIManager");
-    eventBus->subscribe(this, &UIManager::onControllerMenuMoveEvent, "UIManager");
+    initializeComponents(textureManager, windowScale, font, sceneName);
 }
 
-void UIManager::initializeComponents(TextureManager& textureManager, float windowScale, sf::Font* font) {
+void UIManager::initializeComponents(
+        TextureManager &textureManager,
+        float windowScale,
+        sf::Font *font,
+        std::string sceneName) {
     textureManager.loadTexture(AssetPath::getUIComponentAssetPath(UIComponentType::MENU_SELECTOR));
 
     dialogueMenuComponent = uiComponentInitializer.initializeDialogueMenuComponent(textureManager, eventBus, windowScale, font);
     startMenuComponent = uiComponentInitializer.initializeStartMenuComponent(textureManager, eventBus, windowScale, font);
     partyMenuComponent = uiComponentInitializer.initializePartyMenuComponent(textureManager, eventBus, windowScale, font);
+
+    //TODO: I need four of these and they're specific to battle menu. Need to be able to initialize these components outside of here or at least conditionally depending on what scene we're in. BattleUIManager and OverworldUIManager would probably be cool
+    battleChoiceMenuComponent = uiComponentInitializer.initializeBattleMenuComponent(textureManager, eventBus, windowScale, font, true, 0);
+
+    std::vector<DialogueEvent> entityDialogueEvents = xmlManager.loadEntityDialogueForScene(sceneName); //TODO: need to see how this works for the battle scene
+    dialogueMenuComponent.setEntityDialogueEvents(entityDialogueEvents);
 }
 
-void UIManager::update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime) {
-    if(activeMenuComponent != nullptr) {
+void UIManager::update(
+        sf::RenderTexture &renderTexture,
+        sf::View &view,
+        sf::Time deltaTime) {
+    if (activeMenuComponent != nullptr) {
         activeMenuComponent->update(renderTexture, view, deltaTime);
     }
 }
 
-void UIManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
-    if(activeMenuComponent != nullptr) {
-        activeMenuComponent->drawToRenderTexture(renderTexture);
+void UIManager::drawToRenderTexture(sf::RenderTexture &renderTexture) const {
+    if (activeMenuComponent != nullptr) {
+        activeMenuComponent->drawToRenderTexture(&renderTexture);
     }
 }
 
-void UIManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
+void UIManager::openDialogue(std::string dialogueTextAssetName) {
     activeMenuComponent = &dialogueMenuComponent;
-    activeMenuComponent->onOpenDialogueEvent(event);
+    activeMenuComponent->openDialogue(dialogueTextAssetName);
 }
 
-void UIManager::onOpenMenuEvent(OpenMenuEvent* event) {
-    switch(event->getMenuToOpen()) {
+void UIManager::openMenu(UIComponentType menuTypeToOpen) {
+    switch (menuTypeToOpen) {
         case PARTY_MENU:
             activeMenuComponent = &partyMenuComponent;
             break;
         case START_MENU:
             activeMenuComponent = &startMenuComponent;
             break;
+        case BATTLE_CHARACTER_CHOICES_MENU:
+            activeMenuComponent = &battleChoiceMenuComponent;
         default:
             break;
     }
 }
 
-void UIManager::onCloseDialogueEvent(CloseDialogueEvent *event) {
+void UIManager::closeCurrentMenuOrDialogue() {
     activeMenuComponent = nullptr;
 }
 
-void UIManager::onCloseMenuEvent(CloseMenuEvent *event) {
-    activeMenuComponent = nullptr;
-}
-
-void UIManager::onControllerMenuEvent(ControllerMenuEvent* event){
-    if(activeMenuComponent == nullptr) {
+void UIManager::handleControllerMenuButtonPressed() {
+    if (activeMenuComponent == nullptr) {
         activeMenuComponent = &startMenuComponent;
-        activeMenuComponent->onControllerMenuEvent(event);
+        eventBus->publish(new OpenMenuEvent(UIComponentType::START_MENU));
     }
 }
 
-void UIManager::onControllerActionEvent(ControllerActionEvent* event) {
-    if(activeMenuComponent != nullptr) {
-        activeMenuComponent->onControllerActionEvent(event);
+void UIManager::handleControllerActionButtonPressed() {
+    if (activeMenuComponent != nullptr) {
+        //TODO: open the menu thats stored in the "opensTo" variable on the selected menu option. Probably will publish an OpenMenuEvent like handleControllerMenuButtonPressed
+        //TODO: how to decide when to publish this event?
+//        publishOnlyEventBus->publish(new OpenMenuEvent(activeMenuComponent->getNextMenuType()));
+
+        activeMenuComponent->handleControllerActionButtonPressed();
     }
 }
 
-void UIManager::onControllerCancelEvent(ControllerCancelEvent* event) {
-    if(activeMenuComponent != nullptr) {
-        activeMenuComponent->onControllerCancelEvent(event);
+void UIManager::handleControllerCancelButtonPressed() {
+    if (activeMenuComponent != nullptr) {
+        eventBus->publish(new CloseMenuEvent());
     }
 }
 
-void UIManager::onControllerMenuMoveEvent(ControllerMenuMoveEvent* event) {
-    if(activeMenuComponent != nullptr) {
-        activeMenuComponent->onControllerMenuMoveEvent(event);
+void UIManager::handleControllerMenuMoveButtonPressed(MoveDirection direction) {
+    if (activeMenuComponent != nullptr) {
+        activeMenuComponent->handleControllerMenuMoveButtonPressed(direction);
     }
 }
 
-void UIManager::resetOnNewScene(std::vector<DialogueEvent> entityDialogueEvents) {
-    dialogueMenuComponent.setEntityDialogueEvents(entityDialogueEvents);
-}
-
-void UIManager::release(TextureManager& textureManager) {
-    //TODO: unsubscribe from eventBus
+void UIManager::release(TextureManager &textureManager) {
     uiComponentInitializer.release(textureManager);
     textureManager.releaseTexture(AssetPath::getUIComponentAssetPath(UIComponentType::MENU_SELECTOR));
 }

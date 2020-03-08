@@ -26,12 +26,9 @@ public:
     void drawToRenderTexture(sf::RenderTexture* renderTexture) override;
 
     void changeActiveMenuOption(MoveDirection direction);
-    UIComponentType getActiveMenuOptionNextMenu();
+    UIComponentType getNextMenuType();
 
-    void onControllerMenuEvent(ControllerMenuEvent* event) override;
-    void onControllerActionEvent(ControllerActionEvent* event) override;
-    void onControllerCancelEvent(ControllerCancelEvent* event) override;
-    void onControllerMenuMoveEvent(ControllerMenuMoveEvent* event) override;
+    void handleControllerMenuMoveButtonPressed(MoveDirection direction) override;
 
 private:
     sf::Sprite menuSelectorSprite;

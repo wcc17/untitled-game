@@ -47,12 +47,10 @@ void NpcManager::onOpenDialogueEvent(OpenDialogueEvent* event) {
 }
 
 void NpcManager::onCloseDialogueEvent(CloseDialogueEvent* event) {
-    if(event->interactedWith.getType() == ObjectType::NPC) {
-        for(std::shared_ptr<NpcEntity> npc : npcs) {
-            if(event->interactedWith.getName() == npc->getEntityCollidable().getName()) {
-                npc->onPlayerInteractionFinish();
-                break;
-            }
+    for(std::shared_ptr<NpcEntity> npc : npcs) {
+        if(event->nameOfDialogueClosed == npc->getEntityCollidable().getName()) {
+            npc->onPlayerInteractionFinish();
+            break;
         }
     }
 }
