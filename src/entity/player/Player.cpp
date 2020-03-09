@@ -130,7 +130,8 @@ void Player::onCollisionEvent(PlayerCollisionEvent* event) {
 }
 
 void Player::onDoorCollisionEvent(PlayerDoorCollisionEvent* event) {
-    eventBus->publish(new ChangeSceneToNewMapEvent(event->collidedWith));
+    //any door object on the tmx tiled map should have a name that designates the new map that the door leads to
+    eventBus->publish(new ChangeSceneToNewMapEvent(event->collidedWith.getName()));
 }
 
 void Player::onPlayerAndNpcCollisionEvent(PlayerAndNpcCollisionEvent* event) {

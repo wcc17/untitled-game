@@ -6,6 +6,7 @@
 #include "../npc/NpcManager.h"
 #include "../collisions/CollisionManager.h"
 #include "ViewManager.h"
+#include "../ui/manager/OverworldUIManager.h"
 
 class OverworldScene : public Scene {
 
@@ -22,8 +23,7 @@ public:
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
     virtual void release(TextureManager& textureManager) override;
     void openDialogue(std::string dialogueTextAssetName) override;
-    void openMenu(UIComponentType menuTypeToOpen) override;
-    void closeCurrentMenuOrDialogue() override;
+    void closeDialogue() override;
     void handleControllerMenuButtonPressed() override;
     void handleControllerActionButtonPressed() override;
     void handleControllerCancelButtonPressed() override;
@@ -44,6 +44,7 @@ private:
     MapLoader mapLoader;
     NpcManager npcManager;
     CollisionManager collisionManager;
+    OverworldUIManager uiManager;
 };
 
 

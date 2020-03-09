@@ -35,7 +35,7 @@ set(SOURCE_FILES src/main.cpp
         src/util/Logger.cpp
         src/entity/components/EntityLogger.cpp
         src/util/XmlManager.cpp
-        src/ui/UIManager.cpp
+        src/ui/manager/UIManager.cpp
         src/map/SceneMap.cpp
         src/ui/component/menu_component/MenuWithSelectorComponent.cpp
         src/ui/component/MenuOptionComponent.cpp
@@ -49,7 +49,12 @@ set(SOURCE_FILES src/main.cpp
         src/scene/OverworldScene.cpp
         src/scene/BattleScene.cpp
         src/scene/SceneStateHandler.cpp
-        )
+        src/ui/component/menu_component/BattleChoiceMenuWithSelectorComponent.cpp
+        src/ui/component/menu_component/PartyMenuWithSelectorComponent.cpp
+        src/ui/component/menu_component/StartMenuWithSelectorComponent.cpp
+        src/ui/manager/OverworldUIManager.cpp
+        src/ui/manager/BattleUIManager.cpp
+        src/scene/battle/BattleSceneMenuChoice.cpp)
 
 set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/asset/FontManager.h
@@ -81,7 +86,7 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/util/Logger.h
         includes/entity/components/EntityLogger.h
         includes/util/XmlManager.h
-        includes/ui/UIManager.h
+        includes/ui/manager/UIManager.h
         includes/map/SceneMap.h
         includes/ui/component/menu_component/MenuWithSelectorComponent.h
         includes/ui/component/MenuOptionComponent.h
@@ -95,6 +100,12 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/scene/OverworldScene.h
         includes/scene/BattleScene.h
         includes/scene/SceneStateHandler.h
+        includes/ui/component/menu_component/BattleChoiceMenuWithSelectorComponent.h
+        includes/ui/component/menu_component/PartyMenuWithSelectorComponent.h
+        includes/ui/component/menu_component/StartMenuWithSelectorComponent.h
+        includes/ui/manager/OverworldUIManager.h
+        includes/ui/manager/BattleUIManager.h
+        includes/scene/battle/BattleSceneMenuChoice.h
         )
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
@@ -118,8 +129,8 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/PlayerDoorCollisionEvent.h
         includes/events/event/ControllerMenuEvent.h
         includes/events/event/ControllerCancelEvent.h
-        includes/events/event/OpenMenuEvent.h
-        includes/events/event/CloseMenuEvent.h
+        includes/events/event/PauseGameEvent.h
+        includes/events/event/UnPauseGameEvent.h
         includes/events/event/ControllerMenuMoveEvent.h
         includes/ui/component/MenuScreenPosition.h
         includes/ui/UIComponentType.h
@@ -132,7 +143,7 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/ChangeSceneToBattleEvent.h
         includes/scene/battle/BattleSceneDialogueEventName.h
         includes/scene/battle/BattleState.h
-        )
+        includes/events/event/ChangeSceneToPreviousSceneEvent.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 

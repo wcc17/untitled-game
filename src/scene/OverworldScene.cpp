@@ -31,7 +31,6 @@ void OverworldScene::initialize(
             getNpcNameToPropertiesMap(),
             getMapTileSize(),
             textureManager);
-
     collisionManager.initializeForScene(getMapCollidables());
     uiManager.initialize(eventBus, textureManager, font, windowSize, defaultWindowSize, sceneName);
 }
@@ -91,11 +90,7 @@ void OverworldScene::openDialogue(std::string dialogueTextAssetName) {
     uiManager.openDialogue(dialogueTextAssetName);
 }
 
-void OverworldScene::openMenu(UIComponentType menuTypeToOpen) {
-    uiManager.openMenu(menuTypeToOpen);
-}
-
-void OverworldScene::closeCurrentMenuOrDialogue() {
+void OverworldScene::closeDialogue() {
     uiManager.closeCurrentMenuOrDialogue();
 }
 
@@ -116,8 +111,7 @@ void OverworldScene::handleControllerMenuMoveButtonPressed(MoveDirection directi
 }
 
 void OverworldScene::release(TextureManager& textureManager) {
-    Scene::release(textureManager);
-
+    uiManager.release(textureManager);
     player->release();
     sceneMap.release(textureManager);
     npcManager.release(textureManager);

@@ -7,6 +7,9 @@
 #include "../../includes/ui/UIComponentType.h"
 #include "component/menu_component/MenuWithSelectorComponent.h"
 #include "component/menu_component/DialogueMenuComponent.h"
+#include "component/menu_component/BattleChoiceMenuWithSelectorComponent.h"
+#include "component/menu_component/PartyMenuWithSelectorComponent.h"
+#include "component/menu_component/StartMenuWithSelectorComponent.h"
 #include <SFML/Graphics/Font.hpp>
 
 class UIComponentInitializer {
@@ -14,22 +17,18 @@ class UIComponentInitializer {
 public:
     DialogueMenuComponent initializeDialogueMenuComponent(
             TextureManager& textureManager,
-            std::shared_ptr<EventBus> eventBus,
             float windowScale,
             sf::Font* font);
-    MenuWithSelectorComponent initializeStartMenuComponent(
+    StartMenuWithSelectorComponent initializeStartMenuComponent(
             TextureManager& textureManager,
-            std::shared_ptr<EventBus> eventBus,
             float windowScale,
             sf::Font* font);
-    MenuWithSelectorComponent initializePartyMenuComponent(
+    PartyMenuWithSelectorComponent initializePartyMenuComponent(
             TextureManager& textureManager,
-            std::shared_ptr<EventBus> eventBus,
             float windowScale,
             sf::Font* font);
-    MenuWithSelectorComponent initializeBattleMenuComponent(
+    BattleChoiceMenuWithSelectorComponent initializeBattleMenuComponent(
             TextureManager& textureManager,
-            std::shared_ptr<EventBus> eventBus,
             float windowScale,
             sf::Font* font,
             bool isPartyLeader,

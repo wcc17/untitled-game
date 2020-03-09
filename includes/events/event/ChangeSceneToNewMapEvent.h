@@ -2,12 +2,11 @@
 #define NEWNEW_CHANGESCENETONEWMAPEVENT_H
 
 #include "../Event.h"
-#include "../../collisions/Collidable.h"
 
 class ChangeSceneToNewMapEvent : public Event {
 public:
-    ChangeSceneToNewMapEvent(const Collidable& door): door(door) {}
-    const Collidable& door;
+    ChangeSceneToNewMapEvent(const std::string newSceneName): newSceneName(newSceneName) {}
+    const std::string newSceneName;
 };
 
 

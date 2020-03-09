@@ -11,10 +11,11 @@
 #include "../npc/NpcManager.h"
 #include "../ui/dialogue/DialogueManager.h"
 #include "ViewManager.h"
-#include "../events/event/OpenMenuEvent.h"
-#include "../events/event/CloseMenuEvent.h"
+#include "../events/event/PauseGameEvent.h"
+#include "../events/event/UnPauseGameEvent.h"
 #include "../events/event/ChangeSceneToNewMapEvent.h"
 #include "../events/event/ChangeSceneToBattleEvent.h"
+#include "../events/event/ChangeSceneToPreviousSceneEvent.h"
 #include "OverworldScene.h"
 #include "BattleScene.h"
 #include "SceneStateHandler.h"
@@ -27,7 +28,7 @@ public:
     void release();
     sf::Color getSceneTransparency(sf::Color currentColor);
 private:
-    void loadScene(std::string previousSceneName, std::string sceneName);
+    void loadScene(std::string sceneName);
     void releaseScene();
     void updateSceneState(sf::Time elapsedTime, sf::RenderTexture& renderTexture);
     void updateSceneTransition(sf::Time elapsedTime);
@@ -36,8 +37,9 @@ private:
     void drawSceneStateToRenderTexture(sf::RenderTexture* renderTexture);
     void onChangeSceneToNewMapEvent(ChangeSceneToNewMapEvent* event);
     void onChangeSceneToBattleEvent(ChangeSceneToBattleEvent* event);
-    void onOpenMenuEvent(OpenMenuEvent* event);
-    void onCloseMenuEvent(CloseMenuEvent* event);
+    void onChangeSceneToPreviousSceneEvent(ChangeSceneToPreviousSceneEvent* event);
+    void onPauseGameEvent(PauseGameEvent* event);
+    void onUnPauseGameEvent(UnPauseGameEvent* event);
     void onControllerMenuEvent(ControllerMenuEvent* event);
     void onControllerActionEvent(ControllerActionEvent* event);
     void onControllerCancelEvent(ControllerCancelEvent* event);
@@ -55,6 +57,7 @@ private:
 
     SceneState state = SceneState::STATE_TRANSITION_SCENE_IN;
     std::string nextSceneName;
+    std::string previousSceneName;
 
     TextureManager textureManager;
     ViewManager viewManager;

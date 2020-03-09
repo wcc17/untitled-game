@@ -17,7 +17,3 @@ void Scene::initialize(
 std::string Scene::getSceneName() {
     return this->sceneName;
 }
-
-void Scene::release(TextureManager& textureManager) {
-    uiManager.release(textureManager);
-}

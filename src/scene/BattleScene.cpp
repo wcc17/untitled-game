@@ -1,5 +1,6 @@
 #include "../../includes/scene/BattleScene.h"
 #include "../../includes/scene/battle/BattleSceneDialogueEventName.h"
+#include "../../includes/scene/battle/BattleSceneMenuChoice.h"
 
 void BattleScene::initialize(
         std::shared_ptr<EventBus> eventBus,
@@ -11,6 +12,7 @@ void BattleScene::initialize(
         sf::Vector2f defaultWindowSize) {
 
     Scene::initialize(eventBus, sceneName, previousSceneName, textureManager, font, windowSize, defaultWindowSize);
+
     uiManager.initialize(eventBus, textureManager, font, windowSize, defaultWindowSize, sceneName);
 
     uiManager.openDialogue(BattleSceneDialogueEventName::ENEMY_APPEARED);
@@ -21,6 +23,13 @@ void BattleScene::update(
         bool isPaused,
         sf::RenderTexture& renderTexture,
         sf::View& view) {
+    switch(state) {
+        case BattleState::ENEMY_APPEARED_STATE:
+        case BattleState::SHOW_BATTLE_CHOICES_STATE:
+        case BattleState::RUN_AWAY_STATE:
+            break;
+    }
+
     uiManager.update(renderTexture, view, elapsedTime);
 }
 
@@ -39,9 +48,17 @@ void BattleScene::handleControllerActionButtonPressed() {
             changeToShowBattleChoicesState();
             break;
         case BattleState::SHOW_BATTLE_CHOICES_STATE:
-            //TODO: where we actually choose an option I think
+            handleBattleChoiceChosen();
+            break;
+        case BattleState::RUN_AWAY_STATE:
+            //TODO: I don't want to publish this until all the text is shown and has been clicked through. DialogueManager shouldn't close dialogue until its told to?
+//            eventBus->publish(new ChangeSceneToPreviousSceneEvent());
             break;
     }
+}
+
+void BattleScene::handleControllerMenuMoveButtonPressed(MoveDirection direction) {
+    uiManager.handleControllerMenuMoveButtonPressed(direction);
 }
 
 void BattleScene::changeToShowBattleChoicesState() {
@@ -50,29 +67,16 @@ void BattleScene::changeToShowBattleChoicesState() {
     uiManager.openMenu(UIComponentType::BATTLE_CHARACTER_CHOICES_MENU);
 }
 
+void BattleScene::handleBattleChoiceChosen() {
+    std::string battleChoiceSelected = uiManager.handleControllerActionButtonPressedForBattleChoice();
 
-void BattleScene::release(TextureManager& textureManager) {
-    Scene::release(textureManager);
+    if(battleChoiceSelected == BattleSceneMenuChoice::RUN) {
+        state = BattleState::RUN_AWAY_STATE;
+        uiManager.closeCurrentMenuOrDialogue();
+        uiManager.openDialogue(BattleSceneDialogueEventName::PARTY_RAN_AWAY);
+    }
 }
 
-/**
-
-(Top of screen) <nothing>
-(Bottom of screen) An enemy has attacked!       BattleSceneDialogueEventName::ENEMY_APPEARED = "enemy_appeared"
-
-
-(Top of screen)     What will you do?           BattleSceneDialogueEventName::ENEMY_APPEARED = "enemy_appeared"
-(Bottom of screen)  Show action choice (Attack, Magic, Item) for each character in the party. Also show "Run" for the first character in the party  //TODO: who handles what text shows here?
-                        Make user choose one of the above three options for each character in the party
-
-
-IF RUN is chosen
-    If run was successful
-        (Top of screen) <nothing>
-        (Bottom of screen) The party ran away! BattleSceneDialogueEventName::PARTY_RAN_AWAY = "party_ran_away"
-
-    If run was unsuccessful
-        (Top of screen) <nothing>
-        (Bottom of screen) The party couldn't get away! BattleSceneDialogueEventName::PARTY_COULD_NOT_RUN = "party_could_not_run"
-
-*/
+void BattleScene::release(TextureManager& textureManager) {
+    uiManager.release(textureManager);
+}

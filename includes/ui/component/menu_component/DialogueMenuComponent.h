@@ -8,7 +8,6 @@
 class DialogueMenuComponent : public BaseMenuComponent {
 public:
     void initialize(
-            std::shared_ptr<EventBus> eventBus,
             sf::Font *font,
             float windowScale,
             sf::Texture *componentTexture,
@@ -19,7 +18,7 @@ public:
             sf::Time deltaTime) override;
     void setEntityDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents);
     void openDialogue(std::string nameOfDialogueTextAsset) override;
-    void handleControllerActionButtonPressed() override;
+    void handleControllerActionButtonPressed(std::shared_ptr<EventBus> eventBus) override;
 
 private:
     DialogueManager dialogueManager;

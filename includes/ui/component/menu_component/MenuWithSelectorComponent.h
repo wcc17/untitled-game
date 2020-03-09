@@ -9,14 +9,13 @@
 #include "../../../util/Logger.h"
 #include "../MenuScreenPosition.h"
 #include "BaseMenuComponent.h"
-#include "../../../events/event/OpenMenuEvent.h"
-#include "../../../events/event/CloseMenuEvent.h"
+#include "../../../events/event/PauseGameEvent.h"
+#include "../../../events/event/UnPauseGameEvent.h"
 
 class MenuWithSelectorComponent : public BaseMenuComponent {
 
 public:
     void initialize(
-            std::shared_ptr<EventBus> eventBus,
             sf::Font* font,
             float windowScale,
             sf::Texture* componentTexture,
@@ -24,18 +23,19 @@ public:
             ScreenPosition screenPosition);
     void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime) override;
     void drawToRenderTexture(sf::RenderTexture* renderTexture) override;
+    void handleControllerMenuMoveButtonPressed(MoveDirection direction) override;
 
     void changeActiveMenuOption(MoveDirection direction);
+    std::string getActiveMenuOptionName();
     UIComponentType getNextMenuType();
 
-    void handleControllerMenuMoveButtonPressed(MoveDirection direction) override;
 
 private:
     sf::Sprite menuSelectorSprite;
     int selectedMenuOptionIndex = 0;
 
     void updateSelectorPositionBasedOnMenuComponent();
-    sf::Vector2f getSelectorPositionBasedOnSelectedMenuOption(sf::Vector2f selectorDimensions);
+    sf::Vector2f getSelectorPositionBasedOnSelectedMenuOption();
 };
 
 

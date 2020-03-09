@@ -12,15 +12,16 @@ void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font
 
     eventBus->subscribe(this, &SceneManager::onChangeSceneToNewMapEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onChangeSceneToBattleEvent, "SceneManager");
-    eventBus->subscribe(this, &SceneManager::onOpenMenuEvent, "SceneManager");
-    eventBus->subscribe(this, &SceneManager::onCloseMenuEvent, "SceneManager");
+    eventBus->subscribe(this, &SceneManager::onChangeSceneToPreviousSceneEvent, "SceneManager");
+    eventBus->subscribe(this, &SceneManager::onPauseGameEvent, "SceneManager");
+    eventBus->subscribe(this, &SceneManager::onUnPauseGameEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onOpenDialogueEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onCloseDialogueEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onControllerActionEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onControllerMenuEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onControllerCancelEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onControllerMenuMoveEvent, "SceneManager");
-    loadScene("", "scene1");
+    loadScene("scene1");
 }
 
 void SceneManager::update(sf::Time elapsedTime, sf::RenderTexture& renderTexture) {
@@ -69,10 +70,8 @@ void SceneManager::updateSceneTransition(sf::Time elapsedTime) {
 
 void SceneManager::updateChangeSceneState() {
     //will only run once, just switching scenes
-    std::string previousSceneName = scene->getSceneName();
-    releaseScene();
-    loadScene(previousSceneName, nextSceneName);
-    nextSceneName = "";
+    loadScene(nextSceneName);
+    this->nextSceneName = "";
     this->state = sceneStateHandler.getNextState(state);
 }
 
@@ -100,7 +99,11 @@ void SceneManager::drawSceneStateToRenderTexture(sf::RenderTexture* renderTextur
     renderTexture->draw(*scene);
 }
 
-void SceneManager::loadScene(std::string previousSceneName, std::string sceneName) {
+void SceneManager::loadScene(std::string sceneName) {
+    if(scene != nullptr) {
+        this->previousSceneName = scene->getSceneName();
+        releaseScene();
+    }
 
     if(sceneName == "battle") {
         scene = std::make_unique<BattleScene>();
@@ -108,12 +111,12 @@ void SceneManager::loadScene(std::string previousSceneName, std::string sceneNam
         scene = std::make_unique<OverworldScene>();
     }
 
-    scene->initialize(eventBus, sceneName, previousSceneName, textureManager, font, windowSize, defaultWindowSize);
+    scene->initialize(eventBus, sceneName, this->previousSceneName, textureManager, font, windowSize, defaultWindowSize);
 }
 
 void SceneManager::onChangeSceneToNewMapEvent(ChangeSceneToNewMapEvent* event) {
     if(state == STATE_SCENE) {
-        this->nextSceneName = event->door.getName();
+        this->nextSceneName = event->newSceneName;
         this->state = sceneStateHandler.getNextState(state);
     }
 }
@@ -125,20 +128,23 @@ void SceneManager::onChangeSceneToBattleEvent(ChangeSceneToBattleEvent* event) {
     }
 }
 
-void SceneManager::onOpenMenuEvent(OpenMenuEvent* event) {
+void SceneManager::onChangeSceneToPreviousSceneEvent(ChangeSceneToPreviousSceneEvent* event) {
+    if(state == STATE_SCENE) {
+        this->nextSceneName = this->previousSceneName;
+        this->state = sceneStateHandler.getNextState(state);
+    }
+}
+
+void SceneManager::onPauseGameEvent(PauseGameEvent* event) {
     if(state == STATE_SCENE) {
         state = STATE_PAUSE;
     }
-
-    scene->openMenu(event->getMenuToOpen());
 }
 
-void SceneManager::onCloseMenuEvent(CloseMenuEvent* event) {
+void SceneManager::onUnPauseGameEvent(UnPauseGameEvent* event) {
     if(state == STATE_PAUSE) {
         state = STATE_SCENE;
     }
-
-    scene->closeCurrentMenuOrDialogue();
 }
 
 void SceneManager::onOpenDialogueEvent(OpenDialogueEvent *event) {
@@ -146,7 +152,7 @@ void SceneManager::onOpenDialogueEvent(OpenDialogueEvent *event) {
 }
 
 void SceneManager::onCloseDialogueEvent(CloseDialogueEvent *event) {
-    scene->closeCurrentMenuOrDialogue();
+    scene->closeDialogue();
 }
 
 void SceneManager::onControllerMenuEvent(ControllerMenuEvent *event) {

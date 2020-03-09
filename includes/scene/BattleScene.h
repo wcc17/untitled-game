@@ -7,6 +7,8 @@
 #include "../collisions/CollisionManager.h"
 #include "ViewManager.h"
 #include "battle/BattleState.h"
+#include "../ui/manager/BattleUIManager.h"
+#include "../events/event/ChangeSceneToPreviousSceneEvent.h"
 
 class BattleScene : public Scene {
 
@@ -29,11 +31,14 @@ public:
             sf::RenderStates states) const override;
     virtual void release(TextureManager& textureManager) override;
     void handleControllerActionButtonPressed() override;
+    void handleControllerMenuMoveButtonPressed(MoveDirection direction) override;
 
 private:
     void changeToShowBattleChoicesState();
+    void handleBattleChoiceChosen();
 
     BattleState state;
+    BattleUIManager uiManager;
 };
 
 

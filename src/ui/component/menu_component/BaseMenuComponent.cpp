@@ -1,7 +1,6 @@
 #include "../../../../includes/ui/component/menu_component/BaseMenuComponent.h"
 
 void BaseMenuComponent::initialize(
-        std::shared_ptr<EventBus> eventBus,
         sf::Font* font,
         float windowScale,
         sf::Texture* componentTexture,

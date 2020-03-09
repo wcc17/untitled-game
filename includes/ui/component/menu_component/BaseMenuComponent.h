@@ -17,7 +17,6 @@ class BaseMenuComponent {
 
 public:
     virtual void initialize(
-            std::shared_ptr<EventBus> eventBus,
             sf::Font* font,
             float windowScale,
             sf::Texture* componentTexture,
@@ -25,13 +24,13 @@ public:
     virtual void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime);
     virtual void drawToRenderTexture(sf::RenderTexture* renderTexture);
 
-    void addMenuOption(MenuOptionComponent menuOption);
-
-    virtual void handleControllerMenuButtonPressed() {};
-    virtual void handleControllerActionButtonPressed() {};
-    virtual void handleControllerCancelButtonPressed() {};
+    virtual void handleControllerMenuButtonPressed(std::shared_ptr<EventBus> eventBus) {};
+    virtual void handleControllerActionButtonPressed(std::shared_ptr<EventBus> eventBus) {};
+    virtual void handleControllerCancelButtonPressed(std::shared_ptr<EventBus> eventBus) {};
     virtual void handleControllerMenuMoveButtonPressed(MoveDirection direction) {};
     virtual void openDialogue(std::string nameOfDialogueTextAsset) {};
+
+    void addMenuOption(MenuOptionComponent menuOption);
 
 protected:
     sf::Font* font;

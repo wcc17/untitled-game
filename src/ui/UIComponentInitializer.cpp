@@ -1,8 +1,8 @@
 #include "../../includes/ui/UIComponentInitializer.h"
+#include "../../includes/scene/battle/BattleSceneMenuChoice.h"
 
 DialogueMenuComponent UIComponentInitializer::initializeDialogueMenuComponent(
         TextureManager& textureManager,
-        std::shared_ptr<EventBus> eventBus,
         float windowScale,
         sf::Font* font) {
     DialogueMenuComponent dialogueMenuComponent;
@@ -10,7 +10,6 @@ DialogueMenuComponent UIComponentInitializer::initializeDialogueMenuComponent(
     std::string dialogueBoxAssetPath = AssetPath::getUIComponentAssetPath(UIComponentType::DIALOGUE_MENU);
     textureManager.loadTexture(dialogueBoxAssetPath);
     dialogueMenuComponent.initialize(
-            eventBus,
             font,
             windowScale,
             textureManager.getTexture(dialogueBoxAssetPath),
@@ -24,17 +23,15 @@ DialogueMenuComponent UIComponentInitializer::initializeDialogueMenuComponent(
     return dialogueMenuComponent;
 }
 
-MenuWithSelectorComponent UIComponentInitializer::initializeStartMenuComponent(
+StartMenuWithSelectorComponent UIComponentInitializer::initializeStartMenuComponent(
         TextureManager& textureManager,
-        std::shared_ptr<EventBus> eventBus,
         float windowScale,
         sf::Font* font) {
-    MenuWithSelectorComponent startMenuComponent;
+    StartMenuWithSelectorComponent startMenuComponent;
 
     std::string startMenuAssetPath = AssetPath::getUIComponentAssetPath(UIComponentType::START_MENU);
     textureManager.loadTexture(startMenuAssetPath);
     startMenuComponent.initialize(
-            eventBus,
             font,
             windowScale,
             textureManager.getTexture(startMenuAssetPath),
@@ -51,17 +48,15 @@ MenuWithSelectorComponent UIComponentInitializer::initializeStartMenuComponent(
     return startMenuComponent;
 }
 
-MenuWithSelectorComponent UIComponentInitializer::initializePartyMenuComponent(
+PartyMenuWithSelectorComponent UIComponentInitializer::initializePartyMenuComponent(
         TextureManager& textureManager,
-        std::shared_ptr<EventBus> eventBus,
         float windowScale,
         sf::Font* font) {
-    MenuWithSelectorComponent partyMenuComponent;
+    PartyMenuWithSelectorComponent partyMenuComponent;
 
     std::string partyMenuAssetPath = AssetPath::getUIComponentAssetPath(UIComponentType::PARTY_MENU);
     textureManager.loadTexture(partyMenuAssetPath);
     partyMenuComponent.initialize(
-            eventBus,
             font,
             windowScale,
             textureManager.getTexture(partyMenuAssetPath),
@@ -78,14 +73,13 @@ MenuWithSelectorComponent UIComponentInitializer::initializePartyMenuComponent(
     return partyMenuComponent;
 }
 
-MenuWithSelectorComponent UIComponentInitializer::initializeBattleMenuComponent(
+BattleChoiceMenuWithSelectorComponent UIComponentInitializer::initializeBattleMenuComponent(
         TextureManager& textureManager,
-        std::shared_ptr<EventBus> eventBus,
         float windowScale,
         sf::Font* font,
         bool isPartyLeader,
         int indexOfCharacterInParty) {
-    MenuWithSelectorComponent battleMenuComponent;
+    BattleChoiceMenuWithSelectorComponent battleMenuComponent;
     ScreenPosition screenPosition = ScreenPosition::BOTTOM_LEFT;
 
     switch(indexOfCharacterInParty) {
@@ -106,19 +100,18 @@ MenuWithSelectorComponent UIComponentInitializer::initializeBattleMenuComponent(
     std::string battleMenuAssetPath = AssetPath::getUIComponentAssetPath(UIComponentType::BATTLE_CHARACTER_CHOICES_MENU);
     textureManager.loadTexture(battleMenuAssetPath);
     battleMenuComponent.initialize(
-            eventBus,
             font,
             windowScale,
             textureManager.getTexture(battleMenuAssetPath),
             textureManager.getTexture(AssetPath::getUIComponentAssetPath(UIComponentType::MENU_SELECTOR)),
             screenPosition);
 
-    initializeMenuOptionComponent(0, "ATTACK", UIComponentType::NO_COMPONENT_TYPE, battleMenuComponent);
-    initializeMenuOptionComponent(1, "MAGIC", UIComponentType::NO_COMPONENT_TYPE, battleMenuComponent);
-    initializeMenuOptionComponent(2, "ITEM", UIComponentType::NO_COMPONENT_TYPE, battleMenuComponent);
+    initializeMenuOptionComponent(0, BattleSceneMenuChoice::ATTACK, UIComponentType::NO_COMPONENT_TYPE, battleMenuComponent);
+    initializeMenuOptionComponent(1, BattleSceneMenuChoice::MAGIC, UIComponentType::NO_COMPONENT_TYPE, battleMenuComponent);
+    initializeMenuOptionComponent(2, BattleSceneMenuChoice::ITEM, UIComponentType::NO_COMPONENT_TYPE, battleMenuComponent);
 
     if(isPartyLeader) {
-        initializeMenuOptionComponent(3, "RUN", UIComponentType::NO_COMPONENT_TYPE, battleMenuComponent);
+        initializeMenuOptionComponent(3, BattleSceneMenuChoice::RUN, UIComponentType::NO_COMPONENT_TYPE, battleMenuComponent);
     }
 
     return battleMenuComponent;
@@ -135,6 +128,7 @@ void UIComponentInitializer::initializeMenuOptionComponent(
 }
 
 void UIComponentInitializer::release(TextureManager &textureManager) {
+    textureManager.releaseTexture(AssetPath::getUIComponentAssetPath(UIComponentType::BATTLE_CHARACTER_CHOICES_MENU));
     textureManager.releaseTexture(AssetPath::getUIComponentAssetPath(UIComponentType::DIALOGUE_MENU));
     textureManager.releaseTexture(AssetPath::getUIComponentAssetPath(UIComponentType::START_MENU));
     textureManager.releaseTexture(AssetPath::getUIComponentAssetPath(UIComponentType::PARTY_MENU));

@@ -19,12 +19,13 @@
 class DialogueManager {
 public:
     DialogueManager();
-    void initialize(std::shared_ptr<EventBus> eventBus);
+    void initialize();
     void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime);
     void setEntityDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents);
     std::string getStringToDraw();
-    void handleControllerActionButtonPressed();
+    void handleControllerActionButtonPressed(std::shared_ptr<EventBus> eventBus);
     void openDialogue(std::string nameOfDialogueTextAsset);
+    void closeDialogue(std::shared_ptr<EventBus> eventBus);
 
 private:
     enum DialogueState {
@@ -35,7 +36,6 @@ private:
 
     DialogueState dialogueState = STATE_INACTIVE;
 
-    std::shared_ptr<EventBus> eventBus;
     std::string stringToDraw;
     sf::Time stringDrawTimer;
     std::string nameOfDialogueTextAsset;
@@ -46,7 +46,6 @@ private:
     std::vector<DialogueEvent> entityDialogueEvents;
     DialogueEvent defaultDialogueEvent;
 
-    void closeDialogue();
     void initializeText();
     void updateText(sf::Time deltaTime);
     void drawMoreText();

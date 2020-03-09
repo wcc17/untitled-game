@@ -1,13 +1,12 @@
 #include "../../../../includes/ui/component/menu_component/MenuWithSelectorComponent.h"
 
 void MenuWithSelectorComponent::initialize(
-        std::shared_ptr<EventBus> eventBus,
         sf::Font* font,
         float windowScale,
         sf::Texture* componentTexture,
         sf::Texture* selectorTexture,
         ScreenPosition screenPosition) {
-    BaseMenuComponent::initialize(eventBus, font, windowScale, componentTexture, screenPosition);
+    BaseMenuComponent::initialize(font, windowScale, componentTexture, screenPosition);
     this->menuSelectorSprite.setTexture(*selectorTexture);
     this->textOffset = sf::Vector2f(menuSelectorSprite.getGlobalBounds().width, 0);
 }
@@ -23,10 +22,7 @@ void MenuWithSelectorComponent::drawToRenderTexture(sf::RenderTexture *renderTex
 }
 
 void MenuWithSelectorComponent::updateSelectorPositionBasedOnMenuComponent() {
-    sf::Vector2f selectorDimensions = sf::Vector2f(
-            menuSelectorSprite.getGlobalBounds().width,
-            menuSelectorSprite.getGlobalBounds().height);
-    menuSelectorSprite.setPosition(getSelectorPositionBasedOnSelectedMenuOption(selectorDimensions));
+    menuSelectorSprite.setPosition(getSelectorPositionBasedOnSelectedMenuOption());
 }
 
 void MenuWithSelectorComponent::changeActiveMenuOption(MoveDirection direction) {
@@ -56,7 +52,15 @@ UIComponentType MenuWithSelectorComponent::getNextMenuType() {
     return UIComponentType::NO_COMPONENT_TYPE; //TODO: how is this handled? is it even?
 }
 
-sf::Vector2f MenuWithSelectorComponent::getSelectorPositionBasedOnSelectedMenuOption(sf::Vector2f selectorDimensions) {
+std::string MenuWithSelectorComponent::getActiveMenuOptionName() {
+    if(menuOptions.size() > 0) {
+        return menuOptions[selectedMenuOptionIndex].getDisplayText();
+    }
+
+    return "";
+}
+
+sf::Vector2f MenuWithSelectorComponent::getSelectorPositionBasedOnSelectedMenuOption() {
     float height = menuSprite.getGlobalBounds().height / menuOptions.size();
     float x = defaultTextOffset.x;
     float y = defaultTextOffset.y + (height * selectedMenuOptionIndex);

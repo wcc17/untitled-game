@@ -11,6 +11,7 @@ public:
     void initialize(int index, std::string displayText, UIComponentType opensToMenu);
     UIComponentType getOpensToMenu();
     int getIndex();
+    std::string getDisplayText();
 
     bool operator< (const MenuOptionComponent &other) const {
         return index < other.index;

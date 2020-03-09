@@ -4,9 +4,7 @@ Logger DialogueManager::logger("DialogueManager");
 
 DialogueManager::DialogueManager() : defaultDialogueEvent("default") { }
 
-void DialogueManager::initialize(std::shared_ptr<EventBus> eventBus) {
-    this->eventBus = eventBus;
-
+void DialogueManager::initialize() {
     Dialogue defaultDialogue("Nothing to see here.", "");
     defaultDialogueEvent.addDialogue(defaultDialogue);
 }
@@ -24,7 +22,7 @@ void DialogueManager::update(sf::RenderTexture& renderTexture, sf::View& view, s
     }
 }
 
-void DialogueManager::handleControllerActionButtonPressed() {
+void DialogueManager::handleControllerActionButtonPressed(std::shared_ptr<EventBus> eventBus) {
     if(dialogueState == STATE_ACTIVE) {
         if(currentDialogueEvent->shouldStartNextDialogue()) {
             startNextDialogue();
@@ -32,7 +30,7 @@ void DialogueManager::handleControllerActionButtonPressed() {
             //player wants to rush the dialogue by mashing action button
             rushDrawText();
         } else if(currentDialogueEvent->isDialogueEventDone()) {
-            closeDialogue();
+            closeDialogue(eventBus);
         }
     }
 }
@@ -44,11 +42,11 @@ void DialogueManager::openDialogue(std::string dialogueTextAssetName) {
     dialogueState = STATE_READY;
 }
 
-void DialogueManager::closeDialogue() {
+void DialogueManager::closeDialogue(std::shared_ptr<EventBus> eventBus) {
     dialogueState = STATE_INACTIVE;
     this->stringToDraw = "";
     this->currentDialogueEvent.reset();
-    eventBus->publish(new CloseDialogueEvent(nameOfDialogueTextAsset));
+    eventBus->publish(new CloseDialogueEvent(nameOfDialogueTextAsset)); //TODO: I hate that we're passing eventBus all the way down to close the dialogue
 }
 
 void DialogueManager::initializeText() {

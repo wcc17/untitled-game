@@ -13,3 +13,7 @@ UIComponentType MenuOptionComponent::getOpensToMenu() {
 int MenuOptionComponent::getIndex() {
     return this->index;
 }
+
+std::string MenuOptionComponent::getDisplayText() {
+    return getString();
+}
