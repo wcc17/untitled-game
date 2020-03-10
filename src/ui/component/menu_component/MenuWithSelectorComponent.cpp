@@ -44,14 +44,6 @@ void MenuWithSelectorComponent::changeActiveMenuOption(MoveDirection direction) 
     }
 }
 
-UIComponentType MenuWithSelectorComponent::getNextMenuType() {
-    if(menuOptions.size() > 0) {
-        return menuOptions[selectedMenuOptionIndex].getOpensToMenu();
-    }
-
-    return UIComponentType::NO_COMPONENT_TYPE; //TODO: how is this handled? is it even?
-}
-
 std::string MenuWithSelectorComponent::getActiveMenuOptionName() {
     if(menuOptions.size() > 0) {
         return menuOptions[selectedMenuOptionIndex].getDisplayText();

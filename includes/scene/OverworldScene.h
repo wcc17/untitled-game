@@ -7,6 +7,7 @@
 #include "../collisions/CollisionManager.h"
 #include "ViewManager.h"
 #include "../ui/manager/OverworldUIManager.h"
+#include "overworld/OverworldState.h"
 
 class OverworldScene : public Scene {
 
@@ -19,15 +20,19 @@ public:
             sf::Font* font,
             sf::Vector2u windowSize,
             sf::Vector2f defaultWindowSize) override;
-    virtual void update(sf::Time elapsedTime, bool isPaused, sf::RenderTexture& renderTexture, sf::View& view) override;
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    virtual void update(
+            sf::Time elapsedTime,
+            sf::RenderTexture& renderTexture,
+            sf::View& view) override;
+    virtual void draw(
+            sf::RenderTarget& target,
+            sf::RenderStates states) const override;
     virtual void release(TextureManager& textureManager) override;
-    void openDialogue(std::string dialogueTextAssetName) override;
-    void closeDialogue() override;
     void handleControllerMenuButtonPressed() override;
     void handleControllerActionButtonPressed() override;
     void handleControllerCancelButtonPressed() override;
     void handleControllerMenuMoveButtonPressed(MoveDirection direction) override;
+    void openDialogue(std::string dialogueTextAssetName) override;
 
     sf::Vector2u getMapTileSize();
     std::vector<std::shared_ptr<Collidable>>& getMapCollidables();
@@ -45,6 +50,13 @@ private:
     NpcManager npcManager;
     CollisionManager collisionManager;
     OverworldUIManager uiManager;
+    OverworldState state;
+
+    void updateRunningState(sf::Time elapsedTime);
+    void updatePlayerDialogueState();
+    void handleStartMenuChoiceChosen();
+    void openStartMenu();
+    void openPartyMenu();
 };
 
 

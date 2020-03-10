@@ -1,5 +1,4 @@
 #include "../../../includes/ui/manager/BattleUIManager.h"
-#include "../../../includes/scene/battle/BattleSceneMenuChoice.h"
 
 void BattleUIManager::initializeComponents(
         TextureManager &textureManager,
@@ -35,23 +34,15 @@ void BattleUIManager::openMenu(UIComponentType menuTypeToOpen) {
     }
 }
 
+void BattleUIManager::handleControllerActionButtonPressed() {
+    if(activeMenuComponent != nullptr) {
+        activeMenuComponent->handleControllerActionButtonPressed();
+    }
+}
+
 std::string BattleUIManager::handleControllerActionButtonPressedForBattleChoice() {
     if (activeMenuComponent == &battleMenuComponent) {
-        std::string selectedOptionName = battleMenuComponent.getActiveMenuOptionName();
-
-        if(selectedOptionName == BattleSceneMenuChoice::ATTACK) {
-            printf("attack selected\n");
-        } else if(selectedOptionName == BattleSceneMenuChoice::MAGIC) {
-            printf("magic selected\n");
-        } else if(selectedOptionName == BattleSceneMenuChoice::ITEM) {
-            printf("item selected\n");
-        } else if(selectedOptionName == BattleSceneMenuChoice::RUN) {
-            printf("run selected\n");
-        } else {
-            printf("ERROR: something went wrong here\n");
-        }
-
-        return selectedOptionName;
+        return battleMenuComponent.getActiveMenuOptionName();
     }
 
     return "";

@@ -84,3 +84,7 @@ void BaseMenuComponent::updateMenuComponentTextPosition(sf::RenderTexture& rende
     sf::Vector2i coordsToPixel = renderTexture.mapCoordsToPixel(sf::Vector2f(x, y), view);
     menuOptionComponent.setPosition(sf::Vector2f(coordsToPixel.x, coordsToPixel.y));
 }
+
+bool BaseMenuComponent::componentActionIsFinished() {
+    return true;
+}

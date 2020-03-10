@@ -23,9 +23,10 @@ public:
     void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime);
     void setEntityDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents);
     std::string getStringToDraw();
-    void handleControllerActionButtonPressed(std::shared_ptr<EventBus> eventBus);
+    void handleControllerActionButtonPressed();
     void openDialogue(std::string nameOfDialogueTextAsset);
-    void closeDialogue(std::shared_ptr<EventBus> eventBus);
+    void finishDialogue();
+    bool isDialogueEventDone();
 
 private:
     enum DialogueState {
@@ -45,6 +46,8 @@ private:
     std::unique_ptr<DialogueEvent> currentDialogueEvent;
     std::vector<DialogueEvent> entityDialogueEvents;
     DialogueEvent defaultDialogueEvent;
+
+    bool currentDialogueIsDone;
 
     void initializeText();
     void updateText(sf::Time deltaTime);

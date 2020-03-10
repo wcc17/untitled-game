@@ -11,8 +11,6 @@
 #include "../npc/NpcManager.h"
 #include "../ui/dialogue/DialogueManager.h"
 #include "ViewManager.h"
-#include "../events/event/PauseGameEvent.h"
-#include "../events/event/UnPauseGameEvent.h"
 #include "../events/event/ChangeSceneToNewMapEvent.h"
 #include "../events/event/ChangeSceneToBattleEvent.h"
 #include "../events/event/ChangeSceneToPreviousSceneEvent.h"
@@ -33,19 +31,15 @@ private:
     void updateSceneState(sf::Time elapsedTime, sf::RenderTexture& renderTexture);
     void updateSceneTransition(sf::Time elapsedTime);
     void updateChangeSceneState();
-    void updatePauseState(sf::Time elapsedTime, sf::RenderTexture& renderTexture);
     void drawSceneStateToRenderTexture(sf::RenderTexture* renderTexture);
     void onChangeSceneToNewMapEvent(ChangeSceneToNewMapEvent* event);
     void onChangeSceneToBattleEvent(ChangeSceneToBattleEvent* event);
     void onChangeSceneToPreviousSceneEvent(ChangeSceneToPreviousSceneEvent* event);
-    void onPauseGameEvent(PauseGameEvent* event);
-    void onUnPauseGameEvent(UnPauseGameEvent* event);
     void onControllerMenuEvent(ControllerMenuEvent* event);
     void onControllerActionEvent(ControllerActionEvent* event);
     void onControllerCancelEvent(ControllerCancelEvent* event);
     void onControllerMenuMoveEvent(ControllerMenuMoveEvent* event);
     void onOpenDialogueEvent(OpenDialogueEvent* event);
-    void onCloseDialogueEvent(CloseDialogueEvent* event);
 
     float sceneAlpha = 255.f;
 

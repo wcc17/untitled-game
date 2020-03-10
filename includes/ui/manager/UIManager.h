@@ -25,6 +25,7 @@ public:
             sf::Time deltaTime);
     void drawToRenderTexture(sf::RenderTexture& renderTexture) const;
     void closeCurrentMenuOrDialogue();
+    bool checkActiveComponentActionFinished();
 
     virtual void handleControllerMenuButtonPressed() {};
     virtual void handleControllerActionButtonPressed() {};

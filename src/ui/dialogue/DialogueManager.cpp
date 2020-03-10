@@ -22,7 +22,7 @@ void DialogueManager::update(sf::RenderTexture& renderTexture, sf::View& view, s
     }
 }
 
-void DialogueManager::handleControllerActionButtonPressed(std::shared_ptr<EventBus> eventBus) {
+void DialogueManager::handleControllerActionButtonPressed() {
     if(dialogueState == STATE_ACTIVE) {
         if(currentDialogueEvent->shouldStartNextDialogue()) {
             startNextDialogue();
@@ -30,7 +30,7 @@ void DialogueManager::handleControllerActionButtonPressed(std::shared_ptr<EventB
             //player wants to rush the dialogue by mashing action button
             rushDrawText();
         } else if(currentDialogueEvent->isDialogueEventDone()) {
-            closeDialogue(eventBus);
+            finishDialogue();
         }
     }
 }
@@ -40,13 +40,14 @@ void DialogueManager::openDialogue(std::string dialogueTextAssetName) {
     nameOfDialogueTextAsset = dialogueTextAssetName;
     initializeText();
     dialogueState = STATE_READY;
+    this->currentDialogueIsDone = false;
 }
 
-void DialogueManager::closeDialogue(std::shared_ptr<EventBus> eventBus) {
+void DialogueManager::finishDialogue() {
     dialogueState = STATE_INACTIVE;
     this->stringToDraw = "";
     this->currentDialogueEvent.reset();
-    eventBus->publish(new CloseDialogueEvent(nameOfDialogueTextAsset)); //TODO: I hate that we're passing eventBus all the way down to close the dialogue
+    this->currentDialogueIsDone = true;
 }
 
 void DialogueManager::initializeText() {
@@ -103,4 +104,8 @@ void DialogueManager::setEntityDialogueEvents(std::vector<DialogueEvent> entityD
 
 std::string DialogueManager::getStringToDraw() {
     return this->stringToDraw;
+}
+
+bool DialogueManager::isDialogueEventDone() {
+    return this->currentDialogueIsDone;
 }

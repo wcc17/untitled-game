@@ -13,10 +13,7 @@ void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font
     eventBus->subscribe(this, &SceneManager::onChangeSceneToNewMapEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onChangeSceneToBattleEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onChangeSceneToPreviousSceneEvent, "SceneManager");
-    eventBus->subscribe(this, &SceneManager::onPauseGameEvent, "SceneManager");
-    eventBus->subscribe(this, &SceneManager::onUnPauseGameEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onOpenDialogueEvent, "SceneManager");
-    eventBus->subscribe(this, &SceneManager::onCloseDialogueEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onControllerActionEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onControllerMenuEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onControllerCancelEvent, "SceneManager");
@@ -40,15 +37,12 @@ void SceneManager::update(sf::Time elapsedTime, sf::RenderTexture& renderTexture
         case SceneState::STATE_SKIP_FRAME:
             //skip a frame so that everything can catch up after loading a new scene
             this->state = sceneStateHandler.getNextState(state);
-        case SceneState::STATE_PAUSE:
-            updatePauseState(elapsedTime, renderTexture);
             break;
     }
 }
 
 void SceneManager::updateSceneState(sf::Time elapsedTime, sf::RenderTexture& renderTexture) {
-    bool isPaused = false;
-    scene->update(elapsedTime, isPaused, renderTexture, viewManager.getView());
+    scene->update(elapsedTime, renderTexture, viewManager.getView());
 }
 
 void SceneManager::updateSceneTransition(sf::Time elapsedTime) {
@@ -75,17 +69,11 @@ void SceneManager::updateChangeSceneState() {
     this->state = sceneStateHandler.getNextState(state);
 }
 
-void SceneManager::updatePauseState(sf::Time elapsedTime, sf::RenderTexture& renderTexture) {
-    bool isPaused = true;
-    scene->update(elapsedTime, isPaused, renderTexture, viewManager.getView());
-}
-
 void SceneManager::drawToRenderTexture(sf::RenderTexture* renderTexture) {
     switch(state) {
         case SceneState::STATE_SCENE:
         case SceneState::STATE_TRANSITION_SCENE_IN:
         case SceneState::STATE_TRANSITION_SCENE_OUT:
-        case SceneState::STATE_PAUSE:
             drawSceneStateToRenderTexture(renderTexture);
             break;
         case SceneState::STATE_CHANGING_SCENE:
@@ -135,24 +123,8 @@ void SceneManager::onChangeSceneToPreviousSceneEvent(ChangeSceneToPreviousSceneE
     }
 }
 
-void SceneManager::onPauseGameEvent(PauseGameEvent* event) {
-    if(state == STATE_SCENE) {
-        state = STATE_PAUSE;
-    }
-}
-
-void SceneManager::onUnPauseGameEvent(UnPauseGameEvent* event) {
-    if(state == STATE_PAUSE) {
-        state = STATE_SCENE;
-    }
-}
-
 void SceneManager::onOpenDialogueEvent(OpenDialogueEvent *event) {
     scene->openDialogue(event->interactedWith.getName());
-}
-
-void SceneManager::onCloseDialogueEvent(CloseDialogueEvent *event) {
-    scene->closeDialogue();
 }
 
 void SceneManager::onControllerMenuEvent(ControllerMenuEvent *event) {

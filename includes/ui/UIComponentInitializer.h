@@ -10,6 +10,8 @@
 #include "component/menu_component/BattleChoiceMenuWithSelectorComponent.h"
 #include "component/menu_component/PartyMenuWithSelectorComponent.h"
 #include "component/menu_component/StartMenuWithSelectorComponent.h"
+#include "../scene/battle/BattleSceneMenuChoice.h"
+#include "../scene/overworld/OverworldStartMenuChoice.h"
 #include <SFML/Graphics/Font.hpp>
 
 class UIComponentInitializer {
@@ -39,7 +41,6 @@ private:
     void initializeMenuOptionComponent(
             int index,
             std::string displayText,
-            UIComponentType opensToMenu,
             MenuWithSelectorComponent& menuComponent);
 };
 

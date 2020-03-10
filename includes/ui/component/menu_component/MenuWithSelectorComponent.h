@@ -9,8 +9,6 @@
 #include "../../../util/Logger.h"
 #include "../MenuScreenPosition.h"
 #include "BaseMenuComponent.h"
-#include "../../../events/event/PauseGameEvent.h"
-#include "../../../events/event/UnPauseGameEvent.h"
 
 class MenuWithSelectorComponent : public BaseMenuComponent {
 

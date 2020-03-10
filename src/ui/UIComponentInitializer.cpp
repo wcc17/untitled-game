@@ -1,5 +1,4 @@
 #include "../../includes/ui/UIComponentInitializer.h"
-#include "../../includes/scene/battle/BattleSceneMenuChoice.h"
 
 DialogueMenuComponent UIComponentInitializer::initializeDialogueMenuComponent(
         TextureManager& textureManager,
@@ -17,7 +16,7 @@ DialogueMenuComponent UIComponentInitializer::initializeDialogueMenuComponent(
 
     MenuOptionComponent textOptionComponent;
     std::string displayText = "";
-    textOptionComponent.initialize(0, displayText, UIComponentType::NO_COMPONENT_TYPE);
+    textOptionComponent.initialize(0, displayText);
     dialogueMenuComponent.addMenuOption(textOptionComponent);
 
     return dialogueMenuComponent;
@@ -38,12 +37,12 @@ StartMenuWithSelectorComponent UIComponentInitializer::initializeStartMenuCompon
             textureManager.getTexture(AssetPath::getUIComponentAssetPath(UIComponentType::MENU_SELECTOR)),
             ScreenPosition::TOP_RIGHT);
 
-    initializeMenuOptionComponent(0, "Party", UIComponentType::PARTY_MENU, startMenuComponent);
-    initializeMenuOptionComponent(1, "Items", UIComponentType::NO_COMPONENT_TYPE, startMenuComponent);
-    initializeMenuOptionComponent(2, "Skills", UIComponentType::NO_COMPONENT_TYPE, startMenuComponent);
-    initializeMenuOptionComponent(3, "Options", UIComponentType::NO_COMPONENT_TYPE, startMenuComponent);
-    initializeMenuOptionComponent(4, "Save", UIComponentType::NO_COMPONENT_TYPE, startMenuComponent);
-    initializeMenuOptionComponent(5, "Exit", UIComponentType::NO_COMPONENT_TYPE, startMenuComponent);
+    initializeMenuOptionComponent(0, OverworldStartMenuChoice::PARTY, startMenuComponent);
+    initializeMenuOptionComponent(1, OverworldStartMenuChoice::ITEMS, startMenuComponent);
+    initializeMenuOptionComponent(2, OverworldStartMenuChoice::SKILLS, startMenuComponent);
+    initializeMenuOptionComponent(3, OverworldStartMenuChoice::OPTIONS, startMenuComponent);
+    initializeMenuOptionComponent(4, OverworldStartMenuChoice::SAVE, startMenuComponent);
+    initializeMenuOptionComponent(5, OverworldStartMenuChoice::EXIT, startMenuComponent);
 
     return startMenuComponent;
 }
@@ -63,12 +62,12 @@ PartyMenuWithSelectorComponent UIComponentInitializer::initializePartyMenuCompon
             textureManager.getTexture(AssetPath::getUIComponentAssetPath(UIComponentType::MENU_SELECTOR)),
             ScreenPosition::TOP_LEFT);
 
-    initializeMenuOptionComponent(0, "Charlie", UIComponentType::NO_COMPONENT_TYPE, partyMenuComponent);
-    initializeMenuOptionComponent(1, "Louie", UIComponentType::NO_COMPONENT_TYPE, partyMenuComponent);
-    initializeMenuOptionComponent(2, "Henry", UIComponentType::NO_COMPONENT_TYPE, partyMenuComponent);
-    initializeMenuOptionComponent(3, "Edgar", UIComponentType::NO_COMPONENT_TYPE, partyMenuComponent);
-    initializeMenuOptionComponent(4, "Victoria", UIComponentType::NO_COMPONENT_TYPE, partyMenuComponent);
-    initializeMenuOptionComponent(5, "Tracy", UIComponentType::NO_COMPONENT_TYPE, partyMenuComponent);
+    initializeMenuOptionComponent(0, "Charlie", partyMenuComponent);
+    initializeMenuOptionComponent(1, "Louie", partyMenuComponent);
+    initializeMenuOptionComponent(2, "Henry", partyMenuComponent);
+    initializeMenuOptionComponent(3, "Edgar", partyMenuComponent);
+    initializeMenuOptionComponent(4, "Victoria", partyMenuComponent);
+    initializeMenuOptionComponent(5, "Tracy", partyMenuComponent);
 
     return partyMenuComponent;
 }
@@ -106,12 +105,12 @@ BattleChoiceMenuWithSelectorComponent UIComponentInitializer::initializeBattleMe
             textureManager.getTexture(AssetPath::getUIComponentAssetPath(UIComponentType::MENU_SELECTOR)),
             screenPosition);
 
-    initializeMenuOptionComponent(0, BattleSceneMenuChoice::ATTACK, UIComponentType::NO_COMPONENT_TYPE, battleMenuComponent);
-    initializeMenuOptionComponent(1, BattleSceneMenuChoice::MAGIC, UIComponentType::NO_COMPONENT_TYPE, battleMenuComponent);
-    initializeMenuOptionComponent(2, BattleSceneMenuChoice::ITEM, UIComponentType::NO_COMPONENT_TYPE, battleMenuComponent);
+    initializeMenuOptionComponent(0, BattleSceneMenuChoice::ATTACK, battleMenuComponent);
+    initializeMenuOptionComponent(1, BattleSceneMenuChoice::MAGIC, battleMenuComponent);
+    initializeMenuOptionComponent(2, BattleSceneMenuChoice::ITEM, battleMenuComponent);
 
     if(isPartyLeader) {
-        initializeMenuOptionComponent(3, BattleSceneMenuChoice::RUN, UIComponentType::NO_COMPONENT_TYPE, battleMenuComponent);
+        initializeMenuOptionComponent(3, BattleSceneMenuChoice::RUN, battleMenuComponent);
     }
 
     return battleMenuComponent;
@@ -120,10 +119,9 @@ BattleChoiceMenuWithSelectorComponent UIComponentInitializer::initializeBattleMe
 void UIComponentInitializer::initializeMenuOptionComponent(
         int index,
         std::string displayText,
-        UIComponentType opensToMenu,
         MenuWithSelectorComponent& startMenuComponent) {
     MenuOptionComponent menuOption;
-    menuOption.initialize(index, displayText, opensToMenu);
+    menuOption.initialize(index, displayText);
     startMenuComponent.addMenuOption(menuOption);
 }
 

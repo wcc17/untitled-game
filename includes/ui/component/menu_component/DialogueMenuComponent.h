@@ -18,7 +18,8 @@ public:
             sf::Time deltaTime) override;
     void setEntityDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents);
     void openDialogue(std::string nameOfDialogueTextAsset) override;
-    void handleControllerActionButtonPressed(std::shared_ptr<EventBus> eventBus) override;
+    void handleControllerActionButtonPressed() override;
+    bool componentActionIsFinished() override;
 
 private:
     DialogueManager dialogueManager;

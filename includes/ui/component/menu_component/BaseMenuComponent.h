@@ -23,9 +23,10 @@ public:
             ScreenPosition screenPosition);
     virtual void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime);
     virtual void drawToRenderTexture(sf::RenderTexture* renderTexture);
+    virtual bool componentActionIsFinished();
 
     virtual void handleControllerMenuButtonPressed(std::shared_ptr<EventBus> eventBus) {};
-    virtual void handleControllerActionButtonPressed(std::shared_ptr<EventBus> eventBus) {};
+    virtual void handleControllerActionButtonPressed() {};
     virtual void handleControllerCancelButtonPressed(std::shared_ptr<EventBus> eventBus) {};
     virtual void handleControllerMenuMoveButtonPressed(MoveDirection direction) {};
     virtual void openDialogue(std::string nameOfDialogueTextAsset) {};

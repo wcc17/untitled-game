@@ -11,6 +11,7 @@ public:
     std::string handleControllerActionButtonPressedForBattleChoice();
     void handleControllerCancelButtonPressed() override;
     void handleControllerMenuMoveButtonPressed(MoveDirection direction) override;
+    void handleControllerActionButtonPressed() override;
     void openDialogue(std::string dialogueTextAssetName) override;
     void openMenu(UIComponentType menuTypeToOpen) override;
     void release(TextureManager& textureManager) override;

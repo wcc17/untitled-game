@@ -31,10 +31,14 @@ void DialogueMenuComponent::setEntityDialogueEvents(std::vector<DialogueEvent> e
     dialogueManager.setEntityDialogueEvents(entityDialogueEvents);
 }
 
-void DialogueMenuComponent::handleControllerActionButtonPressed(std::shared_ptr<EventBus> eventBus) {
-    dialogueManager.handleControllerActionButtonPressed(eventBus);
+void DialogueMenuComponent::handleControllerActionButtonPressed() {
+    dialogueManager.handleControllerActionButtonPressed();
 }
 
 void DialogueMenuComponent::openDialogue(std::string nameOfDialogueTextAsset) {
     dialogueManager.openDialogue(nameOfDialogueTextAsset);
+}
+
+bool DialogueMenuComponent::componentActionIsFinished() {
+    return dialogueManager.isDialogueEventDone();
 }

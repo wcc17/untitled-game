@@ -10,13 +10,13 @@
 class OverworldUIManager : public UIManager {
 
 public:
-    void handleControllerMenuButtonPressed() override;
     void handleControllerActionButtonPressed() override;
-    void handleControllerCancelButtonPressed() override;
     void handleControllerMenuMoveButtonPressed(MoveDirection direction) override;
     void openDialogue(std::string dialogueTextAssetName) override;
     void openMenu(UIComponentType menuTypeToOpen) override;
     void release(TextureManager& textureManager) override;
+
+    std::string handleControllerActionButtonPressedForStartMenu();
 
 protected:
     void initializeComponents(

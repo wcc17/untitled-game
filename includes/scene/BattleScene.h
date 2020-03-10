@@ -23,7 +23,6 @@ public:
             sf::Vector2f defaultWindowSize) override;
     virtual void update(
             sf::Time elapsedTime,
-            bool isPaused,
             sf::RenderTexture& renderTexture,
             sf::View& view) override;
     virtual void draw(
@@ -36,6 +35,8 @@ public:
 private:
     void changeToShowBattleChoicesState();
     void handleBattleChoiceChosen();
+    void checkEnemyAppearedDialogueFinished();
+    void checkRunningAwayDialogueFinished();
 
     BattleState state;
     BattleUIManager uiManager;

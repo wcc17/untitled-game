@@ -19,8 +19,6 @@
 #include "../events/event/ControllerCancelEvent.h"
 #include "../events/event/ControllerMoveEvent.h"
 #include "../events/event/ControllerMenuMoveEvent.h"
-#include "../events/event/PauseGameEvent.h"
-#include "../events/event/UnPauseGameEvent.h"
 
 class Scene : public sf::Drawable, public sf::Transformable {
 public:
@@ -32,7 +30,10 @@ public:
             sf::Font* font,
             sf::Vector2u windowSize,
             sf::Vector2f defaultWindowSize);
-    virtual void update(sf::Time elapsedTime, bool isPaused, sf::RenderTexture& renderTexture, sf::View& view) {};
+    virtual void update(
+            sf::Time elapsedTime,
+            sf::RenderTexture& renderTexture,
+            sf::View& view) {};
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {};
     virtual void release(TextureManager& textureManager) {};
     virtual std::string getSceneName();

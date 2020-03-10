@@ -24,6 +24,7 @@ public:
     std::string getAssetName();
     bool isMoving() const;
     bool isNpcAggressive() const;
+    bool isPlayerInteractingWithEntity() const;
 
 protected:
     EntityAnimation entityAnimation;

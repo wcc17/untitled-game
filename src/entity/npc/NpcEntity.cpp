@@ -32,7 +32,7 @@ void NpcEntity::update(sf::Time deltaTime, const sf::Vector2u& mapTileSize) {
         case STATE_MOVING:
             handleMovingState(deltaTime, mapTileSize);
             break;
-        case STATE_PLAYER_INTERACTING_WITH_UI:
+        case STATE_ENTITY_IS_BEING_INTERACTED_WITH:
             handleInteractingState(deltaTime);
             break;
     }
@@ -66,7 +66,7 @@ void NpcEntity::onPlayerInteractionStart(MoveDirection playerFacingDirection) {
     entityAnimation.turnToFaceEntityFacingDirection(playerFacingDirection);
     sf::Sprite::setTextureRect(entityAnimation.getTextureRect());
     stateBeforeInteraction = state;
-    state = STATE_PLAYER_INTERACTING_WITH_UI;
+    state = STATE_ENTITY_IS_BEING_INTERACTED_WITH;
 }
 
 void NpcEntity::onPlayerInteractionFinish() {
@@ -103,4 +103,8 @@ bool NpcEntity::isMoving() const {
 
 bool NpcEntity::isNpcAggressive() const {
     return this->isAggressive;
+}
+
+bool NpcEntity::isPlayerInteractingWithEntity() const {
+    return (this->state == EntityState::STATE_ENTITY_IS_BEING_INTERACTED_WITH);
 }

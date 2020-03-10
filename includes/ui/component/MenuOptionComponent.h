@@ -8,8 +8,7 @@
 class MenuOptionComponent : public sf::Text {
 
 public:
-    void initialize(int index, std::string displayText, UIComponentType opensToMenu);
-    UIComponentType getOpensToMenu();
+    void initialize(int index, std::string displayText);
     int getIndex();
     std::string getDisplayText();
 
@@ -19,7 +18,6 @@ public:
 
 private:
     int index;
-    UIComponentType opensToMenu;
 };
 
 

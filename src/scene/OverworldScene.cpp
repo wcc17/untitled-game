@@ -33,19 +33,117 @@ void OverworldScene::initialize(
             textureManager);
     collisionManager.initializeForScene(getMapCollidables());
     uiManager.initialize(eventBus, textureManager, font, windowSize, defaultWindowSize, sceneName);
+
+    state = OverworldState::RUNNING;
 }
 
-void OverworldScene::update(sf::Time elapsedTime, bool isPaused, sf::RenderTexture& renderTexture, sf::View& view) {
-    if(!isPaused) {
-        player->update(elapsedTime);
-        npcManager.update(elapsedTime);
-        collisionManager.checkAllCollisions(player, npcManager.getNpcEntities());
+void OverworldScene::update(
+        sf::Time elapsedTime,
+        sf::RenderTexture& renderTexture,
+        sf::View& view) {
+    switch(state) {
+        case OverworldState::RUNNING:
+            updateRunningState(elapsedTime);
+            break;
+        case OverworldState::PLAYER_DIALOGUE:
+            updatePlayerDialogueState();
+            break;
+        case OverworldState::START_MENU_OPEN:
+            break;
+        case OverworldState::PARTY_MENU_OPEN:
+            break;
     }
 
     uiManager.update(renderTexture, view, elapsedTime);
 }
 
-void OverworldScene::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+void OverworldScene::handleControllerActionButtonPressed() {
+    switch(state) {
+        case OverworldState::RUNNING:
+            uiManager.handleControllerActionButtonPressed();
+            break;
+        case OverworldState::PLAYER_DIALOGUE:
+            uiManager.handleControllerActionButtonPressed();
+            break;
+        case OverworldState::START_MENU_OPEN:
+            handleStartMenuChoiceChosen();
+            break;
+        case OverworldState::PARTY_MENU_OPEN:
+            break;
+    }
+}
+
+void OverworldScene::updateRunningState(sf::Time elapsedTime) {
+    player->update(elapsedTime);
+    npcManager.update(elapsedTime);
+    collisionManager.checkAllCollisions(player, npcManager.getNpcEntities());
+}
+
+void OverworldScene::updatePlayerDialogueState() {
+    if(uiManager.checkActiveComponentActionFinished()) {
+        uiManager.closeCurrentMenuOrDialogue();
+        eventBus->publish(new CloseDialogueEvent());
+        state = OverworldState::RUNNING;
+    }
+}
+
+void OverworldScene::handleControllerCancelButtonPressed() {
+    switch(state) {
+        case OverworldState::RUNNING:
+            break;
+        case OverworldState::PLAYER_DIALOGUE:
+            break;
+        case OverworldState::START_MENU_OPEN:
+            uiManager.closeCurrentMenuOrDialogue();
+            state = OverworldState::RUNNING;
+            break;
+        case OverworldState::PARTY_MENU_OPEN:
+            uiManager.closeCurrentMenuOrDialogue();
+            openStartMenu();
+            break;
+    }
+}
+
+void OverworldScene::handleControllerMenuButtonPressed() {
+    openStartMenu();
+}
+
+void OverworldScene::handleControllerMenuMoveButtonPressed(MoveDirection direction) {
+    uiManager.handleControllerMenuMoveButtonPressed(direction);
+}
+
+void OverworldScene::handleStartMenuChoiceChosen() {
+    std::string startMenuChoiceSelected = uiManager.handleControllerActionButtonPressedForStartMenu();
+
+    if(startMenuChoiceSelected == OverworldStartMenuChoice::PARTY) {
+        uiManager.closeCurrentMenuOrDialogue();
+        openPartyMenu();
+    } else if(startMenuChoiceSelected == OverworldStartMenuChoice::EXIT) {
+        uiManager.closeCurrentMenuOrDialogue();
+        state = OverworldState::RUNNING;
+    }
+}
+
+void OverworldScene::openDialogue(std::string dialogueTextAssetName) {
+    uiManager.openDialogue(dialogueTextAssetName);
+    state = PLAYER_DIALOGUE;
+}
+
+void OverworldScene::openStartMenu() {
+    uiManager.openMenu(UIComponentType::START_MENU);
+    state = START_MENU_OPEN;
+}
+
+void OverworldScene::openPartyMenu() {
+    uiManager.openMenu(UIComponentType::PARTY_MENU);
+    state = OverworldState::PARTY_MENU_OPEN;
+}
+
+
+
+void OverworldScene::draw(
+        sf::RenderTarget& target,
+        sf::RenderStates states) const {
     states.transform *= getTransform();
     states.texture = texture;
 
@@ -84,30 +182,6 @@ std::map<std::string, std::vector<tmx::Property>> OverworldScene::getNpcNameToPr
 
 std::string OverworldScene::getPlayerSpawnNameForPreviousToCurrentSceneTransition(std::string sceneName) {
     return sceneMap.getPlayerSpawnNameForPreviousToCurrentSceneTransition(sceneName);
-}
-
-void OverworldScene::openDialogue(std::string dialogueTextAssetName) {
-    uiManager.openDialogue(dialogueTextAssetName);
-}
-
-void OverworldScene::closeDialogue() {
-    uiManager.closeCurrentMenuOrDialogue();
-}
-
-void OverworldScene::handleControllerMenuButtonPressed() {
-    uiManager.handleControllerMenuButtonPressed();
-}
-
-void OverworldScene::handleControllerActionButtonPressed() {
-    uiManager.handleControllerActionButtonPressed();
-}
-
-void OverworldScene::handleControllerCancelButtonPressed() {
-    uiManager.handleControllerCancelButtonPressed();
-}
-
-void OverworldScene::handleControllerMenuMoveButtonPressed(MoveDirection direction) {
-    uiManager.handleControllerMenuMoveButtonPressed(direction);
 }
 
 void OverworldScene::release(TextureManager& textureManager) {

@@ -1,13 +1,8 @@
 #include "../../../includes/ui/component/MenuOptionComponent.h"
 
-void MenuOptionComponent::initialize(int index, std::string displayText, UIComponentType opensToMenu) {
+void MenuOptionComponent::initialize(int index, std::string displayText) {
     this->index = index;
-    this->opensToMenu = opensToMenu;
     setString(displayText);
-}
-
-UIComponentType MenuOptionComponent::getOpensToMenu() {
-    return this->opensToMenu;
 }
 
 int MenuOptionComponent::getIndex() {

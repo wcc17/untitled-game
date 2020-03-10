@@ -35,6 +35,10 @@ bool UIManager::isAnyMenuOpen() {
     return (activeMenuComponent != nullptr);
 }
 
+bool UIManager::checkActiveComponentActionFinished() {
+    return activeMenuComponent->componentActionIsFinished();
+}
+
 void UIManager::release(TextureManager &textureManager) {
     uiComponentInitializer.release(textureManager);
 }

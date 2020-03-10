@@ -11,10 +11,7 @@ void OverworldUIManager::initializeComponents(
     startMenuComponent = uiComponentInitializer.initializeStartMenuComponent(textureManager, windowScale, font);
     partyMenuComponent = uiComponentInitializer.initializePartyMenuComponent(textureManager, windowScale, font);
 
-    //TODO: I need four of these and they're specific to battle menu. Need to be able to initialize these components outside of here or at least conditionally depending on what scene we're in. BattleUIManager and OverworldUIManager would probably be cool
-//    battleChoiceMenuComponent = uiComponentInitializer.initializeBattleMenuComponent(textureManager, windowScale, font, true, 0);
-
-    std::vector<DialogueEvent> entityDialogueEvents = xmlManager.loadEntityDialogueForScene(sceneName); //TODO: need to see how this works for the battle scene
+    std::vector<DialogueEvent> entityDialogueEvents = xmlManager.loadEntityDialogueForScene(sceneName);
     dialogueMenuComponent.setEntityDialogueEvents(entityDialogueEvents);
 }
 
@@ -38,28 +35,41 @@ void OverworldUIManager::openMenu(UIComponentType menuTypeToOpen) {
     }
 }
 
-void OverworldUIManager::handleControllerMenuButtonPressed() {
-    if(!isAnyMenuOpen()) {
-        openMenu(UIComponentType::START_MENU);
-        eventBus->publish(new PauseGameEvent());
-//        activeMenuComponent->handleControllerMenuButtonPressed(eventBus);
+void OverworldUIManager::handleControllerActionButtonPressed() {
+    if (activeMenuComponent != nullptr) {
+        activeMenuComponent->handleControllerActionButtonPressed();
     }
 }
 
-void OverworldUIManager::handleControllerActionButtonPressed() {
-//    if (activeMenuComponent != nullptr) {
-//        activeMenuComponent->handleControllerActionButtonPressed(eventBus);
-//    }
+std::string OverworldUIManager::handleControllerActionButtonPressedForStartMenu() {
+    if (activeMenuComponent == &startMenuComponent) {
+        return startMenuComponent.getActiveMenuOptionName();
+    }
+
+    return "";
 }
 
-void OverworldUIManager::handleControllerCancelButtonPressed() {
-//    if (activeMenuComponent != nullptr) {
-//        activeMenuComponent->handleControllerCancelButtonPressed(eventBus);
+//std::string BattleUIManager::handleControllerActionButtonPressedForBattleChoice() {
+//    if (activeMenuComponent == &battleMenuComponent) {
+//        std::string selectedOptionName = battleMenuComponent.getActiveMenuOptionName();
+//
+//        if(selectedOptionName == BattleSceneMenuChoice::ATTACK) {
+//            printf("attack selected\n");
+//        } else if(selectedOptionName == BattleSceneMenuChoice::MAGIC) {
+//            printf("magic selected\n");
+//        } else if(selectedOptionName == BattleSceneMenuChoice::ITEM) {
+//            printf("item selected\n");
+//        } else if(selectedOptionName == BattleSceneMenuChoice::RUN) {
+//            printf("run selected\n");
+//        } else {
+//            printf("ERROR: something went wrong here\n");
+//        }
+//
+//        return selectedOptionName;
 //    }
-
-    closeCurrentMenuOrDialogue();
-    eventBus->publish(new UnPauseGameEvent());
-}
+//
+//    return "";
+//}
 
 void OverworldUIManager::handleControllerMenuMoveButtonPressed(MoveDirection direction) {
     if (activeMenuComponent != nullptr) {

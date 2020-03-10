@@ -54,7 +54,9 @@ set(SOURCE_FILES src/main.cpp
         src/ui/component/menu_component/StartMenuWithSelectorComponent.cpp
         src/ui/manager/OverworldUIManager.cpp
         src/ui/manager/BattleUIManager.cpp
-        src/scene/battle/BattleSceneMenuChoice.cpp)
+        src/scene/battle/BattleSceneMenuChoice.cpp
+        src/scene/overworld/OverworldStartMenuChoice.cpp
+        )
 
 set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/asset/FontManager.h
@@ -106,6 +108,7 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/ui/manager/OverworldUIManager.h
         includes/ui/manager/BattleUIManager.h
         includes/scene/battle/BattleSceneMenuChoice.h
+        includes/scene/overworld/OverworldStartMenuChoice.h
         )
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
@@ -129,8 +132,6 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/PlayerDoorCollisionEvent.h
         includes/events/event/ControllerMenuEvent.h
         includes/events/event/ControllerCancelEvent.h
-        includes/events/event/PauseGameEvent.h
-        includes/events/event/UnPauseGameEvent.h
         includes/events/event/ControllerMenuMoveEvent.h
         includes/ui/component/MenuScreenPosition.h
         includes/ui/UIComponentType.h
@@ -143,7 +144,9 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/events/event/ChangeSceneToBattleEvent.h
         includes/scene/battle/BattleSceneDialogueEventName.h
         includes/scene/battle/BattleState.h
-        includes/events/event/ChangeSceneToPreviousSceneEvent.h)
+        includes/events/event/ChangeSceneToPreviousSceneEvent.h
+        includes/scene/overworld/OverworldState.h
+        )
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 
