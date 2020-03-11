@@ -37,3 +37,12 @@ void DialogueEvent::startNextDialogue() {
 std::string DialogueEvent::getName() {
     return this->entityName;
 }
+
+std::vector<Dialogue> DialogueEvent::getDialogues() {
+    return this->dialogues;
+}
+
+void DialogueEvent::setDialogues(std::vector<Dialogue> dialogues) {
+    this->dialogues = dialogues;
+}
+

@@ -10,8 +10,6 @@
 #include "../../../controller/MoveDirection.h"
 #include "../../../util/Logger.h"
 #include "../MenuScreenPosition.h"
-#include "../../../events/Event.h"
-#include "../../../events/EventBus.h"
 
 class BaseMenuComponent {
 
@@ -20,18 +18,24 @@ public:
             sf::Font* font,
             float windowScale,
             sf::Texture* componentTexture,
-            ScreenPosition screenPosition);
+            ScreenPosition screenPosition,
+            UIComponentType componentType);
     virtual void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime);
     virtual void drawToRenderTexture(sf::RenderTexture* renderTexture);
     virtual bool componentActionIsFinished();
 
-    virtual void handleControllerMenuButtonPressed(std::shared_ptr<EventBus> eventBus) {};
+    virtual void handleControllerMenuButtonPressed() {};
     virtual void handleControllerActionButtonPressed() {};
-    virtual void handleControllerCancelButtonPressed(std::shared_ptr<EventBus> eventBus) {};
+    virtual void handleControllerCancelButtonPressed() {};
     virtual void handleControllerMenuMoveButtonPressed(MoveDirection direction) {};
+    virtual void openDialogueWithSubstitutions(
+            std::string nameOfDialogueTextAsset,
+            std::vector<std::string> textSubstitutions) {};
     virtual void openDialogue(std::string nameOfDialogueTextAsset) {};
+    virtual std::string getActiveMenuOptionName();
 
     void addMenuOption(MenuOptionComponent menuOption);
+    UIComponentType getUIComponentType();
 
 protected:
     sf::Font* font;
@@ -41,6 +45,7 @@ protected:
     float windowScale;
     ScreenPosition screenPosition;
     sf::Vector2f textOffset;
+    UIComponentType componentType = UIComponentType::NO_COMPONENT_TYPE;
 
     void updatePositionForView(sf::RenderTexture& renderTexture, sf::View& view);
     void sortMenuOptions();

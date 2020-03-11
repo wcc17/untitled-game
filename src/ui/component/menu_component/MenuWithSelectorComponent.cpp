@@ -1,12 +1,13 @@
 #include "../../../../includes/ui/component/menu_component/MenuWithSelectorComponent.h"
 
-void MenuWithSelectorComponent::initialize(
-        sf::Font* font,
+void MenuWithSelectorComponent::initializeMenuWithSelectorComponent(
+        sf::Font *font,
         float windowScale,
-        sf::Texture* componentTexture,
-        sf::Texture* selectorTexture,
-        ScreenPosition screenPosition) {
-    BaseMenuComponent::initialize(font, windowScale, componentTexture, screenPosition);
+        sf::Texture *componentTexture,
+        sf::Texture *selectorTexture,
+        ScreenPosition screenPosition,
+        UIComponentType componentType) {
+    BaseMenuComponent::initialize(font, windowScale, componentTexture, screenPosition, componentType);
     this->menuSelectorSprite.setTexture(*selectorTexture);
     this->textOffset = sf::Vector2f(menuSelectorSprite.getGlobalBounds().width, 0);
 }

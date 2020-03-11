@@ -7,9 +7,6 @@
 #include "../../includes/ui/UIComponentType.h"
 #include "component/menu_component/MenuWithSelectorComponent.h"
 #include "component/menu_component/DialogueMenuComponent.h"
-#include "component/menu_component/BattleChoiceMenuWithSelectorComponent.h"
-#include "component/menu_component/PartyMenuWithSelectorComponent.h"
-#include "component/menu_component/StartMenuWithSelectorComponent.h"
 #include "../scene/battle/BattleSceneMenuChoice.h"
 #include "../scene/overworld/OverworldStartMenuChoice.h"
 #include <SFML/Graphics/Font.hpp>
@@ -21,15 +18,15 @@ public:
             TextureManager& textureManager,
             float windowScale,
             sf::Font* font);
-    StartMenuWithSelectorComponent initializeStartMenuComponent(
+    MenuWithSelectorComponent initializeStartMenuComponent(
             TextureManager& textureManager,
             float windowScale,
             sf::Font* font);
-    PartyMenuWithSelectorComponent initializePartyMenuComponent(
+    MenuWithSelectorComponent initializePartyMenuComponent(
             TextureManager& textureManager,
             float windowScale,
             sf::Font* font);
-    BattleChoiceMenuWithSelectorComponent initializeBattleMenuComponent(
+    MenuWithSelectorComponent initializeBattleMenuComponent(
             TextureManager& textureManager,
             float windowScale,
             sf::Font* font,

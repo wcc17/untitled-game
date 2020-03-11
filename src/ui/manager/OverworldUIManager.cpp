@@ -15,6 +15,13 @@ void OverworldUIManager::initializeComponents(
     dialogueMenuComponent.setEntityDialogueEvents(entityDialogueEvents);
 }
 
+void OverworldUIManager::openDialogueWithSubstitutions(
+        std::string dialogueTextAssetName,
+        std::vector<std::string> textSubstitutions) {
+    activeMenuComponent = &dialogueMenuComponent;
+    activeMenuComponent->openDialogueWithSubstitutions(dialogueTextAssetName, textSubstitutions);
+}
+
 void OverworldUIManager::openDialogue(std::string dialogueTextAssetName) {
     activeMenuComponent = &dialogueMenuComponent;
     activeMenuComponent->openDialogue(dialogueTextAssetName);
@@ -40,36 +47,6 @@ void OverworldUIManager::handleControllerActionButtonPressed() {
         activeMenuComponent->handleControllerActionButtonPressed();
     }
 }
-
-std::string OverworldUIManager::handleControllerActionButtonPressedForStartMenu() {
-    if (activeMenuComponent == &startMenuComponent) {
-        return startMenuComponent.getActiveMenuOptionName();
-    }
-
-    return "";
-}
-
-//std::string BattleUIManager::handleControllerActionButtonPressedForBattleChoice() {
-//    if (activeMenuComponent == &battleMenuComponent) {
-//        std::string selectedOptionName = battleMenuComponent.getActiveMenuOptionName();
-//
-//        if(selectedOptionName == BattleSceneMenuChoice::ATTACK) {
-//            printf("attack selected\n");
-//        } else if(selectedOptionName == BattleSceneMenuChoice::MAGIC) {
-//            printf("magic selected\n");
-//        } else if(selectedOptionName == BattleSceneMenuChoice::ITEM) {
-//            printf("item selected\n");
-//        } else if(selectedOptionName == BattleSceneMenuChoice::RUN) {
-//            printf("run selected\n");
-//        } else {
-//            printf("ERROR: something went wrong here\n");
-//        }
-//
-//        return selectedOptionName;
-//    }
-//
-//    return "";
-//}
 
 void OverworldUIManager::handleControllerMenuMoveButtonPressed(MoveDirection direction) {
     if (activeMenuComponent != nullptr) {

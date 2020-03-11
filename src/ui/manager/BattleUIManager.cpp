@@ -11,8 +11,15 @@ void BattleUIManager::initializeComponents(
     //TODO: I need four of these and they're specific to battle menu. Need to be able to initialize these components outside of here or at least conditionally depending on what scene we're in.
     battleMenuComponent = uiComponentInitializer.initializeBattleMenuComponent(textureManager, windowScale, font, true, 0);
 
-    std::vector<DialogueEvent> entityDialogueEvents = xmlManager.loadEntityDialogueForScene(sceneName); //TODO: need to see how this works for the battle scene
+    std::vector<DialogueEvent> entityDialogueEvents = xmlManager.loadEntityDialogueForScene(sceneName);
     dialogueMenuComponent.setEntityDialogueEvents(entityDialogueEvents);
+}
+
+void BattleUIManager::openDialogueWithSubstitutions(
+        std::string dialogueTextAssetName,
+        std::vector<std::string> textSubstitutions) {
+    activeMenuComponent = &dialogueMenuComponent;
+    activeMenuComponent->openDialogueWithSubstitutions(dialogueTextAssetName, textSubstitutions);
 }
 
 void BattleUIManager::openDialogue(std::string dialogueTextAssetName) {
@@ -38,23 +45,6 @@ void BattleUIManager::handleControllerActionButtonPressed() {
     if(activeMenuComponent != nullptr) {
         activeMenuComponent->handleControllerActionButtonPressed();
     }
-}
-
-std::string BattleUIManager::handleControllerActionButtonPressedForBattleChoice() {
-    if (activeMenuComponent == &battleMenuComponent) {
-        return battleMenuComponent.getActiveMenuOptionName();
-    }
-
-    return "";
-}
-
-void BattleUIManager::handleControllerCancelButtonPressed() {
-//    if (activeMenuComponent != nullptr) {
-//        activeMenuComponent->handleControllerCancelButtonPressed(eventBus);
-//    }
-
-//    closeCurrentMenuOrDialogue();
-//    eventBus->publish(new UnPauseGameEvent());
 }
 
 void BattleUIManager::handleControllerMenuMoveButtonPressed(MoveDirection direction) {

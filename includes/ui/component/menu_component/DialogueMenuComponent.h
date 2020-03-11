@@ -11,12 +11,16 @@ public:
             sf::Font *font,
             float windowScale,
             sf::Texture *componentTexture,
-            ScreenPosition screenPosition) override;
+            ScreenPosition screenPosition,
+            UIComponentType componentType) override;
     void update(
             sf::RenderTexture& renderTexture,
             sf::View& view,
             sf::Time deltaTime) override;
     void setEntityDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents);
+    void openDialogueWithSubstitutions(
+            std::string nameOfDialogueTextAsset,
+            std::vector<std::string> textSubstitutions) override;
     void openDialogue(std::string nameOfDialogueTextAsset) override;
     void handleControllerActionButtonPressed() override;
     bool componentActionIsFinished() override;

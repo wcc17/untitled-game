@@ -1,13 +1,11 @@
 #include "../../../includes/ui/manager/UIManager.h"
 
 void UIManager::initialize(
-        std::shared_ptr<EventBus> eventBus,
         TextureManager &textureManager,
         sf::Font *font,
         sf::Vector2u windowSize,
         sf::Vector2f defaultWindowSize,
         std::string sceneName) {
-    this->eventBus = eventBus;
     float windowScale = (windowSize.x / defaultWindowSize.x); //assuming aspect ratio is 16:9 I think
     initializeComponents(textureManager, windowScale, font, sceneName);
 }
@@ -37,6 +35,22 @@ bool UIManager::isAnyMenuOpen() {
 
 bool UIManager::checkActiveComponentActionFinished() {
     return activeMenuComponent->componentActionIsFinished();
+}
+
+std::string UIManager::getMenuOptionSelectedOnControllerActionButtonPressed() {
+    if(activeMenuComponent != nullptr) {
+        return activeMenuComponent->getActiveMenuOptionName();
+    }
+
+    return "";
+}
+
+UIComponentType UIManager::getActiveMenuComponentType() {
+    if(activeMenuComponent != nullptr) {
+        return activeMenuComponent->getUIComponentType();
+    }
+
+    return UIComponentType::NO_COMPONENT_TYPE;
 }
 
 void UIManager::release(TextureManager &textureManager) {

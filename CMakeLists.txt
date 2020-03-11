@@ -3,7 +3,8 @@ project(newnew)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
-set(SOURCE_FILES src/main.cpp
+set(SOURCE_FILES
+        src/main.cpp
         src/util/FramerateCounter.cpp
         src/asset/FontManager.cpp
         src/Game.cpp
@@ -49,16 +50,15 @@ set(SOURCE_FILES src/main.cpp
         src/scene/OverworldScene.cpp
         src/scene/BattleScene.cpp
         src/scene/SceneStateHandler.cpp
-        src/ui/component/menu_component/BattleChoiceMenuWithSelectorComponent.cpp
-        src/ui/component/menu_component/PartyMenuWithSelectorComponent.cpp
-        src/ui/component/menu_component/StartMenuWithSelectorComponent.cpp
         src/ui/manager/OverworldUIManager.cpp
         src/ui/manager/BattleUIManager.cpp
         src/scene/battle/BattleSceneMenuChoice.cpp
         src/scene/overworld/OverworldStartMenuChoice.cpp
+        src/ui/dialogue/DialogueSubstitutionUtil.cpp
         )
 
-set(INCLUDE_FILES includes/util/FramerateCounter.h
+set(INCLUDE_FILES
+        includes/util/FramerateCounter.h
         includes/asset/FontManager.h
         includes/Game.h
         includes/controller/BaseController.h
@@ -102,13 +102,11 @@ set(INCLUDE_FILES includes/util/FramerateCounter.h
         includes/scene/OverworldScene.h
         includes/scene/BattleScene.h
         includes/scene/SceneStateHandler.h
-        includes/ui/component/menu_component/BattleChoiceMenuWithSelectorComponent.h
-        includes/ui/component/menu_component/PartyMenuWithSelectorComponent.h
-        includes/ui/component/menu_component/StartMenuWithSelectorComponent.h
         includes/ui/manager/OverworldUIManager.h
         includes/ui/manager/BattleUIManager.h
         includes/scene/battle/BattleSceneMenuChoice.h
         includes/scene/overworld/OverworldStartMenuChoice.h
+        includes/ui/dialogue/DialogueSubstitutionUtil.h
         )
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h

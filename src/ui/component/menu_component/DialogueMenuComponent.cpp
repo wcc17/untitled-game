@@ -4,12 +4,14 @@ void DialogueMenuComponent::initialize(
         sf::Font *font,
         float windowScale,
         sf::Texture *componentTexture,
-        ScreenPosition screenPosition) {
+        ScreenPosition screenPosition,
+        UIComponentType componentType) {
     BaseMenuComponent::initialize(
             font,
             windowScale,
             componentTexture,
-            screenPosition);
+            screenPosition,
+            componentType);
     dialogueManager.initialize();
 }
 
@@ -33,6 +35,12 @@ void DialogueMenuComponent::setEntityDialogueEvents(std::vector<DialogueEvent> e
 
 void DialogueMenuComponent::handleControllerActionButtonPressed() {
     dialogueManager.handleControllerActionButtonPressed();
+}
+
+void DialogueMenuComponent::openDialogueWithSubstitutions(
+        std::string nameOfDialogueTextAsset,
+        std::vector<std::string> textSubstitutions) {
+    dialogueManager.openDialogueWithSubstitutions(nameOfDialogueTextAsset, textSubstitutions);
 }
 
 void DialogueMenuComponent::openDialogue(std::string nameOfDialogueTextAsset) {

@@ -15,6 +15,7 @@
 #include "../../util/Logger.h"
 #include "../../asset/TextureManager.h"
 #include "../../asset/AssetPath.h"
+#include "DialogueSubstitutionUtil.h"
 
 class DialogueManager {
 public:
@@ -24,7 +25,10 @@ public:
     void setEntityDialogueEvents(std::vector<DialogueEvent> entityDialogueEvents);
     std::string getStringToDraw();
     void handleControllerActionButtonPressed();
-    void openDialogue(std::string nameOfDialogueTextAsset);
+    void openDialogueWithSubstitutions(
+            std::string nameOfDialogueTextAsset,
+            std::vector<std::string> textSubstitutions);
+    void openDialogue(std::string dialogueTextAssetName);
     void finishDialogue();
     bool isDialogueEventDone();
 
@@ -35,21 +39,18 @@ private:
         STATE_INACTIVE
     };
 
-    DialogueState dialogueState = STATE_INACTIVE;
-
-    std::string stringToDraw;
-    sf::Time stringDrawTimer;
-    std::string nameOfDialogueTextAsset;
-
     static Logger logger;
-
-    std::unique_ptr<DialogueEvent> currentDialogueEvent;
-    std::vector<DialogueEvent> entityDialogueEvents;
-    DialogueEvent defaultDialogueEvent;
-
     bool currentDialogueIsDone;
+    sf::Time stringDrawTimer;
+    std::string stringToDraw;
+    std::vector<DialogueEvent> entityDialogueEvents;
+    DialogueState dialogueState = STATE_INACTIVE;
+    DialogueEvent defaultDialogueEvent;
+    DialogueEvent currentDialogueEvent;
+    DialogueSubstitutionUtil dialogueSubstitutionUtil;
 
-    void initializeText();
+    void initializeText(std::string dialogueTextAssetName, std::vector<std::string> textSubstitutions);
+    DialogueEvent assignCurrentDialogueEventForAssetName(std::string dialogueTextAssetName);
     void updateText(sf::Time deltaTime);
     void drawMoreText();
     void rushDrawText();

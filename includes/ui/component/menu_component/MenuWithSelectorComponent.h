@@ -13,18 +13,19 @@
 class MenuWithSelectorComponent : public BaseMenuComponent {
 
 public:
-    void initialize(
+    void initializeMenuWithSelectorComponent(
             sf::Font* font,
             float windowScale,
             sf::Texture* componentTexture,
             sf::Texture* selectorTexture,
-            ScreenPosition screenPosition);
+            ScreenPosition screenPosition,
+            UIComponentType componentType);
     void update(sf::RenderTexture& renderTexture, sf::View& view, sf::Time deltaTime) override;
     void drawToRenderTexture(sf::RenderTexture* renderTexture) override;
     void handleControllerMenuMoveButtonPressed(MoveDirection direction) override;
+    std::string getActiveMenuOptionName() override;
 
     void changeActiveMenuOption(MoveDirection direction);
-    std::string getActiveMenuOptionName();
     UIComponentType getNextMenuType();
 
 

@@ -2,7 +2,7 @@
 <entity>
     <dialogueEvent name="enemy_appeared">
         <dialogue>
-            <dialoguePiece>An enemy {enemyName} has attacked!</dialoguePiece>
+            <dialoguePiece>A {0} has attacked!</dialoguePiece>
         </dialogue>
     </dialogueEvent>
 

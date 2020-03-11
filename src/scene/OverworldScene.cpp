@@ -32,7 +32,7 @@ void OverworldScene::initialize(
             getMapTileSize(),
             textureManager);
     collisionManager.initializeForScene(getMapCollidables());
-    uiManager.initialize(eventBus, textureManager, font, windowSize, defaultWindowSize, sceneName);
+    uiManager.initialize(textureManager, font, windowSize, defaultWindowSize, sceneName);
 
     state = OverworldState::RUNNING;
 }
@@ -113,14 +113,16 @@ void OverworldScene::handleControllerMenuMoveButtonPressed(MoveDirection directi
 }
 
 void OverworldScene::handleStartMenuChoiceChosen() {
-    std::string startMenuChoiceSelected = uiManager.handleControllerActionButtonPressedForStartMenu();
+    if(uiManager.getActiveMenuComponentType() == UIComponentType::START_MENU) {
+        std::string startMenuChoiceSelected = uiManager.getMenuOptionSelectedOnControllerActionButtonPressed();
 
-    if(startMenuChoiceSelected == OverworldStartMenuChoice::PARTY) {
-        uiManager.closeCurrentMenuOrDialogue();
-        openPartyMenu();
-    } else if(startMenuChoiceSelected == OverworldStartMenuChoice::EXIT) {
-        uiManager.closeCurrentMenuOrDialogue();
-        state = OverworldState::RUNNING;
+        if(startMenuChoiceSelected == OverworldStartMenuChoice::PARTY) {
+            uiManager.closeCurrentMenuOrDialogue();
+            openPartyMenu();
+        } else if(startMenuChoiceSelected == OverworldStartMenuChoice::EXIT) {
+            uiManager.closeCurrentMenuOrDialogue();
+            state = OverworldState::RUNNING;
+        }
     }
 }
 

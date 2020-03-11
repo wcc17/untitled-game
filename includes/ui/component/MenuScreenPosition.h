@@ -2,7 +2,7 @@
 #define NEWNEW_MENUSCREENPOSITION_H
 
 enum ScreenPosition {
-    TOP_LEFT, //1st quadrant
+    TOP_LEFT, //1st quadrant, TODO: should I rename?
     TOP_SECOND_QUADRANT,
     TOP_THIRD_QUADRANT,
     TOP_RIGHT, //4th quadrant

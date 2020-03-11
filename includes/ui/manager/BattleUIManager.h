@@ -2,16 +2,15 @@
 #define NEWNEW_BATTLEUIMANAGER_H
 
 #include "UIManager.h"
-#include "../component/menu_component/DialogueMenuComponent.h"
-#include "../component/menu_component/BattleChoiceMenuWithSelectorComponent.h"
 
 class BattleUIManager : public UIManager {
 
 public:
-    std::string handleControllerActionButtonPressedForBattleChoice();
-    void handleControllerCancelButtonPressed() override;
     void handleControllerMenuMoveButtonPressed(MoveDirection direction) override;
     void handleControllerActionButtonPressed() override;
+    void openDialogueWithSubstitutions(
+            std::string dialogueTextAssetName,
+            std::vector<std::string> textSubstitutions) override;
     void openDialogue(std::string dialogueTextAssetName) override;
     void openMenu(UIComponentType menuTypeToOpen) override;
     void release(TextureManager& textureManager) override;
@@ -24,7 +23,7 @@ protected:
             std::string sceneName) override;
 
 private:
-    BattleChoiceMenuWithSelectorComponent battleMenuComponent;
+    MenuWithSelectorComponent battleMenuComponent;
     DialogueMenuComponent dialogueMenuComponent;
 };
 

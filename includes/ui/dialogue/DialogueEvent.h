@@ -16,6 +16,8 @@ public:
     bool currentDialogueDone();
     bool isDialogueEventDone();
     std::string getName();
+    std::vector<Dialogue> getDialogues();
+    void setDialogues(std::vector<Dialogue> dialogues);
 private:
     Dialogue currentDialogue;
     std::vector<Dialogue> dialogues;

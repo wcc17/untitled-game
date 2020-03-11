@@ -13,7 +13,6 @@ class UIManager {
 
 public:
     void initialize(
-            std::shared_ptr<EventBus> eventBus,
             TextureManager& textureManager,
             sf::Font* font,
             sf::Vector2u windowSize,
@@ -26,18 +25,23 @@ public:
     void drawToRenderTexture(sf::RenderTexture& renderTexture) const;
     void closeCurrentMenuOrDialogue();
     bool checkActiveComponentActionFinished();
+    UIComponentType getActiveMenuComponentType();
 
     virtual void handleControllerMenuButtonPressed() {};
     virtual void handleControllerActionButtonPressed() {};
     virtual void handleControllerCancelButtonPressed() {};
     virtual void handleControllerMenuMoveButtonPressed(MoveDirection direction) {};
+    virtual void openDialogueWithSubstitutions(
+            std::string dialogueTextAssetName,
+            std::vector<std::string> textSubstitutions) {};
     virtual void openDialogue(std::string dialogueTextAssetName) {};
     virtual void openMenu(UIComponentType menuTypeToOpen) {};
+
+    virtual std::string getMenuOptionSelectedOnControllerActionButtonPressed();
     virtual void release(TextureManager& textureManager);
 
 protected:
     BaseMenuComponent* activeMenuComponent = nullptr;
-    std::shared_ptr<EventBus> eventBus;
     UIComponentInitializer uiComponentInitializer;
     XmlManager xmlManager;
 

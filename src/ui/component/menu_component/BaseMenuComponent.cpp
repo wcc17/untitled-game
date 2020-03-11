@@ -4,11 +4,13 @@ void BaseMenuComponent::initialize(
         sf::Font* font,
         float windowScale,
         sf::Texture* componentTexture,
-        ScreenPosition screenPosition) {
+        ScreenPosition screenPosition,
+        UIComponentType componentType) {
     this->font = font;
     this->windowScale = windowScale;
     this->screenPosition = screenPosition;
     this->menuSprite.setTexture(*componentTexture);
+    this->componentType = componentType;
 }
 
 void BaseMenuComponent::update(sf::RenderTexture &renderTexture, sf::View &view, sf::Time deltaTime) {
@@ -49,6 +51,16 @@ void BaseMenuComponent::updatePositionForView(sf::RenderTexture& renderTexture, 
             menuComponentX = view.getCenter().x - (view.getSize().x / 2);
             menuComponentY = view.getCenter().y - (view.getSize().y / 2);
             break;
+        case TOP_SECOND_QUADRANT:
+            //TODO: I'm not sure if this works yet
+            menuComponentX = view.getCenter().x - (view.getSize().x / 4);
+            menuComponentY = view.getCenter().y - (view.getSize().y / 2);
+            break;
+        case TOP_THIRD_QUADRANT:
+            //TODO: I'm not sure if this works yet
+            menuComponentX = view.getCenter().x + (view.getSize().x / 4);
+            menuComponentY = view.getCenter().y - (view.getSize().y / 2);
+            break;
         case TOP_RIGHT:
             menuComponentX = view.getCenter().x + (view.getSize().x / 2) - (menuSprite.getTextureRect().width);
             menuComponentY = view.getCenter().y - (view.getSize().y / 2);
@@ -57,11 +69,22 @@ void BaseMenuComponent::updatePositionForView(sf::RenderTexture& renderTexture, 
             menuComponentX = view.getCenter().x - (view.getSize().x / 2);
             menuComponentY = view.getCenter().y + (view.getSize().y / 2) - (menuSprite.getTextureRect().height);
             break;
+        case BOTTOM_SECOND_QUADRANT:
+            //TODO: I'm not sure if this works yet
+            menuComponentX = view.getCenter().x - (view.getSize().x / 4);
+            menuComponentY = view.getCenter().y + (view.getSize().y / 2) - (menuSprite.getTextureRect().height);
+            break;
+        case BOTTOM_THIRD_QUADRANT:
+            //TODO: I'm not sure if this works yet
+            menuComponentX = view.getCenter().x + (view.getSize().x / 4);
+            menuComponentY = view.getCenter().y + (view.getSize().y / 2) - (menuSprite.getTextureRect().height);
+            break;
         case BOTTOM_RIGHT:
             menuComponentX = view.getCenter().x + (view.getSize().x / 2) + (menuSprite.getTextureRect().width);
             menuComponentY = view.getCenter().y - (view.getSize().y / 2) - (menuSprite.getTextureRect().height);
             break;
         case CENTERED:
+            //TODO: this doesn't work?
             break;
     }
 
@@ -87,4 +110,12 @@ void BaseMenuComponent::updateMenuComponentTextPosition(sf::RenderTexture& rende
 
 bool BaseMenuComponent::componentActionIsFinished() {
     return true;
+}
+
+std::string BaseMenuComponent::getActiveMenuOptionName() {
+    return "";
+}
+
+UIComponentType BaseMenuComponent::getUIComponentType() {
+    return this->componentType;
 }

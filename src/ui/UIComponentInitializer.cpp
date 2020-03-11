@@ -12,7 +12,8 @@ DialogueMenuComponent UIComponentInitializer::initializeDialogueMenuComponent(
             font,
             windowScale,
             textureManager.getTexture(dialogueBoxAssetPath),
-            ScreenPosition::BOTTOM_LEFT);
+            ScreenPosition::BOTTOM_LEFT,
+            UIComponentType::DIALOGUE_MENU);
 
     MenuOptionComponent textOptionComponent;
     std::string displayText = "";
@@ -22,20 +23,21 @@ DialogueMenuComponent UIComponentInitializer::initializeDialogueMenuComponent(
     return dialogueMenuComponent;
 }
 
-StartMenuWithSelectorComponent UIComponentInitializer::initializeStartMenuComponent(
+MenuWithSelectorComponent UIComponentInitializer::initializeStartMenuComponent(
         TextureManager& textureManager,
         float windowScale,
         sf::Font* font) {
-    StartMenuWithSelectorComponent startMenuComponent;
+    MenuWithSelectorComponent startMenuComponent;
 
     std::string startMenuAssetPath = AssetPath::getUIComponentAssetPath(UIComponentType::START_MENU);
     textureManager.loadTexture(startMenuAssetPath);
-    startMenuComponent.initialize(
+    startMenuComponent.initializeMenuWithSelectorComponent(
             font,
             windowScale,
             textureManager.getTexture(startMenuAssetPath),
             textureManager.getTexture(AssetPath::getUIComponentAssetPath(UIComponentType::MENU_SELECTOR)),
-            ScreenPosition::TOP_RIGHT);
+            ScreenPosition::TOP_RIGHT,
+            UIComponentType::START_MENU);
 
     initializeMenuOptionComponent(0, OverworldStartMenuChoice::PARTY, startMenuComponent);
     initializeMenuOptionComponent(1, OverworldStartMenuChoice::ITEMS, startMenuComponent);
@@ -47,20 +49,21 @@ StartMenuWithSelectorComponent UIComponentInitializer::initializeStartMenuCompon
     return startMenuComponent;
 }
 
-PartyMenuWithSelectorComponent UIComponentInitializer::initializePartyMenuComponent(
+MenuWithSelectorComponent UIComponentInitializer::initializePartyMenuComponent(
         TextureManager& textureManager,
         float windowScale,
         sf::Font* font) {
-    PartyMenuWithSelectorComponent partyMenuComponent;
+    MenuWithSelectorComponent partyMenuComponent;
 
     std::string partyMenuAssetPath = AssetPath::getUIComponentAssetPath(UIComponentType::PARTY_MENU);
     textureManager.loadTexture(partyMenuAssetPath);
-    partyMenuComponent.initialize(
+    partyMenuComponent.initializeMenuWithSelectorComponent(
             font,
             windowScale,
             textureManager.getTexture(partyMenuAssetPath),
             textureManager.getTexture(AssetPath::getUIComponentAssetPath(UIComponentType::MENU_SELECTOR)),
-            ScreenPosition::TOP_LEFT);
+            ScreenPosition::TOP_LEFT,
+            UIComponentType::PARTY_MENU);
 
     initializeMenuOptionComponent(0, "Charlie", partyMenuComponent);
     initializeMenuOptionComponent(1, "Louie", partyMenuComponent);
@@ -72,13 +75,13 @@ PartyMenuWithSelectorComponent UIComponentInitializer::initializePartyMenuCompon
     return partyMenuComponent;
 }
 
-BattleChoiceMenuWithSelectorComponent UIComponentInitializer::initializeBattleMenuComponent(
+MenuWithSelectorComponent UIComponentInitializer::initializeBattleMenuComponent(
         TextureManager& textureManager,
         float windowScale,
         sf::Font* font,
         bool isPartyLeader,
         int indexOfCharacterInParty) {
-    BattleChoiceMenuWithSelectorComponent battleMenuComponent;
+    MenuWithSelectorComponent battleMenuComponent;
     ScreenPosition screenPosition = ScreenPosition::BOTTOM_LEFT;
 
     switch(indexOfCharacterInParty) {
@@ -98,12 +101,13 @@ BattleChoiceMenuWithSelectorComponent UIComponentInitializer::initializeBattleMe
 
     std::string battleMenuAssetPath = AssetPath::getUIComponentAssetPath(UIComponentType::BATTLE_CHARACTER_CHOICES_MENU);
     textureManager.loadTexture(battleMenuAssetPath);
-    battleMenuComponent.initialize(
+    battleMenuComponent.initializeMenuWithSelectorComponent(
             font,
             windowScale,
             textureManager.getTexture(battleMenuAssetPath),
             textureManager.getTexture(AssetPath::getUIComponentAssetPath(UIComponentType::MENU_SELECTOR)),
-            screenPosition);
+            screenPosition,
+            UIComponentType::BATTLE_CHARACTER_CHOICES_MENU);
 
     initializeMenuOptionComponent(0, BattleSceneMenuChoice::ATTACK, battleMenuComponent);
     initializeMenuOptionComponent(1, BattleSceneMenuChoice::MAGIC, battleMenuComponent);

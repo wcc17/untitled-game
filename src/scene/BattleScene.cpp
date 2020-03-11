@@ -12,10 +12,16 @@ void BattleScene::initialize(
         sf::Vector2f defaultWindowSize) {
 
     Scene::initialize(eventBus, sceneName, previousSceneName, textureManager, font, windowSize, defaultWindowSize);
-    uiManager.initialize(eventBus, textureManager, font, windowSize, defaultWindowSize, sceneName);
+    uiManager.initialize(textureManager, font, windowSize, defaultWindowSize, sceneName);
 
     state = BattleState::ENEMY_APPEARED_STATE;
-    uiManager.openDialogue(BattleSceneDialogueEventName::ENEMY_APPEARED);
+
+    //TODO: this needs to be created another way? where do we get the monster name from
+    //TODO: the substitution seems weird after writing it. should some be loaded with a flag that says they require substitutions?
+    std::vector<std::string> dialogueSubstitutions;
+    dialogueSubstitutions.push_back("Little blob");
+
+    uiManager.openDialogueWithSubstitutions(BattleSceneDialogueEventName::ENEMY_APPEARED, dialogueSubstitutions);
 }
 
 void BattleScene::update(
@@ -85,14 +91,15 @@ void BattleScene::changeToShowBattleChoicesState() {
 }
 
 void BattleScene::handleBattleChoiceChosen() {
-    std::string battleChoiceSelected = uiManager.handleControllerActionButtonPressedForBattleChoice();
+    if(uiManager.getActiveMenuComponentType() == UIComponentType::BATTLE_CHARACTER_CHOICES_MENU) {
+        std::string battleChoiceSelected = uiManager.getMenuOptionSelectedOnControllerActionButtonPressed();
 
-    if(battleChoiceSelected == BattleSceneMenuChoice::RUN) {
-        state = BattleState::RUN_AWAY_STATE;
-        uiManager.closeCurrentMenuOrDialogue();
-        uiManager.openDialogue(BattleSceneDialogueEventName::PARTY_RAN_AWAY);
+        if(battleChoiceSelected == BattleSceneMenuChoice::RUN) {
+            state = BattleState::RUN_AWAY_STATE;
+            uiManager.closeCurrentMenuOrDialogue();
+            uiManager.openDialogue(BattleSceneDialogueEventName::PARTY_RAN_AWAY);
+        }
     }
-    //TODO: handle other choices
 }
 
 void BattleScene::handleControllerMenuMoveButtonPressed(MoveDirection direction) {

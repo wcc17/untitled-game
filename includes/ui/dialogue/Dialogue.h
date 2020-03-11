@@ -8,6 +8,10 @@ public:
     Dialogue(std::string first, std::string second);
     std::string& getCurrentDialoguePiece();
     bool dialogueDone();
+    std::string getFirstDialoguePiece();
+    std::string getSecondDialoguePiece();
+    void setFirstDialoguePiece(std::string piece);
+    void setSecondDialoguePiece(std::string piece);
 
 private:
     std::string first;
