@@ -1,5 +1,5 @@
-#ifndef NEWNEW_PLAYER_H
-#define NEWNEW_PLAYER_H
+#ifndef NEWNEW_PLAYERENTITY_H
+#define NEWNEW_PLAYERENTITY_H
 
 
 #include "../../events/EventBus.h"
@@ -19,7 +19,7 @@
 #include "../components/EntityMovement.h"
 #include "../../events/event/PlayerAndNpcCollisionEvent.h"
 
-class Player : public sf::Sprite {
+class PlayerEntity : public sf::Sprite {
 
 public:
     void initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture);
@@ -60,4 +60,4 @@ private:
 };
 
 
-#endif //NEWNEW_PLAYER_H
+#endif //NEWNEW_PLAYERENTITY_H

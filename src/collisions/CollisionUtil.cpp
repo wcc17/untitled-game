@@ -7,12 +7,12 @@ bool CollisionUtil::collisionOccurred(const Collidable& collidable1, const Colli
              && ( (collidable1.getBoundingBox().intersects(collidable2.getBoundingBox()) )));
 }
 
-bool CollisionUtil::playerVicinityCollisionOccurred(const Player& player, const Collidable& collidable) {
+bool CollisionUtil::playerVicinityCollisionOccurred(const PlayerEntity& player, const Collidable& collidable) {
     const sf::FloatRect& playerVicinityBounds = player.getEntityCollidable().getVicinityBounds();
     return (playerVicinityBounds.intersects(collidable.getBoundingBox()));
 }
 
-bool CollisionUtil::playerDoorCollisionOccurred(const Player& player, const Collidable& collidable) {
+bool CollisionUtil::playerDoorCollisionOccurred(const PlayerEntity& player, const Collidable& collidable) {
     if(collidable.getType() == ObjectType::DOOR) {
         const sf::FloatRect& playerBounds = player.getEntityCollidable().getBoundingBox();
         const sf::FloatRect& doorBounds = collidable.getBoundingBox();

@@ -2,16 +2,17 @@
 #include "../../includes/scene/battle/BattleSceneDialogueEventName.h"
 #include "../../includes/scene/battle/BattleSceneMenuChoice.h"
 
+Logger BattleScene::logger("BattleScene");
+
 void BattleScene::initialize(
         std::shared_ptr<EventBus> eventBus,
         std::string sceneName,
-        std::string previousSceneName,
         TextureManager& textureManager,
         sf::Font* font,
         sf::Vector2u windowSize,
         sf::Vector2f defaultWindowSize) {
 
-    Scene::initialize(eventBus, sceneName, previousSceneName, textureManager, font, windowSize, defaultWindowSize);
+    Scene::initialize(eventBus, sceneName, textureManager, font, windowSize, defaultWindowSize);
     uiManager.initialize(textureManager, font, windowSize, defaultWindowSize, sceneName);
 
     state = BattleState::ENEMY_APPEARED_STATE;
@@ -22,6 +23,12 @@ void BattleScene::initialize(
     dialogueSubstitutions.push_back("Little blob");
 
     uiManager.openDialogueWithSubstitutions(BattleSceneDialogueEventName::ENEMY_APPEARED, dialogueSubstitutions);
+}
+
+void BattleScene::loadPlayerInformation(
+        std::shared_ptr<PlayerEntity> playerEntity,
+        std::string previousSceneName) {
+    logger.logDebug("BattleScene not loading any PlayerInformation yet");
 }
 
 void BattleScene::update(

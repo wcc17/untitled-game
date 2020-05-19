@@ -34,7 +34,7 @@ void SceneMap::loadRectangleObjects(const tmx::Object &object) {
         npcCollidables.push_back(collidable);
     } else if(type == ObjectType::PLAYER) {
         std::string spawnName = collidable.getName(); //using spawnName as object name makes tiled map easier to read
-        collidable.setName("player"); //rest of the game doesn't need the collidable name as the spawn name, makes more sense as Player
+        collidable.setName("player"); //rest of the game doesn't need the collidable name as the spawn name, makes more sense as PlayerEntity
         playerCollidables.insert(std::make_pair(spawnName, collidable));
     } else if(type == ObjectType::NPC_MOVE_BOUNDARY) {
         sf::IntRect rect = sf::IntRect(position.x, position.y, size.x, size.y);

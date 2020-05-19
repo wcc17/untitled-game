@@ -16,11 +16,13 @@ public:
     virtual void initialize(
             std::shared_ptr<EventBus> eventBus,
             std::string sceneName,
-            std::string previousSceneName,
             TextureManager& textureManager,
             sf::Font* font,
             sf::Vector2u windowSize,
             sf::Vector2f defaultWindowSize) override;
+    virtual void loadPlayerInformation(
+            std::shared_ptr<PlayerEntity> playerEntity,
+            std::string previousSceneName) override;
     virtual void update(
             sf::Time elapsedTime,
             sf::RenderTexture& renderTexture,
@@ -40,6 +42,8 @@ private:
 
     BattleState state;
     BattleUIManager uiManager;
+
+    static Logger logger;
 };
 
 

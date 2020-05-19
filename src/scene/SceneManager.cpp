@@ -9,6 +9,7 @@ void SceneManager::initialize(std::shared_ptr<EventBus> eventBus, sf::Font* font
     this->defaultWindowSize = defaultWindowSize;
 
     viewManager.initialize(eventBus);
+    playerManager.initialize(eventBus, textureManager);
 
     eventBus->subscribe(this, &SceneManager::onChangeSceneToNewMapEvent, "SceneManager");
     eventBus->subscribe(this, &SceneManager::onChangeSceneToBattleEvent, "SceneManager");
@@ -99,7 +100,8 @@ void SceneManager::loadScene(std::string sceneName) {
         scene = std::make_unique<OverworldScene>();
     }
 
-    scene->initialize(eventBus, sceneName, this->previousSceneName, textureManager, font, windowSize, defaultWindowSize);
+    scene->initialize(eventBus, sceneName, textureManager, font, windowSize, defaultWindowSize);
+    scene->loadPlayerInformation(playerManager.getPlayerEntity(), this->previousSceneName);
 }
 
 void SceneManager::onChangeSceneToNewMapEvent(ChangeSceneToNewMapEvent* event) {
@@ -150,8 +152,7 @@ sf::Color SceneManager::getSceneTransparency(sf::Color currentColor) {
 
 void SceneManager::release() {
     eventBus->unsubscribeInstanceFromAllEventTypes(this);
-
-    textureManager.releaseTexture(AssetPath::PLAYER_TEXTURE);
+    playerManager.release(textureManager);
     releaseScene();
 }
 

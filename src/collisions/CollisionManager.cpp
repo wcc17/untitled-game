@@ -12,7 +12,7 @@ void CollisionManager::initializeForScene(std::vector<std::shared_ptr<Collidable
     this->mapCollidables = mapCollidables;
 }
 
-void CollisionManager::checkAllCollisions(const std::shared_ptr<Player>& player,
+void CollisionManager::checkAllCollisions(const std::shared_ptr<PlayerEntity>& player,
                                         const std::vector<std::shared_ptr<NpcEntity>>& entities) {
 
     //checkAllCollisions will go through all possible collisions
@@ -29,7 +29,7 @@ void CollisionManager::checkAllCollisions(const std::shared_ptr<Player>& player,
     checkCollisionsBetweenEntitiesAndMap(entities);
 }
 
-void CollisionManager::checkCollisionsWithPlayerAndEntities(const std::shared_ptr<Player>& player, const std::vector<std::shared_ptr<NpcEntity>>& entities) {
+void CollisionManager::checkCollisionsWithPlayerAndEntities(const std::shared_ptr<PlayerEntity>& player, const std::vector<std::shared_ptr<NpcEntity>>& entities) {
 
     for(std::shared_ptr<NpcEntity> npc : entities) {
         EntityCollidable playerCollidable = player->getEntityCollidable();
@@ -45,7 +45,7 @@ void CollisionManager::checkCollisionsWithPlayerAndEntities(const std::shared_pt
     }
 }
 
-void CollisionManager::checkCollisionsWithPlayerAndMap(const std::shared_ptr<Player>& player) {
+void CollisionManager::checkCollisionsWithPlayerAndMap(const std::shared_ptr<PlayerEntity>& player) {
 
     for(std::shared_ptr<Collidable> collidable : mapCollidables) {
 
@@ -93,7 +93,7 @@ void CollisionManager::checkCollisionsBetweenEntitiesAndMap(const std::vector<st
     }
 }
 
-void CollisionManager::handleCollisionWithPlayerAndNpcEntity(const std::shared_ptr<Player>& player, const std::shared_ptr<NpcEntity> npc) {
+void CollisionManager::handleCollisionWithPlayerAndNpcEntity(const std::shared_ptr<PlayerEntity>& player, const std::shared_ptr<NpcEntity> npc) {
     sf::Vector2f playerPosition;
     sf::Vector2f npcPosition;
 
@@ -136,11 +136,11 @@ void CollisionManager::handleCollisionWithNpcAndNpc(const std::shared_ptr<NpcEnt
 }
 
 
-void CollisionManager::handleCollisionWithPlayerAndDoor(const std::shared_ptr<Player>& player, const Collidable& collidable) {
+void CollisionManager::handleCollisionWithPlayerAndDoor(const std::shared_ptr<PlayerEntity>& player, const Collidable& collidable) {
     collisionPublisher.publishPlayerDoorCollisionEvent(collidable);
 }
 
-void CollisionManager::handleCollisionWithPlayerAndMap(const std::shared_ptr<Player>& player, const std::shared_ptr<Collidable> collidable) {
+void CollisionManager::handleCollisionWithPlayerAndMap(const std::shared_ptr<PlayerEntity>& player, const std::shared_ptr<Collidable> collidable) {
     sf::Vector2f playerPosition;
     sf::Vector2f collidablePosition; //TODO: should I add a parameter to fixCollidablePositionAfterCollision to ignore these?
 

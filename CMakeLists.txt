@@ -13,7 +13,7 @@ set(SOURCE_FILES
         src/asset/TextureManager.cpp
         src/asset/BaseAssetManager.cpp
         src/asset/AssetPath.cpp
-        src/entity/player/Player.cpp
+        src/entity/player/PlayerEntity.cpp
         src/entity/components/Animation.cpp
         src/scene/Scene.cpp
         src/entity/components/EntityAnimation.cpp
@@ -55,6 +55,7 @@ set(SOURCE_FILES
         src/scene/battle/BattleSceneMenuChoice.cpp
         src/scene/overworld/OverworldStartMenuChoice.cpp
         src/ui/dialogue/DialogueSubstitutionUtil.cpp
+        src/scene/PlayerManager.cpp
         )
 
 set(INCLUDE_FILES
@@ -66,7 +67,7 @@ set(INCLUDE_FILES
         includes/asset/TextureManager.h
         includes/asset/BaseAssetManager.h
         includes/asset/AssetPath.h
-        includes/entity/player/Player.h
+        includes/entity/player/PlayerEntity.h
         includes/entity/components/Animation.h
         includes/scene/Scene.h
         includes/entity/components/EntityAnimation.h
@@ -107,6 +108,7 @@ set(INCLUDE_FILES
         includes/scene/battle/BattleSceneMenuChoice.h
         includes/scene/overworld/OverworldStartMenuChoice.h
         includes/ui/dialogue/DialogueSubstitutionUtil.h
+        includes/scene/PlayerManager.h
         )
 
 set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
@@ -143,8 +145,7 @@ set(INCLUDE_ONLY_FILES includes/events/event/PlayerCollisionEvent.h
         includes/scene/battle/BattleSceneDialogueEventName.h
         includes/scene/battle/BattleState.h
         includes/events/event/ChangeSceneToPreviousSceneEvent.h
-        includes/scene/overworld/OverworldState.h
-        )
+        includes/scene/overworld/OverworldState.h)
 
 add_executable(newnew ${SOURCE_FILES} ${INCLUDE_FILES} ${INCLUDE_ONLY_FILES})
 

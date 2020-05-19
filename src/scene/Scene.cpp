@@ -5,7 +5,6 @@ Logger Scene::logger("Scene");
 void Scene::initialize(
         std::shared_ptr<EventBus> eventBus,
         std::string sceneName,
-        std::string previousSceneName,
         TextureManager& textureManager,
         sf::Font* font,
         sf::Vector2u windowSize,

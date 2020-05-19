@@ -3,26 +3,18 @@
 void OverworldScene::initialize(
         std::shared_ptr<EventBus> eventBus,
         std::string sceneName,
-        std::string previousSceneName,
         TextureManager& textureManager,
         sf::Font* font,
         sf::Vector2u windowSize,
         sf::Vector2f defaultWindowSize) {
 
-    Scene::initialize(eventBus, sceneName, previousSceneName, textureManager, font, windowSize, defaultWindowSize);
+    Scene::initialize(eventBus, sceneName, textureManager, font, windowSize, defaultWindowSize);
 
     this->sceneMap = mapLoader.loadSceneMap(textureManager, sceneName);
     this->texture = sceneMap.getTileMapTexture();
     this->vertices = sceneMap.getVertices();
 
     collisionManager.initialize(eventBus);
-
-    player = std::make_shared<Player>();
-    textureManager.loadTexture(AssetPath::PLAYER_TEXTURE);
-    player->initialize(eventBus, textureManager.getTexture(AssetPath::PLAYER_TEXTURE));
-
-    std::string playerSpawnName = getPlayerSpawnNameForPreviousToCurrentSceneTransition(previousSceneName);
-    player->initializeForScene(getPlayerCollidable(playerSpawnName), getMapTileSize());
 
     npcManager.initialize(
             eventBus,
@@ -35,6 +27,13 @@ void OverworldScene::initialize(
     uiManager.initialize(textureManager, font, windowSize, defaultWindowSize, sceneName);
 
     state = OverworldState::RUNNING;
+}
+
+void OverworldScene::loadPlayerInformation(
+        std::shared_ptr<PlayerEntity> playerEntity,
+        std::string previousSceneName) {
+    this->playerEntity = playerEntity;
+    playerEntity->initializeForScene(getPlayerCollidable(previousSceneName), getMapTileSize());
 }
 
 void OverworldScene::update(
@@ -74,9 +73,9 @@ void OverworldScene::handleControllerActionButtonPressed() {
 }
 
 void OverworldScene::updateRunningState(sf::Time elapsedTime) {
-    player->update(elapsedTime);
+    playerEntity->update(elapsedTime);
     npcManager.update(elapsedTime);
-    collisionManager.checkAllCollisions(player, npcManager.getNpcEntities());
+    collisionManager.checkAllCollisions(playerEntity, npcManager.getNpcEntities());
 }
 
 void OverworldScene::updatePlayerDialogueState() {
@@ -153,7 +152,7 @@ void OverworldScene::draw(
         target.draw(vertexArray, states);
     }
 
-    target.draw(*player);
+    target.draw(*playerEntity);
     npcManager.drawToRenderTexture(static_cast<sf::RenderTexture&>(target));
     uiManager.drawToRenderTexture(static_cast<sf::RenderTexture&>(target));
 }
@@ -174,8 +173,13 @@ std::map<std::string, sf::IntRect> OverworldScene::getNpcMoveBoundariesMap() {
     return sceneMap.getNpcMoveBoundariesMap();
 }
 
-Collidable OverworldScene::getPlayerCollidable(std::string spawnName) {
-    return sceneMap.getPlayerCollidable(spawnName);
+Collidable OverworldScene::getPlayerCollidable(std::string previousSceneName) {
+    if(previousSceneName == "battle") {
+        return this->playerEntity->getEntityCollidable();
+    } else {
+        std::string playerSpawnName = getPlayerSpawnNameForPreviousToCurrentSceneTransition(previousSceneName);
+        return sceneMap.getPlayerCollidable(playerSpawnName);
+    }
 }
 
 std::map<std::string, std::vector<tmx::Property>> OverworldScene::getNpcNameToPropertiesMap() {
@@ -188,7 +192,6 @@ std::string OverworldScene::getPlayerSpawnNameForPreviousToCurrentSceneTransitio
 
 void OverworldScene::release(TextureManager& textureManager) {
     uiManager.release(textureManager);
-    player->release();
     sceneMap.release(textureManager);
     npcManager.release(textureManager);
 }

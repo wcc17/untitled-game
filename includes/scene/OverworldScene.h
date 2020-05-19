@@ -15,11 +15,13 @@ public:
     virtual void initialize(
             std::shared_ptr<EventBus> eventBus,
             std::string sceneName,
-            std::string previousSceneName,
             TextureManager& textureManager,
             sf::Font* font,
             sf::Vector2u windowSize,
             sf::Vector2f defaultWindowSize) override;
+    virtual void loadPlayerInformation(
+            std::shared_ptr<PlayerEntity> playerEntity,
+            std::string previousSceneName) override;
     virtual void update(
             sf::Time elapsedTime,
             sf::RenderTexture& renderTexture,
@@ -39,12 +41,11 @@ public:
     std::vector<Collidable> getNpcCollidables();
     std::map<std::string, sf::IntRect> getNpcMoveBoundariesMap();
     std::map<std::string, std::vector<tmx::Property>> getNpcNameToPropertiesMap();
-    Collidable getPlayerCollidable(std::string spawnName);
     std::string getPlayerSpawnNameForPreviousToCurrentSceneTransition(std::string sceneName);
 
 private:
     std::vector<sf::VertexArray> vertices;
-    std::shared_ptr<Player> player;
+    std::shared_ptr<PlayerEntity> playerEntity;
     SceneMap sceneMap;
     MapLoader mapLoader;
     NpcManager npcManager;
@@ -57,6 +58,7 @@ private:
     void handleStartMenuChoiceChosen();
     void openStartMenu();
     void openPartyMenu();
+    Collidable getPlayerCollidable(std::string spawnName);
 };
 
 

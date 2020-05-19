@@ -19,17 +19,20 @@
 #include "../events/event/ControllerCancelEvent.h"
 #include "../events/event/ControllerMoveEvent.h"
 #include "../events/event/ControllerMenuMoveEvent.h"
+#include "../entity/player/PlayerEntity.h"
 
 class Scene : public sf::Drawable, public sf::Transformable {
 public:
     virtual void initialize(
             std::shared_ptr<EventBus> eventBus,
             std::string sceneName,
-            std::string previousSceneName,
             TextureManager& textureManager,
             sf::Font* font,
             sf::Vector2u windowSize,
             sf::Vector2f defaultWindowSize);
+    virtual void loadPlayerInformation(
+            std::shared_ptr<PlayerEntity> playerEntity,
+            std::string previousSceneName) {};
     virtual void update(
             sf::Time elapsedTime,
             sf::RenderTexture& renderTexture,

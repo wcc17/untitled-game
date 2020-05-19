@@ -1,13 +1,13 @@
-#include "../../../includes/entity/player/Player.h"
+#include "../../../includes/entity/player/PlayerEntity.h"
 
 const float PLAYER_WIDTH = 16.f;
 const float PLAYER_HEIGHT = 16.f;
 const float PLAYER_FRAME_TIME =  0.16f;
 const float MOVEMENT_SPEED = 80.f;
 const int VICINITY_BOUNDS_OFFSET = 4;
-Logger Player::logger("Player");
+Logger PlayerEntity::logger("PlayerEntity");
 
-void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture) {
+void PlayerEntity::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture) {
     sf::Sprite::setTexture(*texture);
     this->eventBus = eventBus;
     this->state = STATE_STANDING;
@@ -16,16 +16,16 @@ void Player::initialize(std::shared_ptr<EventBus> eventBus, sf::Texture* texture
     entityAnimation.setFrameTime(sf::seconds(PLAYER_FRAME_TIME));
     initializeAnimations();
 
-    eventBus->subscribe(this, &Player::onControllerMoveEvent, "Player");
-    eventBus->subscribe(this, &Player::onControllerActionEvent, "Player");
-    eventBus->subscribe(this, &Player::onVicinityCollisionEvent, "Player");
-    eventBus->subscribe(this, &Player::onCloseDialogueEvent, "Player");
-    eventBus->subscribe(this, &Player::onCollisionEvent, "Player");
-    eventBus->subscribe(this, &Player::onDoorCollisionEvent, "Player");
-    eventBus->subscribe(this, &Player::onPlayerAndNpcCollisionEvent, "Player");
+    eventBus->subscribe(this, &PlayerEntity::onControllerMoveEvent, "PlayerEntity");
+    eventBus->subscribe(this, &PlayerEntity::onControllerActionEvent, "PlayerEntity");
+    eventBus->subscribe(this, &PlayerEntity::onVicinityCollisionEvent, "PlayerEntity");
+    eventBus->subscribe(this, &PlayerEntity::onCloseDialogueEvent, "PlayerEntity");
+    eventBus->subscribe(this, &PlayerEntity::onCollisionEvent, "PlayerEntity");
+    eventBus->subscribe(this, &PlayerEntity::onDoorCollisionEvent, "PlayerEntity");
+    eventBus->subscribe(this, &PlayerEntity::onPlayerAndNpcCollisionEvent, "PlayerEntity");
 }
 
-void Player::initializeForScene(const Collidable& collidable, const sf::Vector2u& mapTileSize) {
+void PlayerEntity::initializeForScene(const Collidable& collidable, const sf::Vector2u& mapTileSize) {
     this->mapTileSize = mapTileSize;
     entityMovement.initialize(collidable.getName(), MOVEMENT_SPEED);
     entityCollidable.initialize(collidable);
@@ -34,7 +34,7 @@ void Player::initializeForScene(const Collidable& collidable, const sf::Vector2u
     adjustPlayerAndViewPositions();
 }
 
-void Player::update(sf::Time deltaTime) {
+void PlayerEntity::update(sf::Time deltaTime) {
     switch(state) {
         case STATE_STANDING:
             handleStandingState(deltaTime);
@@ -51,7 +51,7 @@ void Player::update(sf::Time deltaTime) {
     }
 }
 
-void Player::handleStandingState(sf::Time deltaTime) {
+void PlayerEntity::handleStandingState(sf::Time deltaTime) {
     sf::Vector2f newPosition = getPosition();
     entityMovement.handleStanding(deltaTime, state, currentDirection, newPosition);
     setPosition(newPosition);
@@ -59,11 +59,11 @@ void Player::handleStandingState(sf::Time deltaTime) {
     handleState(deltaTime);
 
     if((fmod(getPosition().x, mapTileSize.x) != 0 || fmod(getPosition().y,mapTileSize.y) != 0) && state == STATE_STANDING) {
-        logger.logError("handleStandingState(). Player has invalid position not divisible by mapTileSize");
+        logger.logError("handleStandingState(). PlayerEntity has invalid position not divisible by mapTileSize");
     }
 }
 
-void Player::handleMovingState(sf::Time deltaTime) {
+void PlayerEntity::handleMovingState(sf::Time deltaTime) {
     sf::Vector2f newPosition = getPosition();
     entityMovement.handleMoving(deltaTime, mapTileSize, state, currentDirection, newPosition);
     setPosition(newPosition);
@@ -71,16 +71,16 @@ void Player::handleMovingState(sf::Time deltaTime) {
     handleState(deltaTime);
 }
 
-void Player::handleInteractingState() {
+void PlayerEntity::handleInteractingState() {
     resetAfterFrame();
 }
 
-void Player::handleDoneInteractingState() {
+void PlayerEntity::handleDoneInteractingState() {
     resetAfterFrame();
     state = STATE_STANDING;
 }
 
-void Player::handleState(sf::Time deltaTime) {
+void PlayerEntity::handleState(sf::Time deltaTime) {
     entityAnimation.update(deltaTime, currentDirection);
     resetAfterFrame();
     adjustPlayerAndViewPositions(); //TODO: this does not need to run every single frame
@@ -88,12 +88,12 @@ void Player::handleState(sf::Time deltaTime) {
     this->entityCollidable.setBoundingBox(sf::FloatRect(getPosition().x, getPosition().y, PLAYER_WIDTH, PLAYER_HEIGHT));
 }
 
-void Player::adjustPlayerAndViewPositions() {
+void PlayerEntity::adjustPlayerAndViewPositions() {
     eventBus->publish(new PlayerPositionChangeEvent(sf::Sprite::getGlobalBounds()));
     roundPosition();
 }
 
-void Player::handleActionButtonPressed() {
+void PlayerEntity::handleActionButtonPressed() {
     MoveDirection currentlyFacingDirection = entityMovement.getLastFacingDirection();
 
     for(std::shared_ptr<Collidable> collidable : entityCollidable.getCollidablesInVicinity()) {
@@ -106,61 +106,61 @@ void Player::handleActionButtonPressed() {
     }
 }
 
-void Player::onControllerMoveEvent(ControllerMoveEvent* event) {
+void PlayerEntity::onControllerMoveEvent(ControllerMoveEvent* event) {
     currentDirection = event->direction;
 }
 
-void Player::onControllerActionEvent(ControllerActionEvent* event) {
+void PlayerEntity::onControllerActionEvent(ControllerActionEvent* event) {
     if(state == STATE_MOVING || state == STATE_STANDING) {
         handleActionButtonPressed();
     }
 }
 
-void Player::onVicinityCollisionEvent(PlayerVicinityCollisionEvent* event) {
+void PlayerEntity::onVicinityCollisionEvent(PlayerVicinityCollisionEvent* event) {
     entityCollidable.addCollidableInVicinity(event->collidedWith);
 }
 
-void Player::onCloseDialogueEvent(CloseDialogueEvent* event) {
+void PlayerEntity::onCloseDialogueEvent(CloseDialogueEvent* event) {
     state = STATE_PLAYER_DONE_WITH_UI;
 }
 
-void Player::onCollisionEvent(PlayerCollisionEvent* event) {
+void PlayerEntity::onCollisionEvent(PlayerCollisionEvent* event) {
     setPosition(event->newPlayerPosition);
     adjustPlayerAndViewPositions();
 }
 
-void Player::onDoorCollisionEvent(PlayerDoorCollisionEvent* event) {
+void PlayerEntity::onDoorCollisionEvent(PlayerDoorCollisionEvent* event) {
     //any door object on the tmx tiled map should have a name that designates the new map that the door leads to
     eventBus->publish(new ChangeSceneToNewMapEvent(event->collidedWith.getName()));
 }
 
-void Player::onPlayerAndNpcCollisionEvent(PlayerAndNpcCollisionEvent* event) {
+void PlayerEntity::onPlayerAndNpcCollisionEvent(PlayerAndNpcCollisionEvent* event) {
     if(event->npc.isNpcAggressive()) {
         eventBus->publish(new ChangeSceneToBattleEvent(event->npc));
     }
 }
 
-void Player::resetAfterFrame() {
+void PlayerEntity::resetAfterFrame() {
     entityCollidable.clearCollidablesInVicinity();
 }
 
-void Player::roundPosition() {
+void PlayerEntity::roundPosition() {
     setPosition(std::round(getPosition().x), std::round(getPosition().y));
 }
 
-EntityCollidable Player::getEntityCollidable() const {
+EntityCollidable PlayerEntity::getEntityCollidable() const {
     return entityCollidable;
 }
 
-MoveDirection Player::getLastFacingDirection() const {
+MoveDirection PlayerEntity::getLastFacingDirection() const {
     return entityMovement.getLastFacingDirection();
 }
 
-void Player::release() {
+void PlayerEntity::release() {
     eventBus->unsubscribeInstanceFromAllEventTypes(this);
 }
 
-void Player::initializeAnimations() {
+void PlayerEntity::initializeAnimations() {
     //TODO: EVERYTHING needs to be multiples of tile size, including the character textures (its frames). Should there be a check to ensure this is happening so that I don't forget? How can I get the tile size here? Also NpcEntity
     //TODO: I don't like that the animations are public members of EntityAnimation. The way animations are handled needs to be refactored
     entityAnimation.walkingAnimationDown.setSpriteSheet(*this->getTexture());

@@ -17,6 +17,7 @@
 #include "OverworldScene.h"
 #include "BattleScene.h"
 #include "SceneStateHandler.h"
+#include "PlayerManager.h"
 
 class SceneManager {
 public:
@@ -56,6 +57,7 @@ private:
     TextureManager textureManager;
     ViewManager viewManager;
     SceneStateHandler sceneStateHandler;
+    PlayerManager playerManager;
 };
 
 

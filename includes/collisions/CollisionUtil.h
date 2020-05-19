@@ -4,14 +4,14 @@
 
 #include <math.h>
 #include "Collidable.h"
-#include "../entity/player/Player.h"
+#include "../entity/player/PlayerEntity.h"
 
 class CollisionUtil {
 
 public:
     static bool collisionOccurred(const Collidable& collidable1, const Collidable& collidable2);
-    static bool playerVicinityCollisionOccurred(const Player& player, const Collidable& collidable);
-    static bool playerDoorCollisionOccurred(const Player& player, const Collidable& collidable);
+    static bool playerVicinityCollisionOccurred(const PlayerEntity& player, const Collidable& collidable);
+    static bool playerDoorCollisionOccurred(const PlayerEntity& player, const Collidable& collidable);
     static void fixCollidablePositionAfterCollision(
             const Collidable& collidable1,
             const Collidable& collidable2,

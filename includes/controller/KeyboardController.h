@@ -3,7 +3,7 @@
 
 #include <SFML/Window/Keyboard.hpp>
 #include "BaseController.h"
-#include "../entity/player/Player.h"
+#include "../entity/player/PlayerEntity.h"
 #include "../events/event/ControllerMoveEvent.h"
 #include "../events/event/ControllerMenuEvent.h"
 #include "../events/event/ControllerCancelEvent.h"
